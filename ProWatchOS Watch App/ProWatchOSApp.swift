@@ -23,4 +23,4 @@ struct ProWatchOS_Watch_AppApp: App {
                 .environment(\.locale, Locale(identifier: "de"))
         }
     }
-}
+} 
