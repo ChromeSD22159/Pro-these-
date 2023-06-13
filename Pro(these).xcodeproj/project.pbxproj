@@ -87,6 +87,16 @@
 		B68C6E2F2A211F2500167F9B /* PainAddSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6E2E2A211F2500167F9B /* PainAddSheet.swift */; };
 		B68C6E312A24C8A800167F9B /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6E302A24C8A800167F9B /* ChartView.swift */; };
 		B68C6E332A25CC6100167F9B /* SnapShotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6E322A25CC6100167F9B /* SnapShotView.swift */; };
+		B697CF6C2A388B3900A4CD01 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F9492F29F7F92600BBE3A2 /* WidgetKit.framework */; };
+		B697CF6D2A388B3900A4CD01 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F9493129F7F92700BBE3A2 /* SwiftUI.framework */; };
+		B697CF702A388B3900A4CD01 /* ProProtheseWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF6F2A388B3900A4CD01 /* ProProtheseWidgetBundle.swift */; };
+		B697CF722A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF712A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift */; };
+		B697CF742A388B3900A4CD01 /* ProProtheseWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF732A388B3900A4CD01 /* ProProtheseWidget.swift */; };
+		B697CF762A388B3B00A4CD01 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B697CF752A388B3B00A4CD01 /* Assets.xcassets */; };
+		B697CF7A2A388B3B00A4CD01 /* ProProtheseWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B697CF6B2A388B3900A4CD01 /* ProProtheseWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B697CF802A388BFF00A4CD01 /* ProProtheseWidgetFeeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF7E2A388BF800A4CD01 /* ProProtheseWidgetFeeling.swift */; };
+		B697CF842A38957C00A4CD01 /* ProProthesenWidgetStopWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */; };
+		B697CF882A3898F300A4CD01 /* ProProtheseWidgetPain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */; };
 		B6B487662A13B79100263A57 /* EventProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B487652A13B79100263A57 /* EventProvider.swift */; };
 		B6B487692A14DF8B00263A57 /* FeelingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B487682A14DF8B00263A57 /* FeelingView.swift */; };
 		B6B4876C2A15948B00263A57 /* SnapCarousell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B4876B2A15948B00263A57 /* SnapCarousell.swift */; };
@@ -126,6 +136,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B697CF782A388B3B00A4CD01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B6F948E529F6ED8500BBE3A2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B697CF6A2A388B3900A4CD01;
+			remoteInfo = ProProtheseWidgetExtension;
+		};
 		B6E3B3E529FD1B5A00341144 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6F948E529F6ED8500BBE3A2 /* Project object */;
@@ -163,6 +180,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				B697CF7A2A388B3B00A4CD01 /* ProProtheseWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -248,6 +266,15 @@
 		B68C6E2E2A211F2500167F9B /* PainAddSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainAddSheet.swift; sourceTree = "<group>"; };
 		B68C6E302A24C8A800167F9B /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		B68C6E322A25CC6100167F9B /* SnapShotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapShotView.swift; sourceTree = "<group>"; };
+		B697CF6B2A388B3900A4CD01 /* ProProtheseWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ProProtheseWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B697CF6F2A388B3900A4CD01 /* ProProtheseWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetBundle.swift; sourceTree = "<group>"; };
+		B697CF712A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetLiveActivity.swift; sourceTree = "<group>"; };
+		B697CF732A388B3900A4CD01 /* ProProtheseWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidget.swift; sourceTree = "<group>"; };
+		B697CF752A388B3B00A4CD01 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B697CF772A388B3B00A4CD01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B697CF7E2A388BF800A4CD01 /* ProProtheseWidgetFeeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetFeeling.swift; sourceTree = "<group>"; };
+		B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProthesenWidgetStopWatch.swift; sourceTree = "<group>"; };
+		B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetPain.swift; sourceTree = "<group>"; };
 		B6B487652A13B79100263A57 /* EventProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProvider.swift; sourceTree = "<group>"; };
 		B6B487682A14DF8B00263A57 /* FeelingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingView.swift; sourceTree = "<group>"; };
 		B6B4876B2A15948B00263A57 /* SnapCarousell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarousell.swift; sourceTree = "<group>"; };
@@ -291,6 +318,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B697CF682A388B3900A4CD01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B697CF6D2A388B3900A4CD01 /* SwiftUI.framework in Frameworks */,
+				B697CF6C2A388B3900A4CD01 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B6E3B3D729FD1B5900341144 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -513,6 +549,29 @@
 			path = Pain;
 			sourceTree = "<group>";
 		};
+		B697CF6E2A388B3900A4CD01 /* ProProtheseWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B697CF6F2A388B3900A4CD01 /* ProProtheseWidgetBundle.swift */,
+				B697CF712A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift */,
+				B697CF852A38989F00A4CD01 /* Widgets */,
+				B697CF752A388B3B00A4CD01 /* Assets.xcassets */,
+				B697CF772A388B3B00A4CD01 /* Info.plist */,
+			);
+			path = ProProtheseWidget;
+			sourceTree = "<group>";
+		};
+		B697CF852A38989F00A4CD01 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				B697CF732A388B3900A4CD01 /* ProProtheseWidget.swift */,
+				B697CF7E2A388BF800A4CD01 /* ProProtheseWidgetFeeling.swift */,
+				B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */,
+				B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
 		B6B487582A0EF84300263A57 /* Notification */ = {
 			isa = PBXGroup;
 			children = (
@@ -614,6 +673,7 @@
 				B66F2C3E29FC5090006CA21E /* Shared */,
 				B6F948EF29F6ED8500BBE3A2 /* Pro(these) */,
 				B6E3B3DB29FD1B5900341144 /* ProWatchOS Watch App */,
+				B697CF6E2A388B3900A4CD01 /* ProProtheseWidget */,
 				B6F9492E29F7F92600BBE3A2 /* Frameworks */,
 				B6F948EE29F6ED8500BBE3A2 /* Products */,
 			);
@@ -624,6 +684,7 @@
 			children = (
 				B6F948ED29F6ED8500BBE3A2 /* Pro-these-.app */,
 				B6E3B3DA29FD1B5900341144 /* ProWatchOS Watch App.app */,
+				B697CF6B2A388B3900A4CD01 /* ProProtheseWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -739,6 +800,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B697CF6A2A388B3900A4CD01 /* ProProtheseWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B697CF7B2A388B3B00A4CD01 /* Build configuration list for PBXNativeTarget "ProProtheseWidgetExtension" */;
+			buildPhases = (
+				B697CF672A388B3900A4CD01 /* Sources */,
+				B697CF682A388B3900A4CD01 /* Frameworks */,
+				B697CF692A388B3900A4CD01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProProtheseWidgetExtension;
+			productName = ProProtheseWidgetExtension;
+			productReference = B697CF6B2A388B3900A4CD01 /* ProProtheseWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B6E3B3D929FD1B5900341144 /* ProWatchOS Watch App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6E3B3E829FD1B5A00341144 /* Build configuration list for PBXNativeTarget "ProWatchOS Watch App" */;
@@ -771,6 +849,7 @@
 			);
 			dependencies = (
 				B6E3B3E629FD1B5A00341144 /* PBXTargetDependency */,
+				B697CF792A388B3B00A4CD01 /* PBXTargetDependency */,
 			);
 			name = "Pro-these-";
 			productName = "Pro(these)";
@@ -787,6 +866,9 @@
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					B697CF6A2A388B3900A4CD01 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
 					B6E3B3D929FD1B5900341144 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -811,11 +893,20 @@
 			targets = (
 				B6F948EC29F6ED8500BBE3A2 /* Pro-these- */,
 				B6E3B3D929FD1B5900341144 /* ProWatchOS Watch App */,
+				B697CF6A2A388B3900A4CD01 /* ProProtheseWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B697CF692A388B3900A4CD01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B697CF762A388B3B00A4CD01 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B6E3B3D829FD1B5900341144 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -839,6 +930,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B697CF672A388B3900A4CD01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B697CF722A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift in Sources */,
+				B697CF702A388B3900A4CD01 /* ProProtheseWidgetBundle.swift in Sources */,
+				B697CF802A388BFF00A4CD01 /* ProProtheseWidgetFeeling.swift in Sources */,
+				B697CF842A38957C00A4CD01 /* ProProthesenWidgetStopWatch.swift in Sources */,
+				B697CF742A388B3900A4CD01 /* ProProtheseWidget.swift in Sources */,
+				B697CF882A3898F300A4CD01 /* ProProtheseWidgetPain.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B6E3B3D629FD1B5900341144 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -965,6 +1069,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B697CF792A388B3B00A4CD01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B697CF6A2A388B3900A4CD01 /* ProProtheseWidgetExtension */;
+			targetProxy = B697CF782A388B3B00A4CD01 /* PBXContainerItemProxy */;
+		};
 		B6E3B3E629FD1B5A00341144 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B6E3B3D929FD1B5900341144 /* ProWatchOS Watch App */;
@@ -973,6 +1082,62 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B697CF7C2A388B3B00A4CD01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProProtheseWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B697CF7D2A388B3B00A4CD01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProProtheseWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B6E3B3E929FD1B5A00341144 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1268,6 +1433,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B697CF7B2A388B3B00A4CD01 /* Build configuration list for PBXNativeTarget "ProProtheseWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B697CF7C2A388B3B00A4CD01 /* Debug */,
+				B697CF7D2A388B3B00A4CD01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B6E3B3E829FD1B5A00341144 /* Build configuration list for PBXNativeTarget "ProWatchOS Watch App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

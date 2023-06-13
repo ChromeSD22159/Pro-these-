@@ -72,6 +72,7 @@ enum SubTab: String, Codable, CaseIterable, Identifiable {
 
 
 extension URL {
+
     var isDeeplink: Bool {
         return scheme == "ProProthese" // match ProProthese://timer
     }
@@ -85,7 +86,12 @@ extension URL {
         //case "step" : return .step
         case "event" : return .event
         case "healthCenter" : return .healthCenter
+        case "feeling" : return .healthCenter
+        case "stopWatch": return .stopWatch
+        case "pain": return .pain
         default: return nil
         }
     }
+    
+    
 }
