@@ -12,27 +12,33 @@ import HealthKit
 
 struct Provider: TimelineProvider {
 
-    var nextUpdate: Date {
-        return Calendar.current.date(byAdding: .minute, value: 1, to: Date())!
-    }
-
     let url = URL(string: "ProProthese://pain")
+    
+    var workoutManager: WorkoutManager
+    
+    var nextUpdate: Date {
+        return Calendar.current.date(byAdding: .minute, value: 10, to: Date())!
+    }
 
     var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
         return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
     }
     
     func placeholder(in context: Context) -> SimpleEntry {        
-        return SimpleEntry(date: Date(), nextUpdate: Date(), url: url, steps: dummySteps)
+        return SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        completion(SimpleEntry(date: Date(), nextUpdate: Date(), url: url, steps: dummySteps))
+        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps)
+        completion(entry)
     }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        let currentDate = Date()
         
-        WorkoutManager().queryWidgetSteps(completion: { stepCount, error in
+        let startDate = Calendar.current.startOfDay(for: currentDate)
+
+        workoutManager.queryWidgetSteps(completion: { stepCount, error in
             
             let s = (min: 0, max: AppConfig.shared.targetSteps, current: Int(stepCount), error: error)
             let entrie = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: s)
@@ -66,18 +72,19 @@ struct ProProtheseWatchComplicationEntryView : View {
         ZStack {
             switch widgetFamily {
             case .accessoryCircular:
-                ZStack {
+                VStack(spacing: 1) {
                     
-                    VStack(spacing: 2) {
-                        
-                        Image("prothesis")
-                            .imageScale(.large)
-                            .font(.title)
-                            .foregroundColor(.white)
-                        
-                        Text(String(format: "%.0f", steps.current))
-                            .font(.system(size: 10).bold())
+                    let gradient = Gradient(colors: [.white.opacity(0.5), AppConfig.shared.background])
+                    
+                    Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
+                        Text("\(entry.steps.current)")
+                            .font(.system(size: 6))
+                    } currentValueLabel: {
+                        Text("🦿")
                     }
+                    .gaugeStyle(.accessoryCircular)
+                    .tint(gradient)
+                    
                 }
             case .accessoryCorner:
                 ZStack {
@@ -89,13 +96,13 @@ struct ProProtheseWatchComplicationEntryView : View {
                             Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                                 Label("Speed", systemImage: "gauge")
                             } currentValueLabel: {
-                              Text("\(steps.current)")
+                                Text("\(entry.steps.current)")
                             } minimumValueLabel: {
-                                Text(String(format: "%.0f", steps.min))
+                                Text("\(entry.steps.min)")
                                     .font(.system(size: 6))
                                     .foregroundColor(.white.opacity(0.5))
                             } maximumValueLabel: {
-                                Text(String(format: "%.0f", steps.max))
+                                Text("\(entry.steps.max)")
                                     .foregroundColor(.white.opacity(0.8))
                             }
                             .tint(steps.current > 100 ? AppConfig.shared.gaugeGradientBad : AppConfig.shared.gaugeGradientGood)
@@ -115,12 +122,12 @@ struct ProProtheseWatchComplicationEntryView : View {
                                 .padding(.trailing, 10)
                             
                             VStack(alignment: .leading) {
-                                Text(String(format: "%.0f", steps.current))
+                                Text("\(entry.steps.current)")
                                     .font(.system(size: 20).bold())
                                 
-                             
+                                let (targetReached, targetPercent) = checkTargetSteps(steps: Double(entry.steps.current))
                                 
-                                Text("100% vom Ziel")
+                                Text("\( targetPercent )% vom Ziel")
                                     .font(.system(size: 12))
                             }
                         }
@@ -128,7 +135,7 @@ struct ProProtheseWatchComplicationEntryView : View {
                         Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                             Label("Speed", systemImage: "gauge")
                         } currentValueLabel: {
-                          Text("\(steps.current)")
+                          Text("\(entry.steps.current)")
                         } minimumValueLabel: {
                           Image(systemName: "gauge.low")
                                 .foregroundColor(.white.opacity(0.5))
@@ -149,7 +156,7 @@ struct ProProtheseWatchComplicationEntryView : View {
                     
                     VStack(spacing: 2) {
                         
-                        Text(String(format: "%.0f", steps.current))
+                        Text("\(entry.steps.current)")
                             .font(.system(size: 10).bold())
                             .widgetLabel{
                                 Image("prothesis")
@@ -168,6 +175,12 @@ struct ProProtheseWatchComplicationEntryView : View {
         }
         .widgetURL(URL(string: "ProProthese://stopWatch"))
     }
+    
+    func checkTargetSteps(steps: Double) -> (Bool, Int) {
+        let percent = steps / Double(AppConfig.shared.targetSteps) * 100
+        let bool = percent >= 100 ? true : false
+        return (bool, Int(percent))
+    }
 }
 
 @main
@@ -180,8 +193,10 @@ struct ProProtheseWatchComplication: Widget {
         .accessoryInline
     ]
     
+    let hm = WorkoutManager()
+    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        StaticConfiguration(kind: kind, provider: Provider(workoutManager: hm)) { entry in
             ProProtheseWatchComplicationEntryView(entry: entry)
         }
         .supportedFamilies(supportedFamilies)
@@ -191,15 +206,19 @@ struct ProProtheseWatchComplication: Widget {
 }
 
 struct ProProtheseWatchComplication_Previews: PreviewProvider {
+    static var nextUpdate: Date {
+        return Calendar.current.date(byAdding: .minute, value: 1, to: Date())!
+    }
+
+    static var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
+        return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
+    }
+    
     static var supportedFamilies:[(widget: WidgetFamily, name: String)] = [
         (widget: .accessoryCircular, name: "Circular"),
         (widget: .accessoryRectangular, name: "Regangular"),
         (widget: .accessoryInline, name: "Inline")
     ]
-    
-    static var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
-        return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
-    }
     
     static var previews: some View {
 

@@ -13,54 +13,48 @@ struct Provider: TimelineProvider {
 
     let url = URL(string: "ProProthese://stopWatch")
     
-    @State var currentSteps = 1.0
-    
     var workoutManager: WorkoutManager
     
+    var nextUpdate: Date {
+        return Calendar.current.date(byAdding: .minute, value: 10, to: Date())!
+    }
+
+    var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
+        return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
+    }
+    
     func placeholder(in context: Context) -> SimpleEntry {
-        
-        let steps = (min: 0.0, max: Double(AppConfig.shared.targetSteps), current: currentSteps)
-        
-        return SimpleEntry(date: Date(), url: self.url!, steps: steps, isRunning: false, timer: Date())
+        return SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps, isRunning: false, timer: Date())
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let steps = (min: 0.0, max: Double(AppConfig.shared.targetSteps), current: currentSteps)
-        let entry = SimpleEntry(date: Date(), url: self.url!, steps: steps, isRunning: false, timer: Date())
+        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps, isRunning: false, timer: Date())
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         let currentDate = Date()
         
-        var entries:[SimpleEntry] = []
-        
         let startDate = Calendar.current.startOfDay(for: currentDate)
 
-        workoutManager.retrieveStepCount(today: startDate) { (steps, error) in
-            let steps = (min: 0.0, max: Double(AppConfig.shared.targetSteps), current: steps ?? 1234)
-            let entry = SimpleEntry(date: currentDate, url: url!, steps: steps, isRunning: false, timer: Date())
-            entries.append(entry)
-        }
-        
-        if entries.count == 0 {
-            let steps = (min: 0.0, max: Double(AppConfig.shared.targetSteps), current: 99999.5)
-            let entry = SimpleEntry(date: currentDate, url: url!, steps: steps, isRunning: false, timer: Date())
-            entries.append(entry)
-        }
-        
-        let refreshDate = Calendar.current.date(byAdding: .second, value: 10, to: currentDate)!
-        
-        let timeline = Timeline(entries: entries, policy: .after(refreshDate))
-        completion(timeline)
+        workoutManager.queryWidgetSteps(completion: { stepCount, error in
+            
+            let s = (min: 0, max: AppConfig.shared.targetSteps, current: Int(stepCount), error: error)
+            let entrie = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: s, isRunning: false, timer: Date())
+            
+            let timeline = Timeline(entries: [entrie], policy: .after(nextUpdate))
+            completion(timeline)
+            
+        })
     }
 
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let url: URL
-    let steps: (min: Double, max: Double, current: Double)
+    let nextUpdate: Date
+    let url: URL?
+    let steps: (min: Int , max: Int , current: Int, error: Error?)
     let isRunning: Bool
     let timer: Date
 }
@@ -96,12 +90,12 @@ struct StopWatchComplicationEntryView : View {
     }
     
     @ViewBuilder
-    func Circular(steps: (min: Double, max: Double, current: Double)) -> some View{
+    func Circular(steps: (min: Int, max: Int, current: Int, error: (any Error)?)) -> some View{
         VStack(spacing: 1) {
             
             let gradient = Gradient(colors: [.white.opacity(0.5), AppConfig.shared.background])
             
-            Gauge(value: steps.current, in: steps.min...steps.max) {
+            Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                 Image( systemName: entry.isRunning ? "stop.fill" : "record.circle" )
             } currentValueLabel: {
                 if entry.isRunning {
@@ -118,14 +112,14 @@ struct StopWatchComplicationEntryView : View {
     }
     
     @ViewBuilder
-    func Corner(steps: (min: Double, max: Double, current: Double)) -> some View {
+    func Corner(steps: (min: Int, max: Int, current: Int, error: (any Error)?)) -> some View {
         ZStack {
             
             Image("prothesis")
                 .imageScale(.large)
                 .font(.system(size: 30))
                 .widgetLabel {
-                    Gauge(value: steps.current, in: steps.min...steps.max) {
+                    Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                         Label("Speed", systemImage: "gauge")
                     } currentValueLabel: {
                       Text("\(steps.current)")
@@ -144,7 +138,7 @@ struct StopWatchComplicationEntryView : View {
     }
     
     @ViewBuilder
-    func Rectangular(steps: (min: Double, max: Double, current: Double)) -> some View {
+    func Rectangular(steps: (min: Int, max: Int, current: Int, error: (any Error)?)) -> some View {
         ZStack {
             VStack(alignment: .leading, spacing: 5) {
 
@@ -183,18 +177,12 @@ struct StopWatchComplicationEntryView : View {
                 }
                 
                 HStack {
-                    //Image(systemName: "figure.walk")
                     
                     VStack {
-                        /*Gauge(value: 25, in: 0...100) {
-                            
-                        }
-                        .gaugeStyle(.accessoryLinearCapacity)
-                        .tint(gradient)*/
-      
+                        
                         let gradient = Gradient(colors: [.white.opacity(0.5), AppConfig.shared.background])
                         
-                        Gauge(value: steps.current, in: steps.min...steps.max) {
+                        Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                         } currentValueLabel: {
                             
                         }
@@ -202,12 +190,14 @@ struct StopWatchComplicationEntryView : View {
                         .tint(gradient)
                        
                         HStack {
-                            Text("\(Int(steps.current)) Schritte heute")
+                            Text("\(Int(steps.current)) Schritte")
                                 .font(.system(size: 10).bold())
+                                .padding(.leading, 5)
                             
                             Spacer()
                             
-                            Text(entry.date.formatteTime(time: "HH:mm:ss")).font(.system(size: 10).bold())
+                            Text("Update: " + entry.date.formatteTime(time: "HH:mm")).font(.system(size: 10).bold())
+                                .padding(.trailing, 5)
                         }
                         
                     }
@@ -221,7 +211,7 @@ struct StopWatchComplicationEntryView : View {
     }
     
     @ViewBuilder
-    func Inline(steps: (min: Double, max: Double, current: Double)) -> some View {
+    func Inline(steps: (min: Int, max: Int, current: Int, error: (any Error)?)) -> some View {
         ZStack {
             
             VStack(spacing: 2) {
@@ -256,25 +246,32 @@ struct StopWatchComplication: Widget {
 }
 
 struct StopWatchComplication_Previews: PreviewProvider {
+    static var nextUpdate: Date {
+        return Calendar.current.date(byAdding: .minute, value: 1, to: Date())!
+    }
+
+    static var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
+        return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
+    }
+    
+    static var supportedFamilies:[(widget: WidgetFamily, name: String)] = [
+        (widget: .accessoryCircular, name: "Circular"),
+        (widget: .accessoryRectangular, name: "Regangular"),
+        (widget: .accessoryInline, name: "Inline")
+    ]
+    
     static var previews: some View {
         let url = URL(string: "ProProthese://pain")
-        let entry = SimpleEntry(date: Date(), url: url!, steps: (min: 0.0, max: 10000.0, current: 3594.0), isRunning: true, timer: Date())
+        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url!, steps: dummySteps, isRunning: true, timer: Date())
         Group {
-            StopWatchComplicationEntryView(entry: entry)
-                .previewContext(WidgetPreviewContext(family: .accessoryCircular))
-                .previewDisplayName("accessoryCircular")
-            
-            StopWatchComplicationEntryView(entry: entry)
-                .previewContext(WidgetPreviewContext(family: .accessoryCorner))
-                .previewDisplayName("accessoryCorner")
-            
-            StopWatchComplicationEntryView(entry: entry)
-                .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
-                .previewDisplayName("accessoryRectangular")
-            
-            StopWatchComplicationEntryView(entry: entry)
-                .previewContext(WidgetPreviewContext(family: .accessoryInline))
-                .previewDisplayName("accessoryInline")
+           
+            ForEach(supportedFamilies, id:\.0) { item in
+                StopWatchComplicationEntryView(
+                    entry: entry
+                )
+                .previewContext(WidgetPreviewContext(family: item.widget))
+                .previewDisplayName("\(item.name)")
+            }
         }
     }
 }
