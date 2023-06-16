@@ -9,14 +9,17 @@ import SwiftUI
 
 struct TabStack: View {
     @Namespace var TabbarAnimation
-    
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject private var tabManager: TabManager
     @EnvironmentObject var cal: MoodCalendar
     @EnvironmentObject var event: EventManager
     @EnvironmentObject var pain: PainViewModel
     @EnvironmentObject var wsvm: WorkoutStatisticViewModel
+    @EnvironmentObject var loginViewModel: LoginViewModel
     
     @StateObject var stopWatchProvider = StopWatchProvider()
+    
+    @Binding var deepLink:URL?
     
     @Binding var activeTab:Tab
     @Binding var activeSubTab:SubTab
@@ -33,16 +36,7 @@ struct TabStack: View {
                     .foregroundColor(activeSubTab == .feeling ? .yellow : .yellow.opacity(0.8))
                     .frame(width: 28, height: 28)
                     .onTapGesture{
-                        withAnimation(.easeInOut(duration: 0.3)){
-                            showSubTab = false
-                            activeTab = .healthCenter
-                            cal.isCalendar = true
-                            cal.addFeelingDate = Date()
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            cal.isFeelingSheet = true
-                            tabManager.workoutTab = .feelings
-                        }
+                        newFeeling(moodCalendar: cal, tabManager: tabManager, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
                 
                 Image(systemName: SubTab.stopWatch.TabIcon())
@@ -53,16 +47,7 @@ struct TabStack: View {
                     .frame(width: 28, height: 28)
                     .offset(y: -20)
                     .onTapGesture{
-                        if stopWatchProvider.recorderState != .started {
-                            stopWatchProvider.recorderState = .started
-                            stopWatchProvider.startRecording()
-                        }
-                        
-                        withAnimation(.easeInOut(duration: 0.3))   {
-                            showSubTab = false
-                            activeTab = .stopWatch
-                        }
-                        
+                        startStopWatch(stopWatchProvider: stopWatchProvider, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
                 
                 Image(systemName: SubTab.pain.TabIcon())
@@ -73,15 +58,7 @@ struct TabStack: View {
                     .frame(width: 28, height: 28)
                     .offset(y: -20)
                     .onTapGesture{
-                        withAnimation(.easeInOut(duration: 0.3)){
-                            showSubTab = false
-                            activeTab = .pain
-                            pain.showList = true
-                            pain.addPainDate = Date()
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            pain.isPainAddSheet = true
-                        }
+                       newPain(painViewModel: pain, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
                 
                 Image(systemName: SubTab.event.TabIcon())
@@ -91,14 +68,7 @@ struct TabStack: View {
                     .foregroundColor(activeSubTab == .event ? .yellow : .yellow.opacity(0.8))
                     .frame(width: 28, height: 28)
                     .onTapGesture{
-                        withAnimation(.easeInOut(duration: 0.3))   {
-                            showSubTab = false
-                            activeTab = .event
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            event.isAddEventSheet = true
-                            event.addEventStarDate = Date()
-                        }
+                        newEvent(eventManager: event, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
             }
             .padding(.bottom)
@@ -173,12 +143,101 @@ struct TabStack: View {
             .padding()
             .background(AppConfig().backgroundLabel.opacity(0.1))
         }
+        .onAppear{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: {
+                print("tabStack \(String(describing: deepLink))")
+                if deepLink?.host == "feeling" {
+                    
+                    withAnimation(.easeInOut(duration: 0.8)){
+                        self.showSubTab = false
+                        self.activeTab = .healthCenter
+                        cal.isCalendar = true
+                        cal.addFeelingDate = Date()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        cal.isFeelingSheet = true
+                    }
+                    
+                } else if deepLink?.host == "pain" {
+                    newPain(painViewModel: pain, showSubTab: $showSubTab, activeTab: $activeTab)
+                    print("newPain")
+                } else if deepLink?.host == "stopWatch" {
+                    startStopWatch(stopWatchProvider: stopWatchProvider, showSubTab: $showSubTab, activeTab: $activeTab)
+                    print("startStopWatch")
+                }
+            })
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .inactive {
+                self.showSubTab = false
+                cal.isFeelingSheet = false
+                pain.isPainAddSheet = false
+            } else if newPhase == .background {
+                self.showSubTab = false
+                cal.isFeelingSheet = false
+                pain.isPainAddSheet = false
+            }
+        }
+    }
+    
+    func newFeeling(moodCalendar: MoodCalendar, tabManager: TabManager, showSubTab: Binding<Bool>, activeTab: Binding<Tab>){
+        tabManager.workoutTab = .feelings
+        withAnimation(.easeInOut(duration: 0.8)){
+            self.showSubTab = false
+            self.activeTab = .healthCenter
+            moodCalendar.isCalendar = true
+            moodCalendar.addFeelingDate = Date()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            moodCalendar.isFeelingSheet = true
+        }
+    }
+    
+    func startStopWatch(stopWatchProvider: StopWatchProvider, showSubTab: Binding<Bool>, activeTab: Binding<Tab>) {
+        
+        if stopWatchProvider.recorderFetchStartTime() != nil {
+            stopWatchProvider.stopRecording()
+            
+            withAnimation(.easeInOut(duration: 0.3))   {
+                self.showSubTab = false
+                self.activeTab = .healthCenter
+            }
+        } else {
+            if stopWatchProvider.recorderState != .started {
+                stopWatchProvider.recorderState = .started
+                stopWatchProvider.startRecording()
+            }
+            
+            withAnimation(.easeInOut(duration: 0.3))   {
+                self.showSubTab = false
+                self.activeTab = .stopWatch
+            }
+        }
+    }
+    
+    func newPain(painViewModel: PainViewModel, showSubTab: Binding<Bool>, activeTab: Binding<Tab>) {
+        withAnimation(.easeInOut(duration: 0.8)){
+            self.showSubTab = false
+            self.activeTab = .pain
+            painViewModel.showList = true
+            painViewModel.addPainDate = Date()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            painViewModel.isPainAddSheet = true
+        }
+    }
+    
+    func newEvent(eventManager: EventManager, showSubTab: Binding<Bool>, activeTab: Binding<Tab>){
+        withAnimation(.easeInOut(duration: 0.8)){
+            self.showSubTab = false
+            self.activeTab = .event
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            eventManager.isAddEventSheet = true
+            eventManager.addEventStarDate = Date()
+        }
     }
 }
-/*
-struct TabStack_Previews: PreviewProvider {
-    static var previews: some View {
-        TabStack(activeTab: .constant(.event), activeSubTab: .constant(.stopWatch))
-    }
-}
-*/
+
+
+

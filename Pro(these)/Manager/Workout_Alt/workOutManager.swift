@@ -205,19 +205,3 @@ extension WorkoutManager {
     }
     
 }
-
-// Models
-struct Times: Identifiable, Hashable {
-    let id = UUID()
-    let startDate: Date
-    let duration: Double
-}
-
-struct WorkoutDataPacked: Identifiable {
-    var id = UUID()
-    var avg: Int
-    var avgName: String
-    var weekNr: Int
-    var data: [ChartData]
-    
-}

@@ -27,7 +27,7 @@ struct PainProvider: TimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = PainSimpleEntry(date: Date(), url: url)
+            let entry = PainSimpleEntry(date: entryDate, url: url)
             entries.append(entry)
         }
 
@@ -60,6 +60,7 @@ struct ProProtheseWidgetPainEntryView : View {
                         VStack {
                             
                             Text("Hey, hast du Schmerzen heute?")
+                                .font(.caption.bold())
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
                             

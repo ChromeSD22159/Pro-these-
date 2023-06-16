@@ -57,21 +57,28 @@ struct ChartView: View {
         // Set Date, Extrakt last 7 Days and set showing Steps to the last StepCount (Today)
         .onAppear{
             DispatchQueue.main.async {
-                currentDate = Date()
-                currentWeek = extractWeekByDate(currentDate: currentDate)
-                currentSteps = Int(Steps.last?.value ?? -1)
+                withAnimation(.easeInOut.delay(0.5)) {
+                    currentDate = Date()
+                    currentWeek = extractWeekByDate(currentDate: Date())
+                    currentSteps = Int(Steps.last?.value ?? -1)
+                }
             }
         }
         // Change the Selected Day, search steps for today and update selected StepCount
         .onChange(of: currentDate, perform: { newDate in
-            currentSteps = Int(Steps.first(where: { Calendar.current.isDate($0.date, inSameDayAs: newDate) })?.value ?? -2)
+            withAnimation(.easeInOut.delay(0.5)) {
+               currentSteps = Int(Steps.first(where: { Calendar.current.isDate($0.date, inSameDayAs: newDate) })?.value ?? 0)
+            }
         })
         // Set Date, Extrakt last 7 Days and set showing Steps to the last StepCount (Today)
         .onChange(of: scenePhase, perform: { newPhase in
+            
            if newPhase == .active {
-                currentDate = Date()
-                currentWeek = extractWeekByDate(currentDate: currentDate)
-                currentSteps = Int(Steps.last?.value ?? -1)
+               withAnimation(.easeInOut.delay(0.5)) {
+                   currentDate = Date()
+                   currentWeek = extractWeekByDate(currentDate: currentDate)
+                   currentSteps = Int(Steps.last?.value ?? -1)
+               }
             }
         })
     }
@@ -93,7 +100,7 @@ struct ChartView: View {
     
     func getSteps(_ dates: [DateValue])  {
          
-        dates.map({ day in
+        let _ = dates.map({ day in
             let startDate = Calendar.current.startOfDay(for: day.date)
 
             vm.retrieveStepCount(today: startDate) { (steps, error) in
@@ -121,7 +128,7 @@ struct ChartView: View {
     
     @ViewBuilder
     func chart(geo: CGSize) -> some View {
-        Chart(currentWeek, id: \.self){ day in
+        Chart(){
             
             RuleMark(y: .value("Durchschnitt", avg ) )
                 .foregroundStyle(.yellow)
@@ -132,94 +139,106 @@ struct ChartView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.yellow)
                 }
-
-            let formDate = Calendar.current.date(byAdding: .hour, value: 12, to: day.date)!
-            
-            if let wk = Steps.first(where: { return Calendar.current.isDate($0.date, equalTo: day.date, toGranularity: .day) }) {
+            ForEach(currentWeek, id: \.self) { day in
+                let formDate = Calendar.current.date(byAdding: .hour, value: 12, to: day.date)!
                 
-                AreaMark(
-                    x: .value("Dates", formDate),
-                    y: .value("Steps", wk.value)
-                )
-                .interpolationMethod(.catmullRom)
-                .foregroundStyle(
-                    .linearGradient(
-                        colors: [
-                            Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0),
-                            Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.1),
-                            Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.5)
-                        ],
-                        startPoint: .bottom,
-                        endPoint: .top)
-                )
-                
-                LineMark(
-                    x: .value("Dates", formDate),
-                    y: .value("Steps", wk.value)
-                )
-                .interpolationMethod(.catmullRom)
-                .symbol {
-                    VStack(spacing: 5){
-                        if Calendar.current.isDate(formDate, inSameDayAs: currentDate) {
-                            Text("\( currentSteps )").font(.caption2).foregroundColor(.white)
-                        } else {
-                            Text("").font(.caption2)
-                        }
-                        
-                        ZStack{
-                            // only show when date is not in future
+                if let wk = Steps.first(where: { return Calendar.current.isDate($0.date, equalTo: day.date, toGranularity: .day) }) {
+                    
+                    AreaMark(
+                        x: .value("Dates", formDate),
+                        y: .value("Steps", wk.value)
+                    )
+                    .interpolationMethod(.catmullRom)
+                    .foregroundStyle(
+                        .linearGradient(
+                            colors: [
+                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0),
+                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.1),
+                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.5)
+                            ],
+                            startPoint: .bottom,
+                            endPoint: .top)
+                    )
+                    
+                    LineMark(
+                        x: .value("Dates", formDate),
+                        y: .value("Steps", wk.value)
+                    )
+                    .interpolationMethod(.catmullRom)
+                    .symbol {
+                        VStack(spacing: 5){
                             if Calendar.current.isDate(formDate, inSameDayAs: currentDate) {
-                                // show wenn selected date is same as item
-                                let (targetReached, _) = checkTargetSteps(steps: 0)
-                                
-                                Image(systemName: targetReached ? "hand.thumbsup.fill" : "circle.fill")
-                                    .scaleEffect(Calendar.current.isDate(formDate, inSameDayAs: currentDate) && targetReached ? 2.1 : targetReached ? 1.6 : 0.7)
-                                    .foregroundColor(targetReached ? .yellow : .white )
-                                    .shadow(color: .black, radius: 10)
-                                
+                                Text("\( currentSteps )").font(.caption2).foregroundColor(.white)
+                            } else {
+                                Text("").font(.caption2)
+                            }
+                            
+                            ZStack{
+                                // only show when date is not in future
                                 if Calendar.current.isDate(formDate, inSameDayAs: currentDate) {
-                                    if !targetReached {
-                                        Circle()
-                                        .fill(targetReached ? .white.opacity(0) : .white.opacity(0.5))
-                                        .frame(width: 20)
-                                        .shadow(radius: 2)
+                                    // show wenn selected date is same as item
+                                    let (targetReached, _) = checkTargetSteps(steps: 0)
+                                    
+                                    Image(systemName: targetReached ? "hand.thumbsup.fill" : "circle.fill")
+                                        .scaleEffect(Calendar.current.isDate(formDate, inSameDayAs: currentDate) && targetReached ? 2.1 : targetReached ? 1.6 : 0.7)
+                                        .foregroundColor(targetReached ? .yellow : .white )
+                                        .shadow(color: .black, radius: 10)
+                                    
+                                    if Calendar.current.isDate(formDate, inSameDayAs: currentDate) {
+                                        if !targetReached {
+                                            Circle()
+                                            .fill(targetReached ? .white.opacity(0) : .white.opacity(0.5))
+                                            .frame(width: 20)
+                                            .shadow(radius: 2)
+                                        }
                                     }
                                 }
                             }
                         }
+                        .offset(y: -10)
                     }
-                    .offset(y: -10)
+                    .foregroundStyle(
+                        .linearGradient(
+                            colors: [
+                                .yellow.opacity(0.5),
+                                .white.opacity(1)
+                            ],
+                            startPoint: .bottom,
+                            endPoint: .top)
+                    )
+                    .lineStyle(.init(lineWidth: 5))
+                    
                 }
-                .foregroundStyle(
-                    .linearGradient(
-                        colors: [
-                            .yellow.opacity(0.5),
-                            .white.opacity(1)
-                        ],
-                        startPoint: .bottom,
-                        endPoint: .top)
-                )
-                .lineStyle(.init(lineWidth: 5))
-                
             }
 
         }
         .chartXAxis {
-            AxisMarks(values: .automatic(desiredCount: 8))
+            //AxisMarks(values: .automatic(desiredCount: 8))
+            
+            AxisMarks(position: .bottom, values: currentWeek.map{ return $0.date } ) { axis in
+                AxisValueLabel() {
+                    VStack {
+                        if let axis = axis .as(Date.self) {
+                            Text(axis.convertDateToDayNames())
+                                .font(.system(size: 10).bold())
+                        }
+                    }
+                }
+            }
             
         }
         .chartYAxis {
             let max = Steps.map { $0.value }.max()
-
-            let test = Array(stride(from: 0, to: max ?? 20000, by: 2500))
+            
+            let test = Array(stride(from: 0, to: max ?? 25000, by: 2500))
             
             AxisMarks(position: .trailing, values: test) { axis in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.3, dash: [10]))
 
                 AxisValueLabel() {
-                    if let axis = axis.as(Int.self) {
-                        Text("\(axis)")
-                            .font(.system(size: 6))
+                    if let axis = axis.as(Double.self) {
+                        Text("\(String(format: "%.1f", axis / 1000)) k")
+                            .font(.system(size: 8))
                     }
                 }
             }

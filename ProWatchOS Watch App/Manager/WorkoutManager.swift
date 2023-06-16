@@ -9,8 +9,11 @@ import Foundation
 import HealthKit
 import CoreLocation
 import MapKit
+import SwiftUI
 
 class WorkoutManager: NSObject, ObservableObject {
+    
+    @AppStorage("trackGPS") var trackGPS:Bool = true
     
     var workoutTypes: [HKWorkoutActivityType] = [.cycling, .running, .walking]
     
@@ -29,6 +32,8 @@ class WorkoutManager: NSObject, ObservableObject {
             }
         }
     }
+    
+    @Published var selectedTab:WatchTab = .steps
     
     let healthStore = HKHealthStore()
     var routeBuilder: HKWorkoutRouteBuilder?
@@ -52,6 +57,7 @@ class WorkoutManager: NSObject, ObservableObject {
             HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
             HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
             HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)!,
+            HKQuantityType.quantityType(forIdentifier: .stepCount)!,
             HKObjectType.activitySummaryType(),
             HKSeriesType.workoutType(),
             HKSeriesType.workoutRoute()
@@ -62,7 +68,10 @@ class WorkoutManager: NSObject, ObservableObject {
             // Handle error.
         }
         
-        locationManager.requestAlwaysAuthorization()
+        if trackGPS {
+            locationManager.requestAlwaysAuthorization()
+        }
+        
     }
     
     
@@ -75,7 +84,10 @@ class WorkoutManager: NSObject, ObservableObject {
         configuration.activityType = workoutType
         configuration.locationType = .outdoor
         
-        setUpLocationManager()
+        if trackGPS {
+            setUpLocationManager()
+        }
+        
         
         do {
             session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
@@ -133,7 +145,7 @@ class WorkoutManager: NSObject, ObservableObject {
     
     @Published var workoutRoute: HKWorkoutRoute?
     
-    func retrieveStepCount(today:Date,completion: @escaping(Double?,Error?) -> ()) {
+    func retrieveStepCount(today:Date, completion: @escaping(Double?,Error?) -> ()) {
 
            let inputFormatter = DateFormatter()
            inputFormatter.dateFormat = "dd/MM/yyyy"
@@ -146,7 +158,7 @@ class WorkoutManager: NSObject, ObservableObject {
             components.second = -1
         
            //  Set the Predicates & Interval
-        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: today) , end: Calendar.current.date(byAdding: components, to: today)!, options: .strictStartDate)
+            let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: today) , end: Calendar.current.date(byAdding: components, to: today)!, options: .strictStartDate)
            var interval = DateComponents()
            interval.day = 1
            //print(predicate)
@@ -162,6 +174,7 @@ class WorkoutManager: NSObject, ObservableObject {
                if let myResult = result {
                    if let sum = myResult.sumQuantity() {
                        resultCount = sum.doubleValue(for: HKUnit.count())
+                       print(resultCount)
                    }
                     
                    DispatchQueue.main.async {
@@ -171,6 +184,24 @@ class WorkoutManager: NSObject, ObservableObject {
            }
            HKHealthStore().execute(query)
        }
+    
+    func queryWidgetSteps(completion: @escaping (Double, Error?) -> Void){
+        let stepQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)
+         
+        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: Date()), end: Date().endOfDay(), options: .strictStartDate)
+        
+        let query = HKStatisticsQuery(quantityType: stepQuantityType!, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            
+            guard let result = result, let sum = result.sumQuantity() else {
+                completion(0.0, error ?? nil)
+                return
+            }
+            
+            completion(sum.doubleValue(for: HKUnit.count()), error ?? nil)
+        }
+        
+        healthStore.execute(query)
+    }
 }
 
 // MARK: - HKWorkoutSessionDelegate
@@ -398,12 +429,20 @@ struct ChartData: Identifiable, Hashable {
     var value: Double
 }
 
-struct WorkoutDataPacked: Identifiable {
-    var id = UUID()
-    var avg: Int
-    var avgName: String
-    var weekNr: Int
-    var data: [ChartData]
-    
-}
 
+
+enum WatchTab: String {
+    case steps = "Steps"
+    case stopWatch = "StopWatch"
+    case nowPlaying = "NowPlaying"
+    
+    var id: Self { self }
+    
+    var title: String {
+        switch self {
+        case .steps : return "Steps"
+        case .stopWatch : return "StopWatch"
+        case .nowPlaying : return "NowPlaying"
+        }
+    }
+}

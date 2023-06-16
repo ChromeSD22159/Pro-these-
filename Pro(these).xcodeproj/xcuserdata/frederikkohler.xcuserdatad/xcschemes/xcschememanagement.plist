@@ -34,10 +34,20 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>ProProtheseWidgetExtension.xcscheme_^#shared#^_</key>
+		<key>ProProtheseWatchComplicationExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
+		</dict>
+		<key>ProProtheseWidgetExtension 1.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>ProProtheseWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
 		</dict>
 		<key>ProWatch Watch App.xcscheme_^#shared#^_</key>
 		<dict>
@@ -59,6 +69,11 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>StopWatchComplicationExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
 		<key>WidgetTestExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -72,6 +87,21 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>B615DF5E2A3B201F007C27E9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B697CF6A2A388B3900A4CD01</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B697CF912A3A043100A4CD01</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>B6AB58192A052BB8003D962B</key>
 		<dict>
 			<key>primary</key>

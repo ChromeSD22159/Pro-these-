@@ -226,7 +226,7 @@ struct feelingDayRow: View {
                         Text("").id("")
                         
                         ForEach(sortedFeelings, id: \.self) { feeling in
-                            let feel = feeling.date?.dateFormatte(date: "dd.MM.yy", time: "HH:mm")
+                            let _ = feeling.date?.dateFormatte(date: "dd.MM.yy", time: "HH:mm")
                             feelingRowItem(feeling: feeling, screenSize: screenSize)
                             
                         } // Foreach
@@ -263,7 +263,7 @@ struct feelingDayRow: View {
                         do {
                             try viewContext.save()
                         } catch {
-                            print("Eintrag vom \(d?.date) \(d?.time) gelöscht! ")
+                            print("Eintrag vom \(String(describing: d?.date)) \(String(describing: d?.time)) gelöscht! ")
                         }
                     }
                 } // FIXME: Add Share

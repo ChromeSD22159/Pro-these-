@@ -19,18 +19,21 @@ struct Pro_theseApp: App {
     let painViewModel = PainViewModel()
     @AppStorage("Days") var fetchDays:Int = 7
     @State private var LaunchScreen = true
+    @State var deepLink:URL?
     @StateObject private var loginViewModel = LoginViewModel()
     
     init() {
         pushNotificationManager.registerForPushNotifications()
+        HealthStoreProvider().setUpHealthRequest(healthStore: HKHealthStore(), readSteps: {
+            
+        })
     }
-    
     
     var body: some Scene {
         WindowGroup {
             ZStack{
                 if loginViewModel.appUnlocked {
-                    ContentView(loc: LocationProvider.shared.getLocation())
+                    ContentView(loc: LocationProvider.shared.getLocation(), deepLink: $deepLink)
                         .environment(\.managedObjectContext, persistenceController.container.viewContext)
                         .environmentObject(AppConfig())
                         .environmentObject(TabManager())
@@ -81,7 +84,18 @@ struct Pro_theseApp: App {
                     }
                 })
             }
-            
+            .onOpenURL { url in
+                print("onOpenURL1 \(String(describing: deepLink))")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    print("onOpenURL2 \(String(describing: deepLink))")
+                    if url.scheme == "ProProthese" {
+                        deepLink = url
+                    } else {
+                        deepLink = nil
+                    }
+                })
+            }
         }
     }
 }
+

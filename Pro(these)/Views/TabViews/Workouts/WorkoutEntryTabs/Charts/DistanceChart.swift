@@ -17,202 +17,202 @@ struct DistanceChart: View {
     var body: some View {
         VStack(spacing: 10) {
             
-            ChartSnapView(spacing: 0, trailingSpace: 0, index: $currentIndex, list: vm.CollectionWeeklyDistanz.sorted { $0.weekNr > $1.weekNr }.reversed(), content: { week in
-                GeometryReader { proxy in
-                    
-                    VStack{
-                        let extractedWeek = extractWeekByDate(weekDate: week.data.first?.date ?? Date())
+            
+            
+            VStack(alignment: .leading, spacing: 10){
+                ChartSnapView(spacing: 0, trailingSpace: 0, index: $currentIndex, list: vm.CollectionWeeklyDistanz.sorted { $0.weekNr > $1.weekNr }.reversed(), content: { week in
+                    GeometryReader { proxy in
                         
-                        Chart() {
+                        VStack{
+                            let extractedWeek = extractWeekByDate(weekDate: week.data.first?.date ?? Date())
                             
-                            RuleMark(y: .value("Durchschnitt", week.avg ) )
-                                .foregroundStyle(.yellow)
-                                .lineStyle(StrokeStyle(lineWidth: 0.5, dash: [8]))
-                                .annotation(position: .automatic, alignment: .leading, spacing: 10) {
-                                    Text("⌀ \(week.avg) m")
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.yellow)
-                                }
-                            
-                            ForEach(extractedWeek, id: \.self) { day in
-                                let formDate = Calendar.current.date(byAdding: .hour, value: 12, to: day)!
+                            Chart() {
                                 
-                                if let wk = week.data.first(where: { return Calendar.current.isDate($0.date, equalTo: day, toGranularity: .day) }) {
-                                    AreaMark(
-                                        x: .value("Dates", wk.date),
-                                        y: .value("Distanz", wk.value)
-                                    )
-                                    .interpolationMethod(.catmullRom)
-                                    .foregroundStyle(
-                                        .linearGradient(
-                                            colors: [
-                                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0),
-                                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.1),
-                                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.5)
-                                            ],
-                                            startPoint: .bottom,
-                                            endPoint: .top)
-                                    )
-                                    
-                                    LineMark(
-                                        x: .value("Dates", wk.date),
-                                        y: .value("Distanz", wk.value)
-                                    )
-                                    .interpolationMethod(.catmullRom)
-                                    .symbol {
-                                        VStack(spacing: 5){
-                                            if Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
-                                                Text("\( seperator(wk.value) )m").font(.caption2).foregroundColor(.white)
-                                            } else {
-                                                Text("").font(.caption2)
-                                            }
-                                            
-                                            ZStack{
-                                                // only show when date is not in future
-                                                if wk.date < Date().endOfDay() || Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
-                                                    // show wenn selected date is same as item
-                                                    Circle()
-                                                        .fill(.white)
-                                                        .frame(width: 10)
-                                                        .shadow(radius: 2)
-                                                    
-                                                    if Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
-                                                        Circle()
-                                                            .fill(.white.opacity(0.5))
-                                                            .frame(width: 20)
-                                                            .shadow(radius: 2)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        .offset(y: -10)
+                                RuleMark(y: .value("Durchschnitt", week.avg ) )
+                                    .foregroundStyle(.yellow)
+                                    .lineStyle(StrokeStyle(lineWidth: 0.5, dash: [8]))
+                                    .annotation(position: .automatic, alignment: .leading, spacing: 10) {
+                                        //Text("⌀ \(week.avg) m")
+                                        
+                                        Text("⌀ " + String(format: "%.1f", Double(week.avg) / 1000 ) + " km")
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.yellow)
                                     }
-                                    .foregroundStyle(
-                                        .linearGradient(
-                                            colors: [
-                                                .yellow.opacity(0.5),
-                                                .white.opacity(1)
-                                            ],
-                                            startPoint: .bottom,
-                                            endPoint: .top)
-                                    )
-                                    .lineStyle(.init(lineWidth: 5))
-                                } else {
-                                    AreaMark(
-                                        x: .value("Dates", formDate),
-                                        y: .value("Distanz", 0)
-                                    )
-                                    .interpolationMethod(.catmullRom)
-                                    .foregroundStyle(
-                                        .linearGradient(
-                                            colors: [
-                                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0),
-                                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.1),
-                                                Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.5)
-                                            ],
-                                            startPoint: .bottom,
-                                            endPoint: .top)
-                                    )
+                                
+                                ForEach(extractedWeek, id: \.self) { day in
+                                    let formDate = Calendar.current.date(byAdding: .hour, value: 12, to: day)!
                                     
-                                    LineMark(
-                                        x: .value("Dates", formDate),
-                                        y: .value("Distanz", 0)
-                                    )
-                                    .interpolationMethod(.catmullRom)
-                                    /* .symbol {
-                                        VStack(spacing: 5){
-                                            if Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
-                                                Text("\( seperator(0) )m").font(.caption2).foregroundColor(.white)
-                                            } else {
-                                                Text("").font(.caption2)
-                                            }
-                                            
-                                            ZStack{
+                                    if let wk = week.data.first(where: { return Calendar.current.isDate($0.date, equalTo: day, toGranularity: .day) }) {
+                                        AreaMark(
+                                            x: .value("Dates", wk.date),
+                                            y: .value("Distanz", wk.value)
+                                        )
+                                        .interpolationMethod(.catmullRom)
+                                        .foregroundStyle(
+                                            .linearGradient(
+                                                colors: [
+                                                    Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0),
+                                                    Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.1),
+                                                    Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.5)
+                                                ],
+                                                startPoint: .bottom,
+                                                endPoint: .top)
+                                        )
+                                        
+                                        LineMark(
+                                            x: .value("Dates", wk.date),
+                                            y: .value("Distanz", wk.value)
+                                        )
+                                        .interpolationMethod(.catmullRom)
+                                        .symbol {
+                                            VStack(spacing: 5){
+                                                if Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
+                                                    let km = wk.value / 1000
+                                                    Text(String(format: "%.1f", km) + " km").font(.caption2).foregroundColor(.white)
+                                                   // Text("\( seperator(wk.value) )m").font(.caption2).foregroundColor(.white)
+                                                } else {
+                                                    Text("").font(.caption2)
+                                                }
                                                 
-                                                // only show when date is not in future
-                                                if formDate < Date().endOfDay() || Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
-                                                    // show wenn selected date is same as item
-                                                    Circle()
-                                                        .fill(.white)
-                                                        .frame(width: 10)
-                                                        .shadow(radius: 2)
-                                                    
-                                                    if Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
+                                                ZStack{
+                                                    // only show when date is not in future
+                                                    if wk.date < Date().endOfDay() || Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
+                                                        // show wenn selected date is same as item
                                                         Circle()
-                                                            .fill(.white.opacity(0.5))
-                                                            .frame(width: 20)
+                                                            .fill(.white)
+                                                            .frame(width: 10)
                                                             .shadow(radius: 2)
+                                                        
+                                                        if Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
+                                                            Circle()
+                                                                .fill(.white.opacity(0.5))
+                                                                .frame(width: 20)
+                                                                .shadow(radius: 2)
+                                                        }
                                                     }
                                                 }
                                             }
+                                            .offset(y: -10)
                                         }
-                                        .offset(y: -10)
-                                    } */ // TESTBUG
-                                    .foregroundStyle(
-                                        .linearGradient(
-                                            colors: [
-                                                .yellow.opacity(0.5),
-                                                .white.opacity(1)
-                                            ],
-                                            startPoint: .bottom,
-                                            endPoint: .top)
-                                    )
-                                    .lineStyle(.init(lineWidth: 5))
+                                        .foregroundStyle(
+                                            .linearGradient(
+                                                colors: [
+                                                    .yellow.opacity(0.5),
+                                                    .white.opacity(1)
+                                                ],
+                                                startPoint: .bottom,
+                                                endPoint: .top)
+                                        )
+                                        .lineStyle(.init(lineWidth: 5))
+                                    } else {
+                                        AreaMark(
+                                            x: .value("Dates", formDate),
+                                            y: .value("Distanz", 0)
+                                        )
+                                        .interpolationMethod(.catmullRom)
+                                        .foregroundStyle(
+                                            .linearGradient(
+                                                colors: [
+                                                    Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0),
+                                                    Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.1),
+                                                    Color(red: 167/255, green: 178/255, blue: 210/255).opacity(0.5)
+                                                ],
+                                                startPoint: .bottom,
+                                                endPoint: .top)
+                                        )
+                                        
+                                        LineMark(
+                                            x: .value("Dates", formDate),
+                                            y: .value("Distanz", 0)
+                                        )
+                                        .interpolationMethod(.catmullRom)
+                                        .foregroundStyle(
+                                            .linearGradient(
+                                                colors: [
+                                                    .yellow.opacity(0.5),
+                                                    .white.opacity(1)
+                                                ],
+                                                startPoint: .bottom,
+                                                endPoint: .top)
+                                        )
+                                        .lineStyle(.init(lineWidth: 5))
+                                    }
                                 }
+
                             }
+                            .chartOverlay { proxy in
+                              GeometryReader { geometry in
+                                Rectangle().fill(.clear).contentShape(Rectangle())
+                                  .onTapGesture { location in
+                                      let origin = geometry[proxy.plotAreaFrame].origin
+                                      let location = CGPoint(
+                                          x: location.x - origin.x,
+                                          y: location.y - origin.y
+                                      )
+                                      
+                                      let (date, _) = proxy.value(at: location, as: (Date, Double).self)!
 
-                        }
-                        .chartOverlay { proxy in
-                          GeometryReader { geometry in
-                            Rectangle().fill(.clear).contentShape(Rectangle())
-                              .onTapGesture { location in
-                                  let origin = geometry[proxy.plotAreaFrame].origin
-                                  let location = CGPoint(
-                                      x: location.x - origin.x,
-                                      y: location.y - origin.y
-                                  )
-                                  
-                                  let (date, _) = proxy.value(at: location, as: (Date, Double).self)!
-
-                                  withAnimation {
-                                      // only update when the date is not in future
-                                      if date < Date().endOfDay() || Calendar.current.isDate(date, inSameDayAs: vm.currentDay) {
-                                          vm.currentDay = date
+                                      withAnimation {
+                                          // only update when the date is not in future
+                                          if date < Date().endOfDay() || Calendar.current.isDate(date, inSameDayAs: vm.currentDay) {
+                                              vm.currentDay = date
+                                          }
                                       }
                                   }
-                              }
-                              
-                           }
-                        }
-                        .chartXAxis {
-                            AxisMarks(values: .automatic(desiredCount: 7))
-                            
-                        }
-                        .chartYAxis {
-                            let max = (week.data.map { $0.value }.max() ?? -44444) + 2500
-                           
-                            let test = Array(stride(from: 0, to: max, by: 2500))
-                            
-                            AxisMarks(position: .trailing, values: test) { axis in
-                                AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.3, dash: [10]))
-
-                                AxisValueLabel() {
-                                    if let axis = axis.as(Int.self) {
-                                        Text("\(axis)")
-                                            .font(.system(size: 6))
+                                  
+                               }
+                            }
+                            .chartXAxis {
+                                //AxisMarks(values: .automatic(desiredCount: 7))
+                                
+                                let dates = extractWeekByDate(weekDate: week.data.first?.date ?? Date())
+                                
+                                AxisMarks(position: .bottom, values: dates) { axis in
+                                    AxisValueLabel() {
+                                        if let axis = axis.as(Date.self) {
+                                            VStack {
+                                                Text(axis.convertDateToDayNames())
+                                                    .font(.system(size: 10).bold())
+                                                
+                                                Text(axis.dateFormatte(date: "(dd.MM)", time: "HH:mm").date)
+                                                    .font(.system(size: 8))
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            .chartYAxis {
+                                let max = (week.data.map { $0.value }.max() ?? -44444) + 2500
+                               
+                                let test = Array(stride(from: 0, to: max, by: 2500))
+                                
+                                AxisMarks(position: .trailing, values: test) { axis in
+                                    AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.3, dash: [10]))
+
+                                    AxisValueLabel() {
+                                        if let axis = axis.as(Double.self) {
+                                            Text("\(String(format: "%.1f", axis / 1000)) km")
+                                                .font(.system(size: 8))
+                                        }
+                                    }
+                                }
+                            }
+                            .chartYScale(range: .plotDimension(padding: 30))
+                            .chartXScale(range: .plotDimension(padding: 30))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
-                        .chartYScale(range: .plotDimension(padding: 20))
-                        .chartXScale(range: .plotDimension(padding: 30))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(height: 200)
+                        .padding(.horizontal)
+                       
                     }
-                    .frame(height: 200)
-                   
-                }
-            })
+                })
+            }
+            .foregroundColor(.white)
+            .background(.ultraThinMaterial)
+            .cornerRadius(20)
+            .frame(maxWidth: .infinity, maxHeight: 250)
+            .padding(.horizontal)
             
             // Indicator
             HStack {

@@ -57,6 +57,7 @@ struct ProProtheseWidgetFeelingEntryView : View {
                         VStack {
                             
                             Text("Hey, Wie fühlst du dich heute?")
+                                .font(.caption.bold())
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
                             

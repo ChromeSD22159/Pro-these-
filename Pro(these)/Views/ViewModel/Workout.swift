@@ -18,3 +18,17 @@ struct Workout: Identifiable, Hashable {
     let workoutRouteSample: HKSample?
     let route: [CLLocation]?
 }
+
+struct WorkoutDataPacked: Identifiable {
+    var id = UUID()
+    var avg: Int
+    var avgName: String
+    var weekNr: Int
+    var data: [ChartData]
+}
+
+struct Times: Identifiable, Hashable {
+    let id = UUID()
+    let startDate: Date
+    let duration: Double
+}

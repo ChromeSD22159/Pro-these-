@@ -13,6 +13,14 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
+
+        
+        for _ in 0..<10 {
+            let myFeeling = Feeling(context: viewContext)
+            myFeeling.name = "Test List"
+            myFeeling.name = "feeling_\(Int.random(in: 1..<5))"
+        }
+        
         do {
             try viewContext.save()
         } catch {

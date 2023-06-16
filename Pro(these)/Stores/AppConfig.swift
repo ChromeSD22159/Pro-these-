@@ -25,6 +25,10 @@ class AppConfig: ObservableObject {
     var backgroundRadial    = RadialGradient(gradient: Gradient(colors: [ Color(red: 5/255, green: 5/255, blue: 15/255).opacity(0.7), Color(red: 5/255, green: 5/255, blue: 15/255).opacity(1) ]), center: .center, startRadius: 50, endRadius: 300)
     var backgroundGradientDark  = LinearGradient(colors: [Color(red: 5/255, green: 10/255, blue: 28/255), Color(red: 4/255, green: 5/255, blue: 19/255)], startPoint: .top, endPoint: .bottom)
     
+    var gaugeGradientBad = LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255)], startPoint: .top, endPoint: .bottom)
+    var gaugeGradientGood = LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255)], startPoint: .top, endPoint: .bottom)
+    
+    
     @AppStorage("Days") var fetchDays:Int = 7
 
     // MARK: PERSONAL

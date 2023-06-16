@@ -58,6 +58,7 @@ struct ProProthesenWidgetStopWatchEntryView : View {
                         VStack {
                             
                             Text("Kontrolliere deinen Prothesentimer.")
+                                .font(.caption.bold())
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
 

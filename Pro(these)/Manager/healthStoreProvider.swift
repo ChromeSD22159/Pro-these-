@@ -13,8 +13,28 @@ class HealthStoreProvider: NSObject, ObservableObject {
     let healthStore = HKHealthStore()
     
     func setUpHealthRequest(healthStore: HKHealthStore, readSteps: @escaping () -> Void) {
-        if HKHealthStore.isHealthDataAvailable(), let stepCount = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) {
-            healthStore.requestAuthorization(toShare: [stepCount], read: [stepCount]) { success, error in
+        
+        // The quantity type to write to the health store.
+        let typesToShare: Set = [
+            HKQuantityType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        // The quantity types to read from the health store.
+        let typesToRead: Set = [
+            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+            HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)!,
+            HKQuantityType.quantityType(forIdentifier: .stepCount)!,
+            HKObjectType.activitySummaryType(),
+            HKSeriesType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        if HKHealthStore.isHealthDataAvailable() {
+            healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
                 if success {
                     readSteps()
                 }
@@ -37,6 +57,7 @@ extension HealthStoreProvider {
             
             var data:[ChartData] = []
             var name = ""
+            
             results?.enumerateStatistics(from: week.start, to: week.end)
                { (statistics, stop) in
                    if let quantity = statistics.sumQuantity() {
@@ -84,7 +105,7 @@ extension HealthStoreProvider {
     func queryDayCountbyType(date: Date, type: HKQuantityTypeIdentifier ,completion: @escaping (Double) -> Void) {
         guard let stepQuantityType = HKQuantityType.quantityType(forIdentifier: type) else { return }
          
-        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: date), end: Calendar.current.endOfDay(for: date), options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: date), end: endOfDay(date), options: .strictStartDate)
         
         let query = HKStatisticsQuery(quantityType: stepQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             
@@ -92,6 +113,8 @@ extension HealthStoreProvider {
                 completion(0.0)
                 return
             }
+            
+            print(result, error)
             
             if type == .stepCount {
                 completion(sum.doubleValue(for: HKUnit.count()))
@@ -105,6 +128,24 @@ extension HealthStoreProvider {
         healthStore.execute(query)
     }
 
+    func queryWidgetSteps(completion: @escaping (Double, Error?) -> Void){
+        let stepQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)
+         
+        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: Date()), end: endOfDay(Date()), options: .strictStartDate)
+        
+        let query = HKStatisticsQuery(quantityType: stepQuantityType!, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            
+            guard let result = result, let sum = result.sumQuantity() else {
+                completion(0.0, error ?? nil)
+                return
+            }
+            
+            completion(sum.doubleValue(for: HKUnit.count()), error ?? nil)
+        }
+        
+        healthStore.execute(query)
+    }
+    
     func getWorkouts(week: DateInterval, workout: HKSource, completion: @escaping (WorkoutDataPacked) -> Void) {        
         var predicate = HKQuery.predicateForObjects(from: .default())
         
@@ -167,4 +208,5 @@ struct ChartData: Identifiable, Hashable {
     var date: Date
     var value: Double
 }
+
 

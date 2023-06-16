@@ -31,7 +31,7 @@ struct SessionTabView: View {
            let _ = TimerView()
         }
         .tabViewStyle(
-          PageTabViewStyle(indexDisplayMode: isLuminanceReduced ? .never : .automatic)
+            PageTabViewStyle(indexDisplayMode: isLuminanceReduced ? .never : .automatic)
         )
         .onChange(of: isLuminanceReduced) { _ in
             let _ = MetricsView()

@@ -17,6 +17,8 @@ struct ContentView: View {
             latitudinalMeters: 750, longitudinalMeters: 750
     )
     
+    @Binding var deepLink: URL?
+    
     @EnvironmentObject private var tabManager: TabManager
     @EnvironmentObject private var healthStore: HealthStorage
     @EnvironmentObject private var cal: MoodCalendar
@@ -95,7 +97,7 @@ struct ContentView: View {
                         }
                         
                         // NavBar
-                        TabStack(activeTab: $activeTab, activeSubTab: $activeSubTab, showSubTab: $showSubTab)
+                        TabStack(deepLink: $deepLink, activeTab: $activeTab, activeSubTab: $activeSubTab, showSubTab: $showSubTab)
                             .frame(height: 70)
                     }
                     .foregroundColor(AppConfig().foreground)
@@ -106,17 +108,12 @@ struct ContentView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            
         }
         // Settings Sheet
         .blurredSheet(.init(.ultraThinMaterial), show: $tabManager.isSettingSheet, onDismiss: {}, content: {
             SettingsSheet()
         })
-        // Deeplink from Widget
-        .onOpenURL { url in
-            // Handle this deep link URL
-            handleWidgetDeepLink(url)
-            doAction(url)
-        }
         // Overlay
         .overlay(overlay ? Launch_Screen().opacity(1) : Launch_Screen().opacity(0), alignment: .topTrailing)
         // Set EntryView from User Settings
@@ -137,66 +134,6 @@ struct ContentView: View {
             }
         }
     }
-    
-    func doAction(_ url: URL){
-        if url.host == "feeling" {
-            withAnimation(.easeInOut(duration: 0.3)){
-                showSubTab = false
-                activeTab = .healthCenter
-                tabManager.workoutTab = .feelings
-                cal.isCalendar = true
-                cal.addFeelingDate = Date()
-                cal.isFeelingSheet = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                cal.isFeelingSheet = true
-                print("from feeling widget")
-            }
-            
-            
-        } else if url.host == "pain" {
-            print("from pain widget")
-            withAnimation(.easeInOut(duration: 0.3)){
-                showSubTab = false
-                activeTab = .pain
-                pain.showList = true
-                pain.addPainDate = Date()
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                pain.showList = true
-                pain.isPainAddSheet = true
-            }
-        } else if url.host == "stopWatch" {
-            /*
-             if stopWatchProvider.recorderState != .started {
-                 stopWatchProvider.recorderState = .started
-                 stopWatchProvider.startRecording()
-             }
-             */
-            
-            withAnimation(.easeInOut(duration: 0.3))   {
-                showSubTab = false
-                activeTab = .stopWatch
-            }
-        } else {
-            activeTab = url.tabIdentifier ?? .healthCenter
-        }
-    }
-    
-    private func handleWidgetDeepLink(_ url: URL) {
-            
-            guard
-                let scheme = url.scheme,
-                let host = url.host else {
-                // Invalid URL format
-                return
-            }
-            
-            guard scheme == "ProProthese" else {
-                // The deep link is not trigger by widget
-                return 
-            }
-            
-            print(url)
-        }
 }
+
+

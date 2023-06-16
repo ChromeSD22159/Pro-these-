@@ -41,8 +41,27 @@
 		B612E31B29FAA6AA00C6BF88 /* SettingChangeName.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E31A29FAA6AA00C6BF88 /* SettingChangeName.swift */; };
 		B612E31F29FAAC8E00C6BF88 /* SettingSetStepTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E31E29FAAC8E00C6BF88 /* SettingSetStepTarget.swift */; };
 		B612E32129FABF6F00C6BF88 /* HeaderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E32029FABF6F00C6BF88 /* HeaderComponent.swift */; };
+		B615DF572A3B1459007C27E9 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6525FEF2A0C02E60024B9D2 /* WorkoutManager.swift */; };
+		B615DF602A3B201F007C27E9 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F9492F29F7F92600BBE3A2 /* WidgetKit.framework */; };
+		B615DF612A3B201F007C27E9 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F9493129F7F92700BBE3A2 /* SwiftUI.framework */; };
+		B615DF642A3B201F007C27E9 /* StopWatchComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615DF632A3B201F007C27E9 /* StopWatchComplication.swift */; };
+		B615DF662A3B2020007C27E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B615DF652A3B2020007C27E9 /* Assets.xcassets */; };
+		B615DF6A2A3B2020007C27E9 /* StopWatchComplicationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B615DF5F2A3B201F007C27E9 /* StopWatchComplicationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B615DF6E2A3B20B4007C27E9 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9491129F6EEFA00BBE3A2 /* Tab.swift */; };
+		B615DF6F2A3B20BD007C27E9 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9490E29F6EECC00BBE3A2 /* AppConfig.swift */; };
+		B615DF742A3B596B007C27E9 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6525FEF2A0C02E60024B9D2 /* WorkoutManager.swift */; };
+		B629A7172A3BE104002D57D4 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DED2A17D52E00167F9B /* DateExtension.swift */; };
+		B629A7182A3BE105002D57D4 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DED2A17D52E00167F9B /* DateExtension.swift */; };
+		B629A7192A3BE105002D57D4 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DED2A17D52E00167F9B /* DateExtension.swift */; };
+		B629A71A2A3BE106002D57D4 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DED2A17D52E00167F9B /* DateExtension.swift */; };
+		B629A71C2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */; };
 		B63874F62A33A0F0008500A3 /* EventCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63874F52A33A0F0008500A3 /* EventCalendar.swift */; };
 		B63874F82A33A153008500A3 /* EventCalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63874F72A33A153008500A3 /* EventCalendarViewModel.swift */; };
+		B64FE9A42A3C5C4B002B51F7 /* healthStoreProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DEF2A17D59600167F9B /* healthStoreProvider.swift */; };
+		B64FE9A52A3C5EA4002B51F7 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260032A0E5FBC0024B9D2 /* Workout.swift */; };
+		B64FE9A62A3C5EA8002B51F7 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260032A0E5FBC0024B9D2 /* Workout.swift */; };
+		B64FE9A72A3C5EA9002B51F7 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260032A0E5FBC0024B9D2 /* Workout.swift */; };
+		B64FE9A82A3C5EA9002B51F7 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260032A0E5FBC0024B9D2 /* Workout.swift */; };
 		B6525FD52A0AEF8F0024B9D2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6525FD42A0AEF8F0024B9D2 /* LaunchScreenView.swift */; };
 		B6525FD62A0AFD530024B9D2 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9491129F6EEFA00BBE3A2 /* Tab.swift */; };
 		B6525FE52A0BE25D0024B9D2 /* FitnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6525FE42A0BE25D0024B9D2 /* FitnessView.swift */; };
@@ -57,6 +76,9 @@
 		B65260022A0D5C5C0024B9D2 /* workOutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260012A0D5C5C0024B9D2 /* workOutViewModel.swift */; };
 		B65260042A0E5FBC0024B9D2 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260032A0E5FBC0024B9D2 /* Workout.swift */; };
 		B65260062A0E83A20024B9D2 /* BackgroundBlurTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65260052A0E83A20024B9D2 /* BackgroundBlurTop.swift */; };
+		B66670EC2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66670EB2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift */; };
+		B66670ED2A3C96C9009CB426 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F948F929F6ED8700BBE3A2 /* Persistence.swift */; };
+		B66670EE2A3C96FF009CB426 /* Pro_these_.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B6F948FB29F6ED8700BBE3A2 /* Pro_these_.xcdatamodeld */; };
 		B66F2C4029FC50C5006CA21E /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F2C3F29FC50C5006CA21E /* Counter.swift */; };
 		B66F2C4229FC50E2006CA21E /* SessionDelegater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F2C4129FC50E2006CA21E /* SessionDelegater.swift */; };
 		B66F2C4629FD0649006CA21E /* WatchConnectivityProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F2C4529FD0649006CA21E /* WatchConnectivityProvider.swift */; };
@@ -97,6 +119,16 @@
 		B697CF802A388BFF00A4CD01 /* ProProtheseWidgetFeeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF7E2A388BF800A4CD01 /* ProProtheseWidgetFeeling.swift */; };
 		B697CF842A38957C00A4CD01 /* ProProthesenWidgetStopWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */; };
 		B697CF882A3898F300A4CD01 /* ProProtheseWidgetPain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */; };
+		B697CF8A2A39223B00A4CD01 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF892A39223B00A4CD01 /* URL.swift */; };
+		B697CF932A3A043200A4CD01 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F9492F29F7F92600BBE3A2 /* WidgetKit.framework */; };
+		B697CF942A3A043200A4CD01 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F9493129F7F92700BBE3A2 /* SwiftUI.framework */; };
+		B697CF972A3A043200A4CD01 /* ProProtheseWatchComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = B697CF962A3A043200A4CD01 /* ProProtheseWatchComplication.swift */; };
+		B697CF992A3A043400A4CD01 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B697CF982A3A043400A4CD01 /* Assets.xcassets */; };
+		B697CF9D2A3A043400A4CD01 /* ProProtheseWatchComplicationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B697CF922A3A043100A4CD01 /* ProProtheseWatchComplicationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B697CFA22A3A0A8400A4CD01 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9490E29F6EECC00BBE3A2 /* AppConfig.swift */; };
+		B697CFA32A3A0AD200A4CD01 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9491129F6EEFA00BBE3A2 /* Tab.swift */; };
+		B6AB87072A3C693300D3D3BC /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9490E29F6EECC00BBE3A2 /* AppConfig.swift */; };
+		B6AB87082A3C693E00D3D3BC /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9491129F6EEFA00BBE3A2 /* Tab.swift */; };
 		B6B487662A13B79100263A57 /* EventProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B487652A13B79100263A57 /* EventProvider.swift */; };
 		B6B487692A14DF8B00263A57 /* FeelingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B487682A14DF8B00263A57 /* FeelingView.swift */; };
 		B6B4876C2A15948B00263A57 /* SnapCarousell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B4876B2A15948B00263A57 /* SnapCarousell.swift */; };
@@ -136,12 +168,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B615DF682A3B2020007C27E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B6F948E529F6ED8500BBE3A2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B615DF5E2A3B201F007C27E9;
+			remoteInfo = StopWatchComplicationExtension;
+		};
 		B697CF782A388B3B00A4CD01 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6F948E529F6ED8500BBE3A2 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B697CF6A2A388B3900A4CD01;
 			remoteInfo = ProProtheseWidgetExtension;
+		};
+		B697CF9B2A3A043400A4CD01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B6F948E529F6ED8500BBE3A2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B697CF912A3A043100A4CD01;
+			remoteInfo = ProProtheseWatchComplicationExtension;
 		};
 		B6E3B3E529FD1B5A00341144 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -161,6 +207,18 @@
 			files = (
 			);
 			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B697CFA12A3A043400A4CD01 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B615DF6A2A3B2020007C27E9 /* StopWatchComplicationExtension.appex in Embed Foundation Extensions */,
+				B697CF9D2A3A043400A4CD01 /* ProProtheseWatchComplicationExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B6E3B3EB29FD1B5A00341144 /* Embed Watch Content */ = {
@@ -221,6 +279,11 @@
 		B612E31A29FAA6AA00C6BF88 /* SettingChangeName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingChangeName.swift; sourceTree = "<group>"; };
 		B612E31E29FAAC8E00C6BF88 /* SettingSetStepTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingSetStepTarget.swift; sourceTree = "<group>"; };
 		B612E32029FABF6F00C6BF88 /* HeaderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderComponent.swift; sourceTree = "<group>"; };
+		B615DF5F2A3B201F007C27E9 /* StopWatchComplicationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StopWatchComplicationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B615DF632A3B201F007C27E9 /* StopWatchComplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchComplication.swift; sourceTree = "<group>"; };
+		B615DF652A3B2020007C27E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B615DF672A3B2020007C27E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetTodaySteps.swift; sourceTree = "<group>"; };
 		B63874F52A33A0F0008500A3 /* EventCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendar.swift; sourceTree = "<group>"; };
 		B63874F72A33A153008500A3 /* EventCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendarViewModel.swift; sourceTree = "<group>"; };
 		B6525FD42A0AEF8F0024B9D2 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
@@ -236,6 +299,8 @@
 		B65260012A0D5C5C0024B9D2 /* workOutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = workOutViewModel.swift; sourceTree = "<group>"; };
 		B65260032A0E5FBC0024B9D2 /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		B65260052A0E83A20024B9D2 /* BackgroundBlurTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundBlurTop.swift; sourceTree = "<group>"; };
+		B66670EB2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetShowFeeling.swift; sourceTree = "<group>"; };
+		B66670EF2A3CA9F5009CB426 /* ProProtheseWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProProtheseWidgetExtension.entitlements; sourceTree = "<group>"; };
 		B66F2C3F29FC50C5006CA21E /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		B66F2C4129FC50E2006CA21E /* SessionDelegater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDelegater.swift; sourceTree = "<group>"; };
 		B66F2C4529FD0649006CA21E /* WatchConnectivityProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityProvider.swift; sourceTree = "<group>"; };
@@ -275,6 +340,11 @@
 		B697CF7E2A388BF800A4CD01 /* ProProtheseWidgetFeeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetFeeling.swift; sourceTree = "<group>"; };
 		B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProthesenWidgetStopWatch.swift; sourceTree = "<group>"; };
 		B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetPain.swift; sourceTree = "<group>"; };
+		B697CF892A39223B00A4CD01 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		B697CF922A3A043100A4CD01 /* ProProtheseWatchComplicationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ProProtheseWatchComplicationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B697CF962A3A043200A4CD01 /* ProProtheseWatchComplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWatchComplication.swift; sourceTree = "<group>"; };
+		B697CF982A3A043400A4CD01 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B697CF9A2A3A043400A4CD01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B6B487652A13B79100263A57 /* EventProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProvider.swift; sourceTree = "<group>"; };
 		B6B487682A14DF8B00263A57 /* FeelingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingView.swift; sourceTree = "<group>"; };
 		B6B4876B2A15948B00263A57 /* SnapCarousell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarousell.swift; sourceTree = "<group>"; };
@@ -318,12 +388,30 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B615DF5C2A3B201F007C27E9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B615DF612A3B201F007C27E9 /* SwiftUI.framework in Frameworks */,
+				B615DF602A3B201F007C27E9 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B697CF682A388B3900A4CD01 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				B697CF6D2A388B3900A4CD01 /* SwiftUI.framework in Frameworks */,
 				B697CF6C2A388B3900A4CD01 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B697CF8F2A3A043100A4CD01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B697CF942A3A043200A4CD01 /* SwiftUI.framework in Frameworks */,
+				B697CF932A3A043200A4CD01 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +535,16 @@
 			path = ContentViewComponents;
 			sourceTree = "<group>";
 		};
+		B615DF622A3B201F007C27E9 /* StopWatchComplication */ = {
+			isa = PBXGroup;
+			children = (
+				B615DF632A3B201F007C27E9 /* StopWatchComplication.swift */,
+				B615DF652A3B2020007C27E9 /* Assets.xcassets */,
+				B615DF672A3B2020007C27E9 /* Info.plist */,
+			);
+			path = StopWatchComplication;
+			sourceTree = "<group>";
+		};
 		B63874F42A33A0DB008500A3 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -568,8 +666,20 @@
 				B697CF7E2A388BF800A4CD01 /* ProProtheseWidgetFeeling.swift */,
 				B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */,
 				B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */,
+				B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */,
+				B66670EB2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift */,
 			);
 			path = Widgets;
+			sourceTree = "<group>";
+		};
+		B697CF952A3A043200A4CD01 /* ProProtheseWatchComplication */ = {
+			isa = PBXGroup;
+			children = (
+				B697CF962A3A043200A4CD01 /* ProProtheseWatchComplication.swift */,
+				B697CF982A3A043400A4CD01 /* Assets.xcassets */,
+				B697CF9A2A3A043400A4CD01 /* Info.plist */,
+			);
+			path = ProProtheseWatchComplication;
 			sourceTree = "<group>";
 		};
 		B6B487582A0EF84300263A57 /* Notification */ = {
@@ -646,6 +756,8 @@
 		B6E3B3DB29FD1B5900341144 /* ProWatchOS Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				B615DF622A3B201F007C27E9 /* StopWatchComplication */,
+				B697CF952A3A043200A4CD01 /* ProProtheseWatchComplication */,
 				B6EEC4C729FEF30B004E2F2F /* ProWatchOS-Watch-App-Info.plist */,
 				B6EEC4B629FD3F39004E2F2F /* ProWatchOS Watch App.entitlements */,
 				B6E3B3DC29FD1B5900341144 /* ProWatchOSApp.swift */,
@@ -669,11 +781,12 @@
 		B6F948E429F6ED8500BBE3A2 = {
 			isa = PBXGroup;
 			children = (
+				B66670EF2A3CA9F5009CB426 /* ProProtheseWidgetExtension.entitlements */,
 				B60DDCB82A03022400372957 /* language */,
 				B66F2C3E29FC5090006CA21E /* Shared */,
 				B6F948EF29F6ED8500BBE3A2 /* Pro(these) */,
-				B6E3B3DB29FD1B5900341144 /* ProWatchOS Watch App */,
 				B697CF6E2A388B3900A4CD01 /* ProProtheseWidget */,
+				B6E3B3DB29FD1B5900341144 /* ProWatchOS Watch App */,
 				B6F9492E29F7F92600BBE3A2 /* Frameworks */,
 				B6F948EE29F6ED8500BBE3A2 /* Products */,
 			);
@@ -685,6 +798,8 @@
 				B6F948ED29F6ED8500BBE3A2 /* Pro-these-.app */,
 				B6E3B3DA29FD1B5900341144 /* ProWatchOS Watch App.app */,
 				B697CF6B2A388B3900A4CD01 /* ProProtheseWidgetExtension.appex */,
+				B697CF922A3A043100A4CD01 /* ProProtheseWatchComplicationExtension.appex */,
+				B615DF5F2A3B201F007C27E9 /* StopWatchComplicationExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -775,6 +890,7 @@
 				B68C6DED2A17D52E00167F9B /* DateExtension.swift */,
 				B68C6DF92A17E30800167F9B /* Calendar.swift */,
 				B68C6DF52A17E09B00167F9B /* DoubleExtention.swift */,
+				B697CF892A39223B00A4CD01 /* URL.swift */,
 			);
 			path = Extention;
 			sourceTree = "<group>";
@@ -800,6 +916,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B615DF5E2A3B201F007C27E9 /* StopWatchComplicationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B615DF6B2A3B2020007C27E9 /* Build configuration list for PBXNativeTarget "StopWatchComplicationExtension" */;
+			buildPhases = (
+				B615DF5B2A3B201F007C27E9 /* Sources */,
+				B615DF5C2A3B201F007C27E9 /* Frameworks */,
+				B615DF5D2A3B201F007C27E9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StopWatchComplicationExtension;
+			productName = StopWatchComplicationExtension;
+			productReference = B615DF5F2A3B201F007C27E9 /* StopWatchComplicationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B697CF6A2A388B3900A4CD01 /* ProProtheseWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B697CF7B2A388B3B00A4CD01 /* Build configuration list for PBXNativeTarget "ProProtheseWidgetExtension" */;
@@ -817,6 +950,23 @@
 			productReference = B697CF6B2A388B3900A4CD01 /* ProProtheseWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		B697CF912A3A043100A4CD01 /* ProProtheseWatchComplicationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B697CF9E2A3A043400A4CD01 /* Build configuration list for PBXNativeTarget "ProProtheseWatchComplicationExtension" */;
+			buildPhases = (
+				B697CF8E2A3A043100A4CD01 /* Sources */,
+				B697CF8F2A3A043100A4CD01 /* Frameworks */,
+				B697CF902A3A043100A4CD01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProProtheseWatchComplicationExtension;
+			productName = ProProtheseWatchComplicationExtension;
+			productReference = B697CF922A3A043100A4CD01 /* ProProtheseWatchComplicationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B6E3B3D929FD1B5900341144 /* ProWatchOS Watch App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6E3B3E829FD1B5A00341144 /* Build configuration list for PBXNativeTarget "ProWatchOS Watch App" */;
@@ -824,10 +974,13 @@
 				B6E3B3D629FD1B5900341144 /* Sources */,
 				B6E3B3D729FD1B5900341144 /* Frameworks */,
 				B6E3B3D829FD1B5900341144 /* Resources */,
+				B697CFA12A3A043400A4CD01 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B697CF9C2A3A043400A4CD01 /* PBXTargetDependency */,
+				B615DF692A3B2020007C27E9 /* PBXTargetDependency */,
 			);
 			name = "ProWatchOS Watch App";
 			productName = "ProWatchOS Watch App";
@@ -866,7 +1019,13 @@
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					B615DF5E2A3B201F007C27E9 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
 					B697CF6A2A388B3900A4CD01 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+					B697CF912A3A043100A4CD01 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
 					B6E3B3D929FD1B5900341144 = {
@@ -892,18 +1051,36 @@
 			projectRoot = "";
 			targets = (
 				B6F948EC29F6ED8500BBE3A2 /* Pro-these- */,
-				B6E3B3D929FD1B5900341144 /* ProWatchOS Watch App */,
 				B697CF6A2A388B3900A4CD01 /* ProProtheseWidgetExtension */,
+				B6E3B3D929FD1B5900341144 /* ProWatchOS Watch App */,
+				B697CF912A3A043100A4CD01 /* ProProtheseWatchComplicationExtension */,
+				B615DF5E2A3B201F007C27E9 /* StopWatchComplicationExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B615DF5D2A3B201F007C27E9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B615DF662A3B2020007C27E9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B697CF692A388B3900A4CD01 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				B697CF762A388B3B00A4CD01 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B697CF902A3A043100A4CD01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B697CF992A3A043400A4CD01 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -930,16 +1107,51 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B615DF5B2A3B201F007C27E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B615DF6F2A3B20BD007C27E9 /* AppConfig.swift in Sources */,
+				B629A7172A3BE104002D57D4 /* DateExtension.swift in Sources */,
+				B615DF742A3B596B007C27E9 /* WorkoutManager.swift in Sources */,
+				B615DF642A3B201F007C27E9 /* StopWatchComplication.swift in Sources */,
+				B615DF6E2A3B20B4007C27E9 /* Tab.swift in Sources */,
+				B64FE9A82A3C5EA9002B51F7 /* Workout.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B697CF672A388B3900A4CD01 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				B697CF722A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift in Sources */,
+				B629A71C2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift in Sources */,
+				B6AB87072A3C693300D3D3BC /* AppConfig.swift in Sources */,
+				B66670ED2A3C96C9009CB426 /* Persistence.swift in Sources */,
+				B6AB87082A3C693E00D3D3BC /* Tab.swift in Sources */,
+				B64FE9A42A3C5C4B002B51F7 /* healthStoreProvider.swift in Sources */,
+				B64FE9A52A3C5EA4002B51F7 /* Workout.swift in Sources */,
+				B629A71A2A3BE106002D57D4 /* DateExtension.swift in Sources */,
 				B697CF702A388B3900A4CD01 /* ProProtheseWidgetBundle.swift in Sources */,
+				B66670EE2A3C96FF009CB426 /* Pro_these_.xcdatamodeld in Sources */,
 				B697CF802A388BFF00A4CD01 /* ProProtheseWidgetFeeling.swift in Sources */,
 				B697CF842A38957C00A4CD01 /* ProProthesenWidgetStopWatch.swift in Sources */,
+				B66670EC2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift in Sources */,
 				B697CF742A388B3900A4CD01 /* ProProtheseWidget.swift in Sources */,
 				B697CF882A3898F300A4CD01 /* ProProtheseWidgetPain.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B697CF8E2A3A043100A4CD01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B697CFA32A3A0AD200A4CD01 /* Tab.swift in Sources */,
+				B629A7182A3BE105002D57D4 /* DateExtension.swift in Sources */,
+				B697CF972A3A043200A4CD01 /* ProProtheseWatchComplication.swift in Sources */,
+				B615DF572A3B1459007C27E9 /* WorkoutManager.swift in Sources */,
+				B697CFA22A3A0A8400A4CD01 /* AppConfig.swift in Sources */,
+				B64FE9A72A3C5EA9002B51F7 /* Workout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,8 +1162,10 @@
 				B6525FEB2A0BEE6F0024B9D2 /* TimerView.swift in Sources */,
 				B6EEC4BE29FD42BD004E2F2F /* Step.swift in Sources */,
 				B6EEC4BD29FD41C0004E2F2F /* AppConfig.swift in Sources */,
+				B64FE9A62A3C5EA8002B51F7 /* Workout.swift in Sources */,
 				B6525FF22A0C06AA0024B9D2 /* ActivityRingsView.swift in Sources */,
 				B609A2DD2A093DE400C88BC6 /* PercentualChangeBadge.swift in Sources */,
+				B629A7192A3BE105002D57D4 /* DateExtension.swift in Sources */,
 				B68C6E312A24C8A800167F9B /* ChartView.swift in Sources */,
 				B6525FE82A0BEA430024B9D2 /* SessionTabView.swift in Sources */,
 				B6525FF62A0C0D330024B9D2 /* MetricsView.swift in Sources */,
@@ -1051,6 +1265,7 @@
 				B612E32129FABF6F00C6BF88 /* HeaderComponent.swift in Sources */,
 				B68C6E0F2A1B54D000167F9B /* LoginViewModel.swift in Sources */,
 				B612E31429FA9C1100C6BF88 /* GlassBackGround.swift in Sources */,
+				B697CF8A2A39223B00A4CD01 /* URL.swift in Sources */,
 				B612E31729FA9C6B00C6BF88 /* SettingMapping.swift in Sources */,
 				B60FDC252A163BBE00BE64D1 /* DistanceStatistic.swift in Sources */,
 				B68C6E242A1FA83700167F9B /* StopWatchView.swift in Sources */,
@@ -1069,10 +1284,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B615DF692A3B2020007C27E9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B615DF5E2A3B201F007C27E9 /* StopWatchComplicationExtension */;
+			targetProxy = B615DF682A3B2020007C27E9 /* PBXContainerItemProxy */;
+		};
 		B697CF792A388B3B00A4CD01 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B697CF6A2A388B3900A4CD01 /* ProProtheseWidgetExtension */;
 			targetProxy = B697CF782A388B3B00A4CD01 /* PBXContainerItemProxy */;
+		};
+		B697CF9C2A3A043400A4CD01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B697CF912A3A043100A4CD01 /* ProProtheseWatchComplicationExtension */;
+			targetProxy = B697CF9B2A3A043400A4CD01 /* PBXContainerItemProxy */;
 		};
 		B6E3B3E629FD1B5A00341144 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1082,7 +1307,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		B697CF7C2A388B3B00A4CD01 /* Debug */ = {
+		B615DF6C2A3B2020007C27E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1091,8 +1316,82 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ProWatchOS Watch App/StopWatchComplication/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = StopWatchComplication;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Data";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Data";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Data";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Location Data";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.StopWatchComplication";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		B615DF6D2A3B2020007C27E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ProWatchOS Watch App/StopWatchComplication/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = StopWatchComplication;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Data";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Data";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Data";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Location Data";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.StopWatchComplication";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Release;
+		};
+		B697CF7C2A388B3B00A4CD01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ProProtheseWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWidget;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Use Healtdata";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Healtdata";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Healtdata";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1100,13 +1399,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProProtheseWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1115,12 +1414,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ProProtheseWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWidget;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Use Healtdata";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Healtdata";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Healtdata";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1128,19 +1431,88 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProProtheseWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B697CF9F2A3A043400A4CD01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ProWatchOS Watch App/ProProtheseWatchComplication/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWatchComplication;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Health ";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Use Health ";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Health ";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationUsageDescription = "location Data";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.ProProtheseWatchComplication";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		B697CFA02A3A043400A4CD01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ProWatchOS Watch App/ProProtheseWatchComplication/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWatchComplication;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Health ";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Use Health ";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Health ";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationUsageDescription = "location Data";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.ProProtheseWatchComplication";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
 			};
 			name = Release;
 		};
 		B6E3B3E929FD1B5A00341144 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "ProWatchOS Watch App/ProWatchOS Watch App.entitlements";
@@ -1164,7 +1536,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1179,6 +1551,7 @@
 		B6E3B3EA29FD1B5A00341144 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "ProWatchOS Watch App/ProWatchOS Watch App.entitlements";
@@ -1202,7 +1575,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1368,7 +1741,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1418,7 +1791,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1433,11 +1806,29 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B615DF6B2A3B2020007C27E9 /* Build configuration list for PBXNativeTarget "StopWatchComplicationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B615DF6C2A3B2020007C27E9 /* Debug */,
+				B615DF6D2A3B2020007C27E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B697CF7B2A388B3B00A4CD01 /* Build configuration list for PBXNativeTarget "ProProtheseWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B697CF7C2A388B3B00A4CD01 /* Debug */,
 				B697CF7D2A388B3B00A4CD01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B697CF9E2A3A043400A4CD01 /* Build configuration list for PBXNativeTarget "ProProtheseWatchComplicationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B697CF9F2A3A043400A4CD01 /* Debug */,
+				B697CFA02A3A043400A4CD01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

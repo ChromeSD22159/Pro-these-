@@ -123,8 +123,8 @@ struct WorkoutStatisticView: View {
     @ViewBuilder
     func StatisticCard() -> some View {
         VStack(alignment: .leading, spacing: 10){
-            Text("Live Statistik")
-                .font(.callout)
+            /*Text("Live Statistik")
+                .font(.callout)*/
             
             HStack{
                 // left
@@ -229,7 +229,7 @@ struct WorkoutStatisticView: View {
                     .foregroundStyle(.yellow)
                     .lineStyle(StrokeStyle(lineWidth: 0.5, dash: [8]))
                     .annotation(position: .automatic, alignment: .leading, spacing: 10) {
-                        Text("⌀ \(weeksAvg) Steps")
+                        Text("⌀ \(weeksAvg) Schritte")
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundColor(.yellow)
@@ -300,7 +300,7 @@ struct WorkoutStatisticView: View {
             }
             .chartYAxis {
                 let max = (vm.CollectionWeeklySteps.map { $0.avg }.max() ?? -8) + 2500
-                let min = (vm.CollectionWeeklySteps.map { $0.avg }.min() ?? -8) - 500
+                let _ = (vm.CollectionWeeklySteps.map { $0.avg }.min() ?? -8) - 500
 
                 let test = Array(stride(from: 0, to: max , by: 2500))
                 
@@ -328,7 +328,7 @@ struct WorkoutStatisticView: View {
     
     @ViewBuilder
     func StatisticsCharts() -> some View {
-        VStack(spacing: 20){
+        VStack(spacing: 10){
             switch activeActivityChart {
             case .workouts : WorkoutChart()
             case .steps : StepChart()
@@ -358,7 +358,6 @@ struct WorkoutStatisticView: View {
             } // tab
             .padding(.horizontal)
         }
-        .padding(.vertical)
     }
     
     

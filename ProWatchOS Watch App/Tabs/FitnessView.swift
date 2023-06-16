@@ -17,6 +17,37 @@ struct FitnessView: View {
             if workoutManager.running {
                 SessionTabView()
             } else {
+                HStack {
+                    Toggle("GPS Aufzeichnung:", isOn: $workoutManager.trackGPS)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    workoutManager.selectedWorkout = .walking
+                }, label: {
+                    HStack {
+                        Image("prothesis")
+                            .imageScale(.large)
+                            .font(.system(size: 30))
+                            .foregroundColor(.yellow)
+                        
+                        Text("Start")
+                            .font(.caption2)
+                    }
+                })
+                .navigationBarTitle("Workouts")
+                .navigationBarTitleDisplayMode(.inline)
+                
+                Button(action: {
+                    withAnimation(.easeInOut) {
+                        workoutManager.selectedTab = .steps
+                    }
+                }, label: {
+                    Text("Statistic")
+                })
+                
+                /*
                 List {
                     
                     ForEach(workoutManager.workoutTypes) { workout in
@@ -30,6 +61,7 @@ struct FitnessView: View {
                  .onAppear {
                      workoutManager.requestAuthorization()
                  }
+                 */
             }
         }
         .sheet(isPresented: $workoutManager.showingSummaryView) {

@@ -26,6 +26,7 @@ struct TimerView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(.yellow)
+                
             }
             .onChange(of: showSubseconds) {
                 timeFormatter.showSubseconds = $0
@@ -50,20 +51,6 @@ class TimeFormatter: Formatter {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
         formatter.zeroFormattingBehavior = .pad
-        /*
-         The add padding zeroes behavior. This behavior pads values with zeroes as appropriate. For example, consider the value of one hour formatted using the positional and abbreviated unit styles. When days, hours, minutes, and seconds are allowed, the value is displayed as “0d 1:00:00” using the positional style, and as “0d 1h 0m 0s” using the abbreviated style.
-         */
-        /*
-         How to use
-         Text(
-             NSNumber(value: elapsedTime),
-             formatter: timeFormatter
-         ) // TEXT - ELAPSED TIME
-             .fontWeight(.semibold)
-             .onChange(of: showSubseconds) {
-                 timeFormatter.showSubseconds = $0
-             }
-         */
         return formatter
     }() // Custom Formatter, show minute & second, subseconds are hsown
     var showSubseconds = true

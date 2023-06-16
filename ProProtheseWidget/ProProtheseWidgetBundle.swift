@@ -15,6 +15,12 @@ struct ProProtheseWidgetBundle: WidgetBundle {
         ProProtheseWidgetPain()
         ProProthesenWidgetStopWatch()
         ProProtheseWidgetFeeling()
+        
+        if #available(iOS 16, *) {
+                ProProtheseWidgetTodaySteps()
+                ProProtheseWidgetShowFeeling()
+        }
+        
         ProProtheseWidgetLiveActivity()
     }
 }

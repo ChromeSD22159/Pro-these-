@@ -62,4 +62,25 @@ public extension Date {
         formattedTime.dateFormat = time
         return (date: formattedDate.string(from: self), time: formattedTime.string(from: self))
     }
+    
+    func convertDateToDayNames() -> String {
+        
+        let day = self.dateFormatte(date: "EEEE", time: "HH:mm").date
+        
+        switch day {
+        case "Monday": return "Mo"
+        case "Tuesday": return "Di"
+        case "Wednesday": return "Mi"
+        case "Thursday": return "Do"
+        case "Friday": return "Fr"
+        case "Saturday": return "Sa"
+        case "Sunday": return "So"
+        default:
+            return ""
+        }
+    }
+}
+
+extension String {
+    
 }
