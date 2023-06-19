@@ -669,8 +669,8 @@
 				B697CF822A38944400A4CD01 /* ProProthesenWidgetStopWatch.swift */,
 				B697CF862A3898B600A4CD01 /* ProProtheseWidgetPain.swift */,
 				B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */,
-				B6D727002A3F387800C8523F /* ProProtheseWidgetWorkoutsToday.swift */,
 				B66670EB2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift */,
+				B6D727002A3F387800C8523F /* ProProtheseWidgetWorkoutsToday.swift */,
 			);
 			path = Widgets;
 			sourceTree = "<group>";
