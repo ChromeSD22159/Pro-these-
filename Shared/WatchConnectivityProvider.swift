@@ -1,130 +1,216 @@
-//
-//  WatchConnectivityProvider.swift
-//  Pro(these)
-//
-//  Created by Frederik Kohler on 29.04.23.
-//
-
-import Foundation
+import Combine
 import WatchConnectivity
-import ClockKit
+import UserNotifications
 
-class WatchConnectivityProvider : NSObject, WCSessionDelegate {
+
+class StateManager: ObservableObject {
     
-    private var session: WCSession = .default
-    var dataReceived: ((String, Any) -> Void)?
+    static let sharedManager = StateManager()
+    
+    var session: WCSession = .default
+    
+    let delegate: WCSessionDelegate
+    
+    let subject = CurrentValueSubject<Bool, Never>(false)
+    let dateSubject = CurrentValueSubject<Date?, Never>(nil)
+    
+    @Published private(set) var state: Bool = false
+    @Published private(set) var date: Date? = nil
+    @Published var paired = false
     
     init(session: WCSession = .default) {
         self.session = session
-
-        super.init()
-
-        self.session.delegate = self
+        
+        self.delegate = SessionDelegater(boolSubject: subject, dateSubject: dateSubject)
+        
         self.connect()
-    }
-    
-    func connect(){
-        guard WCSession.isSupported() else {
-            print("WCSession is not supported")
-            return
-        }
         
-        session.activate()
+        subject
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$state)
     }
-
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
-
-    #if os(iOS)
-    func sessionDidBecomeInactive(_ session: WCSession) { }
-
-    func sessionDidDeactivate(_ session: WCSession) { }
-    #endif
-
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        guard dataReceived != nil else {
-            print("Received data, but 'dataReceived' handler is not provided")
-            return
-        }
-        
-        DispatchQueue.main.async {
-            if let dataReceived = self.dataReceived {
-                for pair in message {
-                    dataReceived(pair.key, pair.value)
-                }
-            }
-        }
-    }
-
-    func sendMessage(_ key: String, _ message: String, _ errorHandler: ((Error) -> Void)?) {
-        if session.isReachable {
-            session.sendMessage([key : message], replyHandler: nil) { (error) in
-                print(error.localizedDescription)
-                if let errorHandler = errorHandler {
-                    errorHandler(error)
-                }
-            }
-        }
-    }
-}
-/*
-class WatchConnectivityProvider: NSObject, WCSessionDelegate {
     
-    static let shared = WatchConnectivityProvider()
-
-    private let session: WCSession
-    
-    var textFieldValue: String = "String"
-    
-    init(session: WCSession = .default) {
-        self.session = .default
-       super.init()
-       self.session.delegate = self
-       self.connect()
-    }
-
     func connect() {
         guard WCSession.isSupported() else {
             print("WCSession is not supported")
             return
         }
-       
+        
+        self.session.delegate = self.delegate
+        session.activate()
+    }
+
+    #if os(iOS)
+    func isPaired(complication: @escaping(Bool) -> ()) {
+        guard session.isPaired else {
+            print("Watch is not Avaible")
+            return complication(false)
+        }
+        
+        complication(true)
+    }
+    #endif
+    
+    func updateApplicationContext(with context: [String : Any] ) {
+        do {
+            try self.session.updateApplicationContext(context)
+        } catch {
+            print("Updating of application context failed \(error)")
+        }
+    }
+    
+    func checkState(){
+        print("---- State Check ----")
+        print(state)
+        print(date)
+        print("---- END Check ----")
+    }
+
+}
+
+
+class SessionDelegater: NSObject, WCSessionDelegate {
+    let boolSubject: CurrentValueSubject<Bool, Never>
+    
+    let dateSubject: CurrentValueSubject<Date?, Never>
+    
+    init(boolSubject: CurrentValueSubject<Bool, Never>, dateSubject: CurrentValueSubject<Date?, Never>) {
+        self.boolSubject = boolSubject
+        self.dateSubject = dateSubject
+        super.init()
+    }
+        
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        // Protocol comformance only
+        // Not needed for this demo
+        if activationState == .activated {
+            print("Watch Connected")
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any]) {
+
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        DispatchQueue.main.async {
+           if let state = message["state"] as? Bool {
+               self.boolSubject.send((state != false))
+           } else {
+               print("There was an error")
+           }
+            
+            if let date = message["Date"] as? Date? {
+                self.dateSubject.send(date ?? nil)
+            } else {
+                print("There was an error")
+            }
+       }
+    }
+    
+    public func session(_ session: WCSession, didReceiveApplicationContext applicationContext: ([String: Any]) ) {
+        // Receive application context sent from counterpart
+        // session.receivedApplicationContext is updated automatically
+        print("applicationContext: \(applicationContext)")
+        
+        if let d = applicationContext["date"] as? Date {
+            print("Update date \(d))")
+           self.dateSubject.send(d)
+        } else {
+           print("There was an error")
+        }
+        
+        if let s = applicationContext["state"] as? Bool {
+            print("Update state \(s))")
+           self.boolSubject.send(s)
+        } else {
+           print("There was an error")
+        }
+    }
+    
+    #if os(iOS)
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        if session.isPaired {
+            print("Watch is Avaible")
+            StateManager.sharedManager.paired = true
+        } else{
+            print("Watch is not Avaible")
+            StateManager.sharedManager.paired = false
+        }
+    }
+    #endif
+    
+    internal func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        debugPrint("didReceiveMessage: \(applicationContext)")
+        
+        DispatchQueue.main.async {
+            
+            if let int = applicationContext["state"] as? Int {
+                if int == 1 { // error is true
+                    print("error is true")
+                    self.boolSubject.send(true)
+                    
+                }
+                if int == 0 { // error does not exist/ false.
+                    print("error is false")
+                    self.boolSubject.send(false)
+                }
+            } else {
+                print("There was an error in 'state'")
+            }
+            
+            if let date = applicationContext["Date"] as? Date? {
+                print("\(date)")
+                self.dateSubject.send(date ?? nil)
+            } else {
+                print("There was an error 'date'")
+            }
+       }
+    }
+    
+    
+    
+    // iOS Protocol comformance
+    // Not needed for this demo otherwise
+    #if os(iOS)
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("\(#function): activationState = \(session.activationState.rawValue)")
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        // Activate the new session after having switched to a new watch.
         session.activate()
     }
     
-    func send(_ message: [String:Any]) -> Void {
-        session.sendMessage(message, replyHandler: nil) { (error) in
-            print("Error: ") // \(error.localizedDescription)
-        }
-    }
-
-
-        
-    // Receiver
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-       //without reply handler
-    }
-
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-       //with reply handler
-    }
-    // end Receiver
-    
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        debugPrint("WCSession activationDidCompleteWith activationState:\(activationState) error:\(String(describing: error))")
-       // debugPrint("WCSession.isPaired: \(session.isPaired), WCSession.isWatchAppInstalled: \(session.isWatchAppInstalled)")
-    }
-    #if os(iOS)
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        debugPrint("sessionDidBecomeInactive: \(session)")
-    }
-
-    func sessionDidDeactivate(_ session: WCSession) {
-        debugPrint("sessionDidDeactivate: \(session)")
-    }
-
     func sessionWatchStateDidChange(_ session: WCSession) {
-        debugPrint("sessionWatchStateDidChange: \(session)")
+        print("\(#function): activationState = \(session.activationState.rawValue)")
     }
     #endif
 }
-*/
+
+enum ProthesisTimer {
+    
+    var id: Self { self }
+    
+    case isRunning
+    case notRunning
+    
+    
+}
+enum Device {
+    case iphone, watch, none
+}
+
+extension Bool
+{
+    init(_ intValue: Int)
+    {
+        switch intValue
+        {
+        case 0:
+            self.init(false)
+        default:
+            self.init(true)
+        }
+    }
+}
