@@ -13,14 +13,16 @@ class PushNotifications {
         "identifier" : "PROTHESE_COMEBACK_REMINDER1",
         "titel": "Wir haben dich heute noch nicht gesehen 😢",
         "body": "Komm bald wieder vorbei, es wird Spannend ✌️",
-        "triggerTimer": "20"
+        "triggerTimer": "20",
+        "url": "ProProthese://statistic"
     ]
     
     var ComeBack2:[String: String] = [
         "identifier" : "PROTHESE_COMEBACK_REMINDER2",
         "titel": "Wie geht's dir? 🤔",
         "body": "Es ist so Still hier ohne  dich...😢",
-        "triggerTimer": "20"
+        "triggerTimer": "20",
+        "url": "ProProthese://statistic"
     ]
     
     var MoodReminder:[String: String] = [
@@ -29,7 +31,8 @@ class PushNotifications {
         "body": "Hinterlasse keine leere Seite in deinem Prothesentagebuch. ✌️",
         "triggerHour": "20",
         "triggerMinute": "30",
-        "repeater": "true"
+        "repeater": "true",
+        "url": "ProProthese://addFeeling"
     ]
     
     var GoodMorning:[String: String] = [
@@ -38,7 +41,8 @@ class PushNotifications {
         "body": "Denke an dein Prothesentagebuch und träge brav deine Zeit. ✌️",
         "triggerHour": "7",
         "triggerMinute": "30",
-        "repeater": "true"
+        "repeater": "true",
+        "url": "ProProthese://addFeeling"
     ]
     
     var MoodReminderDaily1:[String: String] = [
@@ -47,7 +51,8 @@ class PushNotifications {
         "body": "Hey! Wie fühlst du dich heute? ✌️",
         "triggerHour": "7",
         "triggerMinute": "30",
-        "repeater": "true"
+        "repeater": "true",
+        "url": "ProProthese://addFeeling"
     ]
     
     var MoodReminderDaily2:[String: String] = [
@@ -56,7 +61,15 @@ class PushNotifications {
         "body": "Hey! Ein neuer Tag, neue erfahrungen, möchtest du diese nicht abspeichern? ✌️",
         "triggerHour": "7",
         "triggerMinute": "30",
-        "repeater": "true"
+        "repeater": "true",
+        "url": "ProProthese://addFeeling"
     ]
     
 }
+
+/*
+ if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
+     // Ask the system to open that URL.
+     await UIApplication.shared.open(url)
+ }
+ */

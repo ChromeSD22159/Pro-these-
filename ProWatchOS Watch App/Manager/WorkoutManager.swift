@@ -102,9 +102,17 @@ class WorkoutManager: NSObject, ObservableObject {
         builder?.delegate = self
         
         // Start the workout session and begin data collection.
-        let startDate = Date()
+        
+        var startDate: Date?
+        
+        if (UserDefaults.standard.object(forKey: "TimerStateDate") != nil) {
+            startDate = UserDefaults.standard.object(forKey: "TimerStateDate") as? Date
+        } else {
+            startDate = Date()
+        }
+        
         session?.startActivity(with: startDate)
-        builder?.beginCollection(withStart: startDate, completion: { success, error in
+        builder?.beginCollection(withStart: startDate ?? Date(), completion: { success, error in
             // The workout has started
         })
         
@@ -128,10 +136,13 @@ class WorkoutManager: NSObject, ObservableObject {
         }
     }
     
+    @AppStorage("TimerState") var isRunning: Bool = false
+    
     func endWorkout() {
         session?.end()
         showingSummaryView = true
         selectedWorkout = nil
+        isRunning = false
         //addRoute(to: workout ?? nil)
     }
     
@@ -161,7 +172,6 @@ class WorkoutManager: NSObject, ObservableObject {
             let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: today) , end: Calendar.current.date(byAdding: components, to: today)!, options: .strictStartDate)
            var interval = DateComponents()
            interval.day = 1
-           //print(predicate)
             
            let query = HKStatisticsQuery(quantityType: stepsCount!, quantitySamplePredicate: predicate, options: HKStatisticsOptions.cumulativeSum) { (query, result, error) in
      
@@ -174,7 +184,6 @@ class WorkoutManager: NSObject, ObservableObject {
                if let myResult = result {
                    if let sum = myResult.sumQuantity() {
                        resultCount = sum.doubleValue(for: HKUnit.count())
-                       print(resultCount)
                    }
                     
                    DispatchQueue.main.async {
@@ -201,6 +210,42 @@ class WorkoutManager: NSObject, ObservableObject {
         }
         
         healthStore.execute(query)
+    }
+    
+    func getWorkouts(week: DateInterval, workout: HKSource, completion: @escaping (WorkoutDataPacked) -> Void) {
+        var predicate = HKQuery.predicateForObjects(from: .default())
+        
+        predicate = HKQuery.predicateForSamples(withStart: week.start, end: week.end)
+        var data:[ChartData] = []
+        let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: predicate, limit: 0, sortDescriptors: []) { (queryWorkout, workoutSamples, workoutError) in
+            guard let workoutSamples = workoutSamples as? [HKWorkout], workoutError == nil else {
+                return
+            }
+            
+            let workouts:[Times] = workoutSamples.map { Times(startDate: $0.startDate, duration: $0.duration) }
+            let dictionary = Dictionary(grouping: workouts, by: {  Calendar.current.date(byAdding: .hour, value: 2, to: Calendar.current.startOfDay(for: $0.startDate ))! })
+            
+            let test = dictionary.map { Times(startDate:  Calendar.current.date(byAdding: .hour, value: 12, to: $0.key)!, duration: $0.value.map({ $0.duration }).reduce(0, +) ) }.sorted { $0.startDate < $1.startDate }
+            
+            for workout in test.sorted(by: { $0.startDate < $1.startDate }) {
+                data.append( ChartData(date: workout.startDate , value: workout.duration) )
+            }
+            
+            let avg = data.count != 0 ? data.map{ Int($0.value) }.reduce(0, +) / data.count : 0
+            
+            let weekNr = Calendar.current.component(.weekOfYear, from: week.start)
+            
+            completion(WorkoutDataPacked(avg: avg, avgName: "Workout" , weekNr: weekNr, data: data))
+            /*/// save workoutdata in Times array
+            let workouts:[Times] = workoutSamples.map { Times(startDate: $0.startDate, duration: $0.duration) }
+            let dictionary = Dictionary(grouping: workouts, by: {  Calendar.current.date(byAdding: .hour, value: 2, to: Calendar.current.startOfDay(for: $0.startDate ))! })
+            self.waeringTimes = dictionary.map { Times(startDate: $0.key, duration: $0.value.map({ $0.duration }).reduce(0, +) ) }.sorted { $0.startDate < $1.startDate }*/
+        }
+        
+      
+        
+        let healthStore = HKHealthStore()
+        healthStore.execute(workoutQuery)
     }
 }
 

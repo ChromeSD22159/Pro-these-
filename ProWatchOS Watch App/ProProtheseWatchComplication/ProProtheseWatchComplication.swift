@@ -16,6 +16,10 @@ struct Provider: TimelineProvider {
     
     var workoutManager: WorkoutManager
     
+    var entrySteps: Double
+    
+    var entryError: Error?
+    
     var nextUpdate: Date {
         return Calendar.current.date(byAdding: .minute, value: 10, to: Date())!
     }
@@ -36,17 +40,13 @@ struct Provider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         let currentDate = Date()
         
-        let startDate = Calendar.current.startOfDay(for: currentDate)
+        let update = Calendar.current.date(byAdding: .minute, value: 10, to: currentDate)!
 
-        workoutManager.queryWidgetSteps(completion: { stepCount, error in
-            
-            let s = (min: 0, max: AppConfig.shared.targetSteps, current: Int(stepCount), error: error)
-            let entrie = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: s)
-            
-            let timeline = Timeline(entries: [entrie], policy: .after(nextUpdate))
-            completion(timeline)
-            
-        })
+        let s = (min: 0, max: AppConfig.shared.targetSteps, current: Int(entrySteps), error: entryError)
+        let entrie = SimpleEntry(date: Date(), nextUpdate: update, url: url, steps: s)
+        
+        let timeline = Timeline(entries: [entrie], policy: .after(update))
+        completion(timeline)
     }
 }
 
@@ -62,7 +62,7 @@ struct ProProtheseWatchComplicationEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
     
     private var percentSteps: Int {
-        return Int(self.entry.steps.current) / 10000 * 100
+        return Int(self.entry.steps.current) / AppConfig.shared.targetSteps * 100
     }
     
     private let debug = true
@@ -87,28 +87,25 @@ struct ProProtheseWatchComplicationEntryView : View {
                     
                 }
             case .accessoryCorner:
-                ZStack {
-                    
-                    Image("prothesis")
-                        .imageScale(.large)
-                        .font(.system(size: 30))
-                        .widgetLabel {
-                            Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
-                                Label("Speed", systemImage: "gauge")
-                            } currentValueLabel: {
-                                Text("\(entry.steps.current)")
-                            } minimumValueLabel: {
-                                Text("\(entry.steps.min)")
-                                    .font(.system(size: 6))
-                                    .foregroundColor(.white.opacity(0.5))
-                            } maximumValueLabel: {
-                                Text("\(entry.steps.max)")
-                                    .foregroundColor(.white.opacity(0.8))
-                            }
-                            .tint(steps.current > 100 ? AppConfig.shared.gaugeGradientBad : AppConfig.shared.gaugeGradientGood)
-                            .labelStyle(.automatic)
+                Text("🦿")
+                    .font(.system(size: 35))
+                    .widgetLabel(label: {
+                        Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
+                            Label("Speed", systemImage: "gauge")
+                                .font(.system(size: 6))
+                        } currentValueLabel: {
+                            Text("\(steps.current)")
+                        } minimumValueLabel: {
+                            Text(String(format: "%.0f", steps.min))
+                                .font(.system(size: 6))
+                                .foregroundColor(.white.opacity(0.5))
+                        } maximumValueLabel: {
+                            Text(String(format: "%.0f", Double(AppConfig.shared.targetSteps) / 1000) + "k")
+                                .foregroundColor(.white.opacity(0.8))
                         }
-                }
+                        .tint(steps.current > 100 ? AppConfig.shared.gaugeGradientBad : AppConfig.shared.gaugeGradientGood)
+                        .labelStyle(.automatic)
+                    })
             case .accessoryRectangular:
                 ZStack {
                     
@@ -125,7 +122,7 @@ struct ProProtheseWatchComplicationEntryView : View {
                                 Text("\(entry.steps.current)")
                                     .font(.system(size: 20).bold())
                                 
-                                let (targetReached, targetPercent) = checkTargetSteps(steps: Double(entry.steps.current))
+                                let (_, targetPercent) = checkTargetSteps(steps: Double(entry.steps.current))
                                 
                                 Text("\( targetPercent )% vom Ziel")
                                     .font(.system(size: 12))
@@ -189,15 +186,38 @@ struct ProProtheseWatchComplication: Widget {
     
     private var supportedFamilies:[WidgetFamily] = [
         .accessoryCircular,
+        .accessoryCorner,
         .accessoryRectangular,
         .accessoryInline
     ]
     
     let hm = WorkoutManager()
     
+    @AppStorage("Entry steps") var entrySteps: Double = 0
+    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider(workoutManager: hm)) { entry in
+        StaticConfiguration(kind: kind, provider: Provider(workoutManager: hm, entrySteps: entrySteps, entryError: nil)) { entry in
             ProProtheseWatchComplicationEntryView(entry: entry)
+                .onAppear{
+                    hm.queryWidgetSteps(completion: { stepCount, error in
+                        if error?._code == 6 {
+                            
+                        } else {
+                            self.entrySteps = stepCount
+                        }
+                    })
+                }
+                .onChange(of: entry.date){ newDate in
+                    hm.queryWidgetSteps(completion: { stepCount, error in
+                        
+                        if error?._code == 6 {
+                            
+                        } else {
+                            self.entrySteps = stepCount
+                        }
+                        
+                    })
+                }
         }
         .supportedFamilies(supportedFamilies)
         .configurationDisplayName("Schritte heute")
@@ -216,6 +236,7 @@ struct ProProtheseWatchComplication_Previews: PreviewProvider {
     
     static var supportedFamilies:[(widget: WidgetFamily, name: String)] = [
         (widget: .accessoryCircular, name: "Circular"),
+        (widget: .accessoryCorner, name: "Corner"),
         (widget: .accessoryRectangular, name: "Regangular"),
         (widget: .accessoryInline, name: "Inline")
     ]

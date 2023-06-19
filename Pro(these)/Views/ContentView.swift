@@ -9,11 +9,12 @@ import SwiftUI
 import CoreData
 import MapKit
 
+
 struct ContentView: View {
     var loc:MKCoordinateRegion
     
     @State private var RecordViewRegion = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 47.62369790077433, longitude: 8.22015741916841),
+            center: CLLocationCoordinate2D(latitude: 28.41514919840765, longitude: -16.53963053634748),
             latitudinalMeters: 750, longitudinalMeters: 750
     )
     
@@ -54,7 +55,7 @@ struct ContentView: View {
                         
                         // overlay
                         RadialGradient(gradient: Gradient(colors: [
-                            Color(red: 5/255, green: 5/255, blue: 15/255).opacity(0.5),
+                            Color(red: 5/255, green: 5/255, blue: 15/255).opacity(0.35),
                             Color(red: 5/255, green: 5/255, blue: 15/255) //Color(red: 32/255, green: 40/255, blue: 63/255).opacity(1)
                         ]), center: .center, startRadius: 50, endRadius: 300)
                             .ignoresSafeArea()
@@ -63,12 +64,12 @@ struct ContentView: View {
                     // Content
                     VStack(){
                         switch activeTab {
+                            case .home: ZStack{}.padding(.bottom, 10)
                             case .event: Events().padding(.bottom, 10)
                             case .healthCenter: WorkOutEntryView().padding(.bottom, 10)
-                            //case .feeling: FeelingView().padding(.bottom, 10)
-                           
                             case .stopWatch: StopWatchView().padding(.bottom, 10)
                             case .add: FeelingView().padding(.bottom, 10)
+                            case .feeling: FeelingView().padding(.bottom, 10)
                             case .pain: PainEntry().padding(.bottom, 10)
                         }
                         
@@ -119,6 +120,8 @@ struct ContentView: View {
         // Set EntryView from User Settings
         .onAppear{
             activeTab = AppConfig().entrySite
+            
+            RecordViewRegion = LocationProvider.shared.region
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)) { _ in
             overlay.toggle()

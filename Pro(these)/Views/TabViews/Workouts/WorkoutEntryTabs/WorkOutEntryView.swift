@@ -72,7 +72,7 @@ struct WorkOutEntryView: View {
                     // Content
                     ScrollView(showsIndicators: false) {
                         
-                        // Tab
+                        /*// Tab
                         HStack(spacing: 10) {
                             ForEach(WorkoutTab.allCases, id: \.self) { tab in
            
@@ -111,7 +111,9 @@ struct WorkOutEntryView: View {
                         switch tabManager.workoutTab {
                             case .statistic: WorkoutStatisticView(isScreenShotSheet: $isScreenShotSheet).environmentObject(workoutStatisticViewModel)
                             case .feelings: FeelingView()
-                        }
+                        } */
+                        
+                        WorkoutStatisticView(isScreenShotSheet: $isScreenShotSheet).environmentObject(workoutStatisticViewModel)
                     }
                    
                     

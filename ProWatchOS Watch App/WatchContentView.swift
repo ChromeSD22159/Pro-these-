@@ -20,6 +20,7 @@ struct WatchContentView: View {
         NavigationStack {
             TabView {
                 ChartView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .tabItem {
                         Label("Chart", systemImage: "chart.bar.fill")
                     }
@@ -45,6 +46,7 @@ struct WatchContentView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear{
             
             workoutManager.requestAuthorization()

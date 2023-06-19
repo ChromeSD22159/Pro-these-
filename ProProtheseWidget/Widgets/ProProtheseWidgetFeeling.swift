@@ -43,7 +43,7 @@ struct ProProtheseWidgetFeelingEntryView : View {
     var entry: FeelingProvider.Entry
 
     var body: some View {
-        Link(destination: URL(string: "ProProthese://feeling")!) {
+        Link(destination: URL(string: "ProProthese://addFeeling")!) {
             ZStack {
                 
                 LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
@@ -85,7 +85,7 @@ struct ProProtheseWidgetFeelingEntryView : View {
                         Text("Default")
                     }
                 }
-            }.widgetURL(URL(string: "ProProthese://feeling"))
+            }.widgetURL(URL(string: "ProProthese://addFeeling"))
         }
        
     }

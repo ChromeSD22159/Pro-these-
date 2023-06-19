@@ -8,9 +8,12 @@
 import SwiftUI
 import Charts 
 import HealthKit
+import WidgetKit
 
 struct ChartView: View {
     @EnvironmentObject var vm: WorkoutManager
+    @EnvironmentObject var stateManager: StateManager
+    
     @Environment(\.scenePhase) var scenePhase
     
     @State var currentDate = Date()
@@ -20,7 +23,9 @@ struct ChartView: View {
     @State var selectedAvgSteps: Double = 0
     
     @State var Steps: [ChartData] = []
-
+    
+    @AppStorage("TimerState", store: UserDefaults(suiteName: "group.FK.Pro-these-")) var isRunning: Bool = false
+    
     private var avg: Int {
         if self.Steps.count != 0 {
             return self.Steps.map{ Int($0.value) }.reduce(0, +) / self.Steps.count
@@ -29,30 +34,34 @@ struct ChartView: View {
         }
         
     }
-
+    
     var body: some View {
-        GeometryReader { geo in
-            
-            VStack {
-              
-                HStack{
-                    Image("prothesis")
-                        .imageScale(.large)
-                        .font(.system(size: 20, weight: .semibold))
-                    
-                    Text("\( Int(currentSteps) ) Schritte")
+        VStack {
+          
+            HStack{
+                Image("prothesis")
+                    .imageScale(.large)
+                    .font(.system(size: 20, weight: .semibold))
+                
+                Text("\( Int(currentSteps) ) Schritte")
+                    .font(.title3)
+                    .padding()
+
+                if isRunning {
+                    Image(systemName: "record.circle")
+                        .font(.title3)
+                        .padding()
+                } else {
+                    Text("")
                         .font(.title3)
                         .padding()
                 }
-                
-                Spacer()
-                
-                chart(geo: geo.size)
-                    .padding(.bottom)
-                    .frame(width: .infinity, height: .infinity)
             }
-            .frame(width: .infinity, height: .infinity)
             
+            // BUG
+            chart()
+                .padding(.bottom)
+                .frame(alignment: .bottom)
         }
         // Set Date, Extrakt last 7 Days and set showing Steps to the last StepCount (Today)
         .onAppear{
@@ -61,6 +70,9 @@ struct ChartView: View {
                     currentDate = Date()
                     currentWeek = extractWeekByDate(currentDate: Date())
                     currentSteps = Int(Steps.last?.value ?? -1)
+  
+                    isRunning = stateManager.state
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
             }
         }
@@ -72,14 +84,28 @@ struct ChartView: View {
         })
         // Set Date, Extrakt last 7 Days and set showing Steps to the last StepCount (Today)
         .onChange(of: scenePhase, perform: { newPhase in
-            
            if newPhase == .active {
                withAnimation(.easeInOut.delay(0.5)) {
                    currentDate = Date()
                    currentWeek = extractWeekByDate(currentDate: currentDate)
                    currentSteps = Int(Steps.last?.value ?? -1)
+                   
+                   isRunning = stateManager.state
+                   WidgetCenter.shared.reloadAllTimelines()
                }
             }
+        })
+        .onChange(of: stateManager.state, perform: { newState in
+            print("syn Running state")
+            
+            let userDefaults = UserDefaults(suiteName: "group.FK.Pro-these-")!
+                userDefaults.set(newState, forKey: "SharedTimerState")
+                userDefaults.synchronize()
+                WidgetCenter.shared.reloadAllTimelines()
+            
+            print(userDefaults.bool(forKey: "SharedTimerState"))
+            
+            isRunning = newState
         })
     }
     
@@ -127,7 +153,7 @@ struct ChartView: View {
     
     
     @ViewBuilder
-    func chart(geo: CGSize) -> some View {
+    func chart() -> some View {
         Chart(){
             
             RuleMark(y: .value("Durchschnitt", avg ) )
@@ -139,6 +165,7 @@ struct ChartView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.yellow)
                 }
+            
             ForEach(currentWeek, id: \.self) { day in
                 let formDate = Calendar.current.date(byAdding: .hour, value: 12, to: day.date)!
                 

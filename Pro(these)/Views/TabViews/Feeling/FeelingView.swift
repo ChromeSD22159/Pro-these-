@@ -21,9 +21,43 @@ struct FeelingView: View {
     @Namespace var noneID
    
     @State var attempts: Int = 0
-    
+    @State var isScreenShotSheet = false
     var body: some View {
         VStack(spacing: 20){
+            
+            HStack(){
+                VStack(spacing: 2){
+                    Text("Hallo, \(AppConfig.shared.username)")
+                        .font(.title2)
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Dein Tagesziel ist für heute \(AppConfig.shared.targetSteps) Schritte")
+                        .font(.callout)
+                        .foregroundColor(AppConfig.shared.fontLight)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                
+                HStack(spacing: 20){
+                    Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .font(.title3)
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.5)){
+                                cal.isCalendar.toggle()
+                            }
+                        }
+                    
+                    Image(systemName: "gearshape")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .font(.title3)
+                        .onTapGesture {
+                            tabManager.isSettingSheet.toggle()
+                        }
+                }
+            }
+            .padding(.top, 20)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity)
             
             if cal.isCalendar {
                 FeelingCalendarView(feelings: listFeelings)

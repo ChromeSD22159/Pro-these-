@@ -16,8 +16,7 @@ class LocationProvider: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     @Published var location: CLLocationCoordinate2D?
     @Published var region: MKCoordinateRegion
- 
-    
+
     override init() {
         self.region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 47.62369790077433, longitude: 8.22015741916841),
@@ -54,9 +53,16 @@ class LocationProvider: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func updateRegion(location: CLLocationCoordinate2D?) -> MKCoordinateRegion {
+        
         guard location != nil else {
+            
+            print("Region not updated")
+            
+            let lat = 28.41514919840765
+            let long = -16.53963053634748
+
             return MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 47.62369790077433, longitude: 8.22015741916841),
+                center: CLLocationCoordinate2D(latitude: lat, longitude: long),
                 latitudinalMeters: 750, longitudinalMeters: 750
             )
         }

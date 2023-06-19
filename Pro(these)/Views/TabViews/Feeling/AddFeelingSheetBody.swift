@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct AddFeelingSheetBody: View {
     @EnvironmentObject var cal: MoodCalendar
@@ -94,7 +95,7 @@ struct AddFeelingSheetBody: View {
                                     do {
                                         try? persistenceController.container.viewContext.save()
                                         cal.isFeelingSheet.toggle()
-                                        
+                                        WidgetCenter.shared.reloadAllTimelines()
                                         cal.selectedFeeling = ""
                                     }
                                     

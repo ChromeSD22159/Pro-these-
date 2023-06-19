@@ -8,11 +8,12 @@
 import SwiftUI
 
 enum Tab: String, Codable, CaseIterable, Identifiable {
+    case home = "home"
     case healthCenter = "HealthCenter"
     case stopWatch = "StopWatch"
     case add = "AddFeeling"
     case event = "Eventplaner"
-    //case feeling = "Feeling"
+    case feeling = "Feeling"
     case pain = "PhantomPain"
     
     
@@ -20,23 +21,25 @@ enum Tab: String, Codable, CaseIterable, Identifiable {
     
     func TabIcon() -> String {
         switch self {
+            case .home: return "house.fill"
             case .healthCenter: return "chart.pie"
             case .stopWatch: return "stopwatch"
             case .add: return "plus"
             case .event: return "calendar.badge.clock"
-            //case .feeling: return "face.dashed"
+            case .feeling: return "face.dashed"
             case .pain: return "bolt.fill"
         }
     }
     
     func TabTitle() -> String {
         switch self {
-            case .healthCenter: return "Statitic"
-            case .stopWatch: return "StopWatch"
+            case .home: return "Startseite"
+            case .healthCenter: return "Statitik"
+            case .stopWatch: return "Prothesen Recorder"
             case .add: return "plus"
-            case .event: return "Events"
-            //case .feeling: return "Feeling"
-            case .pain: return "PhantomPain"
+            case .event: return "Kalender"
+            case .feeling: return "Feeling"
+            case .pain: return "Phantomschmerzen"
         }
     }
 }

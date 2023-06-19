@@ -47,11 +47,12 @@ class LoginViewModel: ObservableObject {
                 }
             }
             
+            // FIXME: ADD TOUCHID
             if context.biometryType == .touchID {
                 
             }
         } else {
-            print("not id")
+            //print("not id")
         }
     }
     

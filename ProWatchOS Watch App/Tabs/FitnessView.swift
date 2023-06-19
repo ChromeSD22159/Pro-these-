@@ -7,66 +7,92 @@
 
 import SwiftUI
 import HealthKit
+import WidgetKit
 
 struct FitnessView: View {
         
     @EnvironmentObject private var workoutManager: WorkoutManager
+    @EnvironmentObject var stateManager: StateManager
+    
+    @AppStorage("TimerState", store: UserDefaults(suiteName: "group.FK.Pro-these-")) var isRunning: Bool = false
+    @State var isTimerStateDate: Date = Date()
 
     var body: some View {
         VStack{
-            if workoutManager.running {
-                SessionTabView()
-            } else {
-                HStack {
-                    Toggle("GPS Aufzeichnung:", isOn: $workoutManager.trackGPS)
-                }
-                
+            
+           
+            if isRunning {
+                // if timer runnig on the iPhone
                 Spacer()
                 
                 Button(action: {
-                    workoutManager.selectedWorkout = .walking
+                    
                 }, label: {
                     HStack {
                         Image("prothesis")
                             .imageScale(.large)
                             .font(.system(size: 30))
                             .foregroundColor(.yellow)
+                            .padding(.trailing, 10)
                         
-                        Text("Start")
+                        Text("Beende den Timer auf deinem iPhone.")
                             .font(.caption2)
                     }
                 })
                 .navigationBarTitle("Workouts")
                 .navigationBarTitleDisplayMode(.inline)
+                .disabled(true)
                 
-                Button(action: {
-                    withAnimation(.easeInOut) {
-                        workoutManager.selectedTab = .steps
-                    }
-                }, label: {
-                    Text("Statistic")
-                })
-                
-                /*
-                List {
-                    
-                    ForEach(workoutManager.workoutTypes) { workout in
-                        Button(action: { workoutManager.selectedWorkout = workout }, label: { row(icon: workout.icon, text: workout.name) })
+                Spacer()
+            } else {
+                // if timer not runnig on the iPhone
+                if workoutManager.running {
+                    // if timer runs on the watch
+                    SessionTabView()
+                } else {
+                    // no timer runs
+                    HStack {
+                        Toggle("GPS Aufzeichnung:", isOn: $workoutManager.trackGPS)
                     }
                     
-                 } //: LIST
-                 .listStyle(.carousel)
-                 .navigationBarTitle("Workouts")
-                 .navigationBarTitleDisplayMode(.inline)
-                 .onAppear {
-                     workoutManager.requestAuthorization()
-                 }
-                 */
+                    Spacer()
+                    
+                    Button(action: {
+                        workoutManager.selectedWorkout = .walking
+                    }, label: {
+                        HStack {
+                            Image("prothesis")
+                                .imageScale(.large)
+                                .font(.system(size: 30))
+                                .foregroundColor(.yellow)
+                                .padding(.trailing, 10)
+                            
+                            Text("Start")
+                                .font(.caption2)
+                        }
+                    })
+                    .navigationBarTitle("Workouts")
+                    .navigationBarTitleDisplayMode(.inline)
+                    
+                    Button(action: {
+                        withAnimation(.easeInOut) {
+                            workoutManager.selectedTab = .steps
+                        }
+                    }, label: {
+                        Text("Statistic")
+                    })
+                }
             }
         }
         .sheet(isPresented: $workoutManager.showingSummaryView) {
             SummaryView()
         }
+        .onChange(of: isRunning, perform: { newState in            
+            if newState {
+               // workoutManager.selectedWorkout = .walking
+               // UserDefaults.standard.set(Date(), forKey: "TimerStateDate")
+            }
+        })
     }
     
     @ViewBuilder
@@ -110,3 +136,5 @@ extension HKWorkoutActivityType: Identifiable {
         }
     }
 }
+
+

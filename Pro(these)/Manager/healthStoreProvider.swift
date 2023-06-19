@@ -74,7 +74,6 @@ extension HealthStoreProvider {
                            let value = quantity.doubleValue(for: .count())
                            data.append( ChartData(date: date, value: value) )
                            name = "Schritte"
-                          // print("Step: \(value)")
                        }
                        
                        if type == .distanceWalkingRunning {
@@ -113,8 +112,6 @@ extension HealthStoreProvider {
                 completion(0.0)
                 return
             }
-            
-            print(result, error)
             
             if type == .stepCount {
                 completion(sum.doubleValue(for: HKUnit.count()))

@@ -39,6 +39,11 @@ struct StopWatchView: View {
 struct StopWatchRecordView: View {
     @EnvironmentObject var stopWatchProvider: StopWatchProvider
     @EnvironmentObject var tabViewManager: TabManager
+    
+    @EnvironmentObject var stateManager: StateManager
+    
+    @State var recorderState = false
+    
     var body: some View {
         ZStack {
 
@@ -48,8 +53,8 @@ struct StopWatchRecordView: View {
                 
                 HStack{
                     Spacer()
+                    // Timer Started from the watch
                     if stopWatchProvider.recorderState == .started {
-                        
                         Text(stopWatchProvider.recorderStartTime!, style: .timer)
                             .font(.system(size: 50))
                             .italic()
@@ -57,11 +62,11 @@ struct StopWatchRecordView: View {
                             .fontWeight(.medium)
                             .foregroundColor(.white)
                         
-                    }
-                    if stopWatchProvider.recorderState == .notStarted {
+                    } else if stopWatchProvider.recorderState == .notStarted {
                         Text("")
                             .font(.system(size: 50))
                     }
+                    
                     Spacer()
                 }
                 
@@ -92,16 +97,23 @@ struct StopWatchRecordView: View {
                         )
                         .onTapGesture {
                             switch stopWatchProvider.recorderState {
-                            case .started : stopWatchProvider.stopRecording()
-                            case .notStarted:  stopWatchProvider.startRecording()
-                            case .finished:
+                                case .started :
+                                    stopWatchProvider.stopRecording(completion: { bool in  })
+                                    stateManager.updateApplicationContext(with: ["state": false , "date": Calendar.current.date(byAdding: .year, value: -5, to: Date())])
+                                    recorderState = false
+                                
+                                case .notStarted:
+                                    stopWatchProvider.startRecording(completion: { bool in  })
+                                    stateManager.updateApplicationContext(with: ["state": true , "date":  Date()])
+                                    recorderState = true
+                                case .finished:
                                 break
                             }
-                           
                         }
+                        
                    
                    
-                   Image(systemName: "music.note")
+                    Image(systemName: stateManager.session.isWatchAppInstalled && stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
                        .font(.system(size: 20))
                        .foregroundColor(.black)
                         .frame(width: 50, height: 50)
@@ -110,6 +122,9 @@ struct StopWatchRecordView: View {
                                .fill(Color.yellow)
                                .frame(width: 50, height: 50)
                        )
+                       .onTapGesture {
+                           stateManager.paired = stateManager.session.isPaired
+                       }
                }
                 .padding(.bottom, 30)
             }
@@ -118,7 +133,19 @@ struct StopWatchRecordView: View {
                     stopWatchProvider.recorderState = .started
                     stopWatchProvider.recorderStartTime = stopWatchProvider.recorderFetchStartTime()
                 }
+                
+                stateManager.paired = stateManager.session.isPaired
             }
+            .onChange(of: stateManager.paired, perform: { state in
+                if state == true {
+                    print("watch is avaible")
+                }
+            })
+            .onChange(of: stateManager.state, perform: { state in
+                if state == false {
+                    self.recorderState = false
+                }
+            })
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

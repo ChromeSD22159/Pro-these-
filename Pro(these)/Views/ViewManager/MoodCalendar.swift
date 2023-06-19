@@ -110,11 +110,11 @@ class MoodCalendar: ObservableObject {
             
             if randomNotification == 1 {
                 let reminder1 = PushNotifications().MoodReminderDaily1
-                PushNotificationManager().PushNotificationByDate(identifier: reminder1["identifier"]!, title: reminder1["titel"]!, body: reminder1["body"]!, triggerHour: 19, triggerMinute: 30, repeater: true)
+                PushNotificationManager().PushNotificationByDate(identifier: reminder1["identifier"]!, title: reminder1["titel"]!, body: reminder1["body"]!, triggerHour: 19, triggerMinute: 30, repeater: true, url: reminder1["url"]!)
             }
             if randomNotification == 2 {
-                let reminder1 = PushNotifications().MoodReminderDaily2
-                PushNotificationManager().PushNotificationByDate(identifier: reminder1["identifier"]!, title: reminder1["titel"]!, body: reminder1["body"]!, triggerHour: 19, triggerMinute: 30, repeater: true)
+                let reminder2 = PushNotifications().MoodReminderDaily2
+                PushNotificationManager().PushNotificationByDate(identifier: reminder2["identifier"]!, title: reminder2["titel"]!, body: reminder2["body"]!, triggerHour: 19, triggerMinute: 30, repeater: true, url: reminder2["url"]!)
             }
         }
     }

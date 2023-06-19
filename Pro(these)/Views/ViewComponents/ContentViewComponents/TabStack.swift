@@ -145,25 +145,22 @@ struct TabStack: View {
         }
         .onAppear{
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: {
-                print("tabStack \(String(describing: deepLink))")
-                if deepLink?.host == "feeling" {
-                    
+                if deepLink?.host == "showFeeling" {
+                    tabManager.workoutTab = .feelings
                     withAnimation(.easeInOut(duration: 0.8)){
                         self.showSubTab = false
-                        self.activeTab = .healthCenter
+                        self.activeTab = .feeling
                         cal.isCalendar = true
                         cal.addFeelingDate = Date()
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        cal.isFeelingSheet = true
-                    }
-                    
+                } else if deepLink?.host == "addFeeling" {
+                    newFeeling(moodCalendar: cal, tabManager: tabManager, showSubTab: $showSubTab, activeTab: $activeTab)
                 } else if deepLink?.host == "pain" {
                     newPain(painViewModel: pain, showSubTab: $showSubTab, activeTab: $activeTab)
-                    print("newPain")
                 } else if deepLink?.host == "stopWatch" {
                     startStopWatch(stopWatchProvider: stopWatchProvider, showSubTab: $showSubTab, activeTab: $activeTab)
-                    print("startStopWatch")
+                } else if deepLink?.host == "statistic" {
+                    tabManager.workoutTab = .statistic
                 }
             })
         }
@@ -184,7 +181,7 @@ struct TabStack: View {
         tabManager.workoutTab = .feelings
         withAnimation(.easeInOut(duration: 0.8)){
             self.showSubTab = false
-            self.activeTab = .healthCenter
+            self.activeTab = .feeling
             moodCalendar.isCalendar = true
             moodCalendar.addFeelingDate = Date()
         }
@@ -196,16 +193,18 @@ struct TabStack: View {
     func startStopWatch(stopWatchProvider: StopWatchProvider, showSubTab: Binding<Bool>, activeTab: Binding<Tab>) {
         
         if stopWatchProvider.recorderFetchStartTime() != nil {
-            stopWatchProvider.stopRecording()
-            
-            withAnimation(.easeInOut(duration: 0.3))   {
-                self.showSubTab = false
-                self.activeTab = .healthCenter
-            }
+            stopWatchProvider.stopRecording(completion: { _ in
+                withAnimation(.easeInOut(duration: 0.3))   {
+                    self.showSubTab = false
+                    self.activeTab = .healthCenter
+                }
+            })
         } else {
             if stopWatchProvider.recorderState != .started {
                 stopWatchProvider.recorderState = .started
-                stopWatchProvider.startRecording()
+                stopWatchProvider.startRecording(completion: { _ in
+                    
+                })
             }
             
             withAnimation(.easeInOut(duration: 0.3))   {

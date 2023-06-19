@@ -167,7 +167,7 @@ class EventManager: ObservableObject {
                         triggerDate: Calendar.current.date(byAdding: .second, value: alarms.first(where: { $0.ekAlarm == self.addEventAlarm })!.notification, to: addEventStarDate)!,
                         repeater: false)
                     
-                    print(alarms.first(where: { $0.ekAlarm == self.addEventAlarm })!)
+                   // print(alarms.first(where: { $0.ekAlarm == self.addEventAlarm })!)
                     
                     /*PushNotificationManager().PushNotificationByAddEvent(
                         identifier: newEvent.eventID!,

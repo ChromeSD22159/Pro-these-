@@ -6,13 +6,18 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 @main
 struct ProWatchOS_Watch_AppApp: App {
     @StateObject var healthStorage = HealthStorage()
     @StateObject var workoutManager = WorkoutManager()
+    @StateObject var stateManager = StateManager()
     
     @State var deepLink: URL?
+    // @EnvironmentObject private var extensionDelegate: MyExtensionDelegate
+    @WKExtensionDelegateAdaptor private var extensionDelegate: ExtensionDelegate
+    
     var body: some Scene {        
         
         WindowGroup {
@@ -20,6 +25,8 @@ struct ProWatchOS_Watch_AppApp: App {
                 .environmentObject(AppConfig())
                 .environmentObject(healthStorage)
                 .environmentObject(workoutManager)
+                .environmentObject(stateManager)
+                .environmentObject(extensionDelegate)
                 .environment(\.locale, Locale(identifier: "de"))
                 .onOpenURL { url in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
@@ -30,6 +37,10 @@ struct ProWatchOS_Watch_AppApp: App {
                         }
                     })
                 }
+                .onAppear {
+                    WidgetCenter.shared.reloadAllTimelines()
+                }
         }
+          
     }
 } 

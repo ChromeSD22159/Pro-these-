@@ -8,6 +8,7 @@
 import SwiftUI
 import Charts
 import Foundation
+import WidgetKit
 
 struct WorkoutStatisticView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -15,6 +16,9 @@ struct WorkoutStatisticView: View {
     
     @State var activeActivityChart:WorkoutActivityTab = .steps
     @State var workoutTime:Int = 0
+    
+    // Widget Entrys
+    @AppStorage("Entry steps") var entrySteps: Int = -10
     
     @Binding var isScreenShotSheet: Bool
     
@@ -67,7 +71,8 @@ struct WorkoutStatisticView: View {
             
             vm.getCollectionOfWeeklyHealthData()
             
-           
+            entrySteps = Int(vm.CollectionWeeklySteps.last?.data.last?.value ?? 0)
+            WidgetCenter.shared.reloadAllTimelines()
             
             let week = Calendar.current.component(.weekOfYear, from: day)
             let collection = vm.CollectionWeeklyWorkouts.filter { $0.weekNr == week }
@@ -138,9 +143,9 @@ struct WorkoutStatisticView: View {
                             
                             let (h,m,s) = secondsToHoursMinutesSeconds(Int(findWorkOutTime()))
                             switch activeActivityChart {
-                            case .workouts : Text("\(h):\(m):\(s)h").font(.title).fontWeight(.bold)
-                            case .steps : Text(seperator(vm.selectedSteps)).font(.title).fontWeight(.bold)
-                            case .distance: Text("\( String(format: "%.1f", vm.selectedDistance / 1000 ) )km ").font(.title).fontWeight(.bold)
+                            case .workouts : Text("\(h):\(m):\(s)h").font(.title2).fontWeight(.bold)
+                            case .steps : Text(seperator(vm.selectedSteps)).font(.title2).fontWeight(.bold)
+                            case .distance: Text("\( String(format: "%.1f", vm.selectedDistance / 1000 ) )km ").font(.title2).fontWeight(.bold)
                             }
                             
                             Text(formateDate(date:vm.currentDay , dateFormat: "dd.MM.y"))
@@ -159,7 +164,7 @@ struct WorkoutStatisticView: View {
                         Image(systemName: targetReached ? "hand.thumbsup.circle" : "hand.thumbsdown.circle")
                             .font(.title3)
                             .foregroundColor( targetReached ? .green : .red )
-                        Text("\(targetPercent) % des Tagesziel").foregroundColor(.white)
+                        Text("\(targetPercent) % des Tagesziel").font(.footnote).foregroundColor(.white)
                         Spacer(minLength: 5)
                     } /// percentual to target steps
                     
@@ -168,7 +173,7 @@ struct WorkoutStatisticView: View {
                         Image(systemName: vm.compareWeekAvg(date: vm.currentDay, arr: vm.CollectionWeeklySteps) ? "arrow.up.right.circle" : "arrow.down.right.circle")
                             .font(.title3)
                             .foregroundColor( vm.compareWeekAvg(date: vm.currentDay, arr: vm.CollectionWeeklySteps) ? .green : .red )
-                        Text("⌀ " + seperator(vm.selectedAvgSteps) + " Schritte ").foregroundColor(.white)
+                        Text("⌀ " + seperator(vm.selectedAvgSteps) + " Schritte ").font(.footnote).foregroundColor(.white)
                         Spacer(minLength: 5)
                     } /// avg steps
                     
@@ -177,7 +182,7 @@ struct WorkoutStatisticView: View {
                         Image(systemName: vm.compareWeekAvg(date: vm.currentDay, arr: vm.CollectionWeeklySteps) ? "arrow.up.right.circle" : "arrow.down.right.circle")
                             .font(.title3)
                             .foregroundColor( vm.compareWeekAvg(date: vm.currentDay, arr: vm.CollectionWeeklySteps) ? .green : .red )
-                        Text("⌀ " + String(format: "%.2f", vm.selectedAvgDistance / 1000) + " Kilometer").foregroundColor(.white)
+                        Text("⌀ " + String(format: "%.2f", vm.selectedAvgDistance / 1000) + " Kilometer").font(.footnote).foregroundColor(.white)
                         Spacer(minLength: 5)
                     } /// avg Distance
                 }

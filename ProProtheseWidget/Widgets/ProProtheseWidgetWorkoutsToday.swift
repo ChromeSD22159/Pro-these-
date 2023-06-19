@@ -9,63 +9,45 @@ import WidgetKit
 import SwiftUI
 import Foundation
 
-struct TodayStepsProvider: TimelineProvider {
+struct TodayWorkoutsProvider: TimelineProvider {
     let url = URL(string: "ProProthese://statistic")
     
-    @AppStorage("Entry steps") var entrySteps: Int = -10
+    private let entryCache = EntryCache()
     
     var nextUpdate: Date {
-        return Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
-    }
-
-    var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
-        return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
+        return Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!
     }
     
-    func placeholder(in context: Context) -> TodayStepsSimpleEntry {
-        TodayStepsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: dummySteps)
+    func placeholder(in context: Context) -> TodayWorkoutsSimpleEntry {
+        TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: Date(), url: url)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (TodayStepsSimpleEntry) -> ()) {
-        let entry = TodayStepsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: dummySteps)
+    func getSnapshot(in context: Context, completion: @escaping (TodayWorkoutsSimpleEntry) -> ()) {
+        let entry = TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: Date(), url: url)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        let entrie = TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url)
         
-        var entries:[TodayStepsSimpleEntry] = []
-        var entryDate = Date()
-        
-        entryDate = Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
-        
-        let s:(min: Int, max: Int, current: Int, error: Error?) = (min: 0, max: AppConfig.shared.targetSteps, current: 0, error: nil)
-        let entrie = TodayStepsSimpleEntry(date: Date(), nextUpdate: entryDate, url: url, steps: s)
-
-        entries.append(entrie)
-        
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        
+        let timeline = Timeline(entries: [entrie], policy: .after(nextUpdate))
         completion(timeline)
-        
     }
 }
 
-struct TodayStepsSimpleEntry: TimelineEntry {
+struct TodayWorkoutsSimpleEntry: TimelineEntry {
     let date: Date
     let nextUpdate: Date
     let url: URL?
-    let steps: (min: Int , max: Int , current: Int, error: Error?)
 }
 
-struct ProProtheseWidgetTodayStepsEntryView : View {
+struct ProProtheseWidgetTodayWorkoutsEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
-    var entry: TodayStepsProvider.Entry
-    
-    private let debug = true
+    var entry: TodayWorkoutsProvider.Entry
     
     @AppStorage("Entry Date") var entryDate: String = ""
-    @AppStorage("Entry steps") var entrySteps: Int = 123
-    @State var entryError: Error?
+    @AppStorage("Entry steps") var entrySteps: Int = -10
+    @AppStorage("Entry Workouts") var entryWorkouts:String = "0"
     
     var body: some View {
         ZStack {
@@ -95,18 +77,18 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             Spacer()
                             
                             HStack(alignment: .center){
-                                Text("Schritte heute")
+                                Text("Prothesenzeit heute")
                                     .font(.system(size: 10, weight: .medium))
                                     .foregroundColor(.white)
                             }
                             .frame(alignment: .center)
                             .padding(.trailing, 10)
                             
-                            Text("\(entrySteps)")
+                            Text("\(entryWorkouts)")
                                 .font(.title.bold())
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
-
+                            
                             HStack(alignment: .center){
                                 Text("Stand: \(entryDate)")
                                     .font(.system(size: 8, weight: .medium))
@@ -115,7 +97,7 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             .frame(alignment: .center)
                             .padding(.trailing, 10)
                             
-                            Text(entry.steps.error?.localizedDescription ?? "")
+                            Text("")
                                 .font(.system(size: 8, weight: .medium))
                                 .foregroundColor(.gray)
                                 .padding(.bottom, 5)
@@ -125,7 +107,6 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                         .widgetURL(entry.url)
                         
                     }
-
                 case .accessoryCircular:
                     ZStack {
                         
@@ -144,7 +125,6 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             }
                         }
                     }.widgetURL(entry.url)
-                    
                 case .accessoryRectangular:
                     ZStack {
                         
@@ -158,7 +138,7 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                                 }
                                 
                                 VStack(alignment: .leading) {
-                                    Text("\(entrySteps)")
+                                    Text("\(entryWorkouts)")
                                         .font(.body.bold())
                                         .multilineTextAlignment(.center)
                                         .foregroundColor(.white)
@@ -174,7 +154,6 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             .padding(.horizontal)
                         }
                     }.widgetURL(entry.url)
-                    
                 case .accessoryInline:
                     ZStack {
                             
@@ -184,7 +163,7 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                                     .imageScale(.large)
                                     .font(.system(size: 30))
                                 
-                                Text("\(entrySteps) Schritte")
+                                Text("\(entryWorkouts) Schritte")
                             }
                         }
                     }.widgetURL(entry.url)
@@ -198,34 +177,59 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
             }
         }
         .onAppear(perform: {
+            let DateIndterval = DateInterval(start: Calendar.current.startOfDay(for: Date()), end: Date())
+            
             HealthStoreProvider().queryWidgetSteps(completion: { stepCount, error in
                 if error?._code == 6 {
-                    print("SA: \(self.entrySteps)")
+                    print("WA: \(self.entrySteps)")
                 } else {
                     self.entrySteps = Int(stepCount)
                 }
-                self.entryError = error
                 self.entryDate = Date().dateFormatte(date: "dd.MM.yyyy", time: "HH:mm").date + " " + Date().dateFormatte(date: "dd.MM.yyyy", time: "HH:mm").time
+                
+                HealthStoreProvider().getWorkouts(week: DateIndterval, workout: .default(), completion: { workouts in
+                    let (h,m,s) = secondsToHoursMinutesSeconds(Int(workouts.data.last?.value ?? 0.1))
+                    self.entryWorkouts = h + ":" + m + ":" + s
+                })
             })
         })
         .onChange(of: entry.date, perform: { newDate in
-            HealthStoreProvider().queryWidgetSteps(completion: { stepCount, error in
+            let DateIndterval = DateInterval(start: Calendar.current.startOfDay(for: newDate), end: newDate)
+            HealthStoreProvider().queryWidgetSteps(completion: { stepCount, error in               
+                
                 
                 if error?._code == 6 {
-                    print("SC: \(self.entrySteps)")
+                    print("WC: \(self.entrySteps)")
                 } else {
                     self.entrySteps = Int(stepCount)
                 }
                 
-                self.entryError = error
                 self.entryDate = Date().dateFormatte(date: "dd.MM.yyyy", time: "HH:mm").date + " " + Date().dateFormatte(date: "dd.MM.yyyy", time: "HH:mm").time
+                
+                HealthStoreProvider().getWorkouts(week: DateIndterval, workout: .default(), completion: { workouts in
+                    let (h,m,s) = secondsToHoursMinutesSeconds(Int(workouts.data.last?.value ?? 0.1))
+                    self.entryWorkouts = h + ":" + m + ":" + s
+                })
             })
         })
     }
+    
+    func secondsToHoursMinutesSeconds(_ seconds: Int) -> (String, String, String) {
+        let hour = String(format: "%02d", seconds / 3600)
+        let minute = String(format: "%02d", (seconds % 3600) / 60)
+        let second = String(format: "%02d", (seconds % 3600) % 60)
+        return (hour, minute, second)
+    }
+    
 }
 
-struct ProProtheseWidgetTodaySteps: Widget {
-    let kind: String = "ProProtheseWidgetTodaySteps"
+class EntryCache {
+    var previousEntry: SimpleEntry?
+}
+
+struct ProProtheseWidgetTodayWorkouts: Widget {
+    
+    let kind: String = "ProProtheseWidgetTodayWorkouts"
     
     private var supportedFamilies:[WidgetFamily] = [
         .systemSmall,
@@ -234,20 +238,25 @@ struct ProProtheseWidgetTodaySteps: Widget {
         .accessoryInline
     ]
     
+    @State var entryError: Error?
+    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: TodayStepsProvider()) { entry in
-            ProProtheseWidgetTodayStepsEntryView(entry: entry)
+        StaticConfiguration(kind: kind, provider: TodayWorkoutsProvider()) { entry in
+            ProProtheseWidgetTodayWorkoutsEntryView(entry: entry)
                 .background(.clear)
                 .cornerRadius(20)
         }
         .supportedFamilies(supportedFamilies)
-        .configurationDisplayName("Schritte Heute")
+        .configurationDisplayName("Prothesen Tragezeit")
         .description("Sehe überall dein täglichen Fortschritt")
-       
+      
     }
 }
 
-struct ProProtheseWidgetTodaySteps_Previews: PreviewProvider {
+struct ProProtheseWidgetTodayWorkouts_Previews: PreviewProvider {
+    
+    var nextUpdate: Date
+    
     static var supportedFamilies:[(widget: WidgetFamily, name: String)] = [
         (widget: .systemSmall, name: "Small"),
         (widget: .accessoryCircular, name: "Circular"),
@@ -263,17 +272,17 @@ struct ProProtheseWidgetTodaySteps_Previews: PreviewProvider {
         Group {
             
             ForEach(supportedFamilies, id:\.0) { item in
-                ProProtheseWidgetTodayStepsEntryView( entry: TodayStepsSimpleEntry(
+                ProProtheseWidgetTodayWorkoutsEntryView(
+                    entry: TodayWorkoutsSimpleEntry(
                         date: Date(),
                         nextUpdate: Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!,
-                        url: URL(string: "ProProthese://statistic"),
-                        steps: dummySteps
+                        url: URL(string: "ProProthese://statistic")
                     )
-                    
                 )
+                .background(.clear)
+                .cornerRadius(20)
                 .previewContext(WidgetPreviewContext(family: item.widget))
                 .previewDisplayName("\(item.name)")
-                .cornerRadius(20)
             }
  
         }

@@ -308,7 +308,7 @@ struct ContactDetailView: View {
                                 newContactPerson.mobil = convertPhoneNumberWithPrefix(number: contactManager.mobil, type: "mobil")
                                 newContactPerson.mail = contactManager.email
                                 
-                                print(convertPhoneNumberWithPrefix(number: contactManager.phone, type: "phone"))
+                                //print(convertPhoneNumberWithPrefix(number: contactManager.phone, type: "phone"))
                                 
                                 if ValidateForm(newContactPerson: newContactPerson) {
                                    
@@ -344,19 +344,19 @@ struct ContactDetailView: View {
                     }
                     .onChange(of: contactManager.phone, perform: { newPhone in
                         let p = convertPhoneNumberWithPrefix(number: newPhone, type: "phone")
-                        print(p)
+                        //print(p)
                     })
                     .onChange(of: contactManager.countryPhonePrefix, perform: { newPhone in
                         let p = convertPhoneNumberWithPrefix(number: contactManager.phone, type: "phone")
-                        print(p)
+                        //print(p)
                     })
                     .onChange(of: contactManager.mobil, perform: { newPhone in
                         let p = convertPhoneNumberWithPrefix(number: newPhone, type: "mobil")
-                        print(p)
+                       // print(p)
                     })
                     .onChange(of: contactManager.countryMobilPrefix, perform: { newPhone in
                         let p = convertPhoneNumberWithPrefix(number: contactManager.mobil, type: "mobil")
-                        print(p)
+                       // print(p)
                     })
                     
                     

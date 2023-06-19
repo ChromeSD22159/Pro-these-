@@ -47,7 +47,7 @@ struct ProProtheseWidgetPainEntryView : View {
 
     var body: some View {
         ZStack {
-            Link(destination: URL(string: "ProProthese://feeling")!) {
+            Link(destination: entry.url!) {
                 
                 LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
                 
@@ -73,7 +73,7 @@ struct ProProtheseWidgetPainEntryView : View {
                                     .font(.title.bold())
                                     .foregroundColor(.black)
                             }
-                            .widgetURL(URL(string: "ProProthese://pain"))
+                            .widgetURL(entry.url)
                         }
                         .frame(width: screen.size.width, height: screen.size.height)
                         .widgetURL(entry.url)

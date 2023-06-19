@@ -7,6 +7,8 @@
 
 import Foundation
 import HealthKit
+import WidgetKit
+import SwiftUI
 
 class StopWatchProvider: NSObject, ObservableObject {
     
@@ -17,14 +19,23 @@ class StopWatchProvider: NSObject, ObservableObject {
     @Published var recorderState: WorkoutSessionState = .notStarted
     @Published var recorderStartTime: Date?
     
-    func startRecording(){
+   
+    
+    func startRecording(completion: @escaping(Bool) -> ()){
         let date = Date()
         self.recorderStartTime = date
         UserDefaults.standard.set(self.recorderStartTime, forKey: "startTime")
+        
+        let userDefaults = UserDefaults(suiteName: "group.FK.Pro-these-")
+        userDefaults?.set(true, forKey: "TIME")
+        userDefaults?.synchronize()
+        
         self.recorderState = .started
+        
+        completion(true)
     }
     
-    func stopRecording(){
+    func stopRecording(completion: @escaping(Bool) -> ()){
         let startTime = recorderFetchStartTime()
         guard startTime != nil else {
             return print("stopRecording: Start Time is unset")
@@ -32,8 +43,17 @@ class StopWatchProvider: NSObject, ObservableObject {
         completeWorkout(workout: .walking, start: startTime!, end: Date())
 
         self.recorderStartTime = nil
+        
+        let userDefaults = UserDefaults(suiteName: "group.FK.Pro-these-")
+        userDefaults?.set(false, forKey: "TIME")
+        userDefaults?.synchronize()
+        
         UserDefaults.standard.set(nil, forKey: "startTime")
+        WidgetCenter.shared.reloadAllTimelines()
+        
         self.recorderState = .notStarted
+        
+        completion(false)
     }
     
     func recorderFetchStartTime() -> Date? {

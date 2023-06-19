@@ -8,15 +8,21 @@
 import WidgetKit
 import SwiftUI
 import HealthKit
+import Foundation
 
 struct Provider: TimelineProvider {
-
-    let url = URL(string: "ProProthese://stopWatch")
-    
     var workoutManager: WorkoutManager
     
+    var stateManager: StateManager
+    
+    var url = URL(string: "ProProthese://stopWatch")
+    
+    var entrySteps: Double
+    var entryWorkouts: Double
+    
+    
     var nextUpdate: Date {
-        return Calendar.current.date(byAdding: .minute, value: 10, to: Date())!
+        return Calendar.current.date(byAdding: .second, value: 5, to: Date())!
     }
 
     var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
@@ -24,28 +30,43 @@ struct Provider: TimelineProvider {
     }
     
     func placeholder(in context: Context) -> SimpleEntry {
-        return SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps, isRunning: false, timer: Date())
+        return SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps, isRunning: false, timer: Date(), workout: 0.1)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps, isRunning: false, timer: Date())
+        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: self.url!, steps: dummySteps, isRunning: false, timer: Date(), workout: 0.1)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         let currentDate = Date()
         
-        let startDate = Calendar.current.startOfDay(for: currentDate)
-
-        workoutManager.queryWidgetSteps(completion: { stepCount, error in
-            
-            let s = (min: 0, max: AppConfig.shared.targetSteps, current: Int(stepCount), error: error)
-            let entrie = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: s, isRunning: false, timer: Date())
-            
-            let timeline = Timeline(entries: [entrie], policy: .after(nextUpdate))
-            completion(timeline)
-            
-        })
+        let update = Calendar.current.date(byAdding: .second, value: 5, to: currentDate)!
+        
+        let userDefaults = UserDefaults(suiteName: "group.FK.Pro-these-")
+        userDefaults?.synchronize()
+        
+        let s: (min: Int, max: Int, current: Int, error: Error?) = (min: 0, max: AppConfig.shared.targetSteps, current: Int(entrySteps), error: nil)
+        
+        let entrie = SimpleEntry(date: Date(), nextUpdate: update, url: self.url, steps: s, isRunning: stateManager.state, timer: currentDate, workout: entryWorkouts)
+        let timeline = Timeline(entries: [entrie], policy: .after(update))
+        completion(timeline)
+    }
+    
+    func recorderFetchStartTime() -> Bool {
+        if (UserDefaults.standard.object(forKey: "startTime") != nil) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func CheckRecorder() -> Bool {
+        if (UserDefaults(suiteName: "group.FK.Pro-these-")?.object(forKey: "startTime") != nil) {
+            return true
+        } else {
+            return false
+        }
     }
 
 }
@@ -57,6 +78,7 @@ struct SimpleEntry: TimelineEntry {
     let steps: (min: Int , max: Int , current: Int, error: Error?)
     let isRunning: Bool
     let timer: Date
+    let workout: Double
 }
 
 struct StopWatchComplicationEntryView : View {
@@ -64,8 +86,12 @@ struct StopWatchComplicationEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
     
     private var percentSteps: Int {
-        return Int(self.entry.steps.current) / 10000 * 100
+        return Int(self.entry.steps.current) / AppConfig.shared.targetSteps * 100
     }
+    
+    @AppStorage("TimerState", store: UserDefaults(suiteName: "group.FK.Pro-these-")) var isRunning: Bool = false
+    
+    @State var stateManager = StateManager.sharedManager
     
     var body: some View {
         let steps = entry.steps
@@ -85,6 +111,9 @@ struct StopWatchComplicationEntryView : View {
                     Text(entry.date, format: .dateTime)
                 }
             }
+        }
+        .onAppear {
+            print(stateManager.state)
         }
         .widgetURL(entry.url)
     }
@@ -113,28 +142,14 @@ struct StopWatchComplicationEntryView : View {
     
     @ViewBuilder
     func Corner(steps: (min: Int, max: Int, current: Int, error: (any Error)?)) -> some View {
-        ZStack {
-            
-            Image("prothesis")
-                .imageScale(.large)
-                .font(.system(size: 30))
-                .widgetLabel {
-                    Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
-                        Label("Speed", systemImage: "gauge")
-                    } currentValueLabel: {
-                      Text("\(steps.current)")
-                    } minimumValueLabel: {
-                        Text(String(format: "%.0f", steps.min))
-                            .font(.system(size: 6))
-                            .foregroundColor(.white.opacity(0.5))
-                    } maximumValueLabel: {
-                        Text(String(format: "%.0f", steps.max))
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-                    .tint(steps.current > 100 ? AppConfig.shared.gaugeGradientBad : AppConfig.shared.gaugeGradientGood)
-                    .labelStyle(.automatic)
-                }
-        }
+        Text("🦿")
+            .font(.system(size: 35))
+            .widgetLabel(label: {
+                let (h,m,s) = secondsToHoursMinutesSeconds(Int(entry.workout))
+                
+                Text("\(h):\(m):\(s)")
+                    .font(.body.bold())
+            })
     }
     
     @ViewBuilder
@@ -144,31 +159,38 @@ struct StopWatchComplicationEntryView : View {
 
                 HStack {
                     
-                    if !entry.isRunning {
+                    let (h,m,s) = secondsToHoursMinutesSeconds(Int(entry.workout))
+                    
+                    if !isRunning {
                         HStack(alignment: .center) {
                             Text("🦿")
                             
-                            Text("0:00")
-                                .font(.system(size: 20).bold())
+                            
+                            Text("\(h):\(m):\(s)")
+                                .font(.body.bold())
                             
                             Spacer()
                             
-                            Text("Start".uppercased())
-                                .font(.system(size: 20).bold())
+                            Text(isRunning ? "T":" ")
+                                .font(.body.bold())
+                            
+                            Image(systemName: "stopwatch")
+                                .font(.body.bold())
                                 .foregroundColor(.yellow)
                                 .padding(.trailing, 10)
+                                .opacity(0)
                         }
                     } else {
                         HStack(alignment: .center) {
                             Text("🦿")
                             
-                            Text(entry.timer , style: .timer)
+                            Text("\(h):\(m):\(s)")
                                 .font(.system(size: 20).bold())
                             
                             Spacer()
                             
-                            Text("Stop".uppercased())
-                                .font(.system(size: 20).bold())
+                            Image(systemName: "stopwatch")
+                                .font(.body.bold())
                                 .foregroundColor(.yellow)
                                 .padding(.trailing, 10)
                         }
@@ -196,7 +218,7 @@ struct StopWatchComplicationEntryView : View {
                             
                             Spacer()
                             
-                            Text("Update: " + entry.date.formatteTime(time: "HH:mm")).font(.system(size: 10).bold())
+                            Text("Update: " + entry.nextUpdate.formatteTime(time: "HH:mm")).font(.system(size: 10).bold())
                                 .padding(.trailing, 5)
                         }
                         
@@ -227,20 +249,71 @@ struct StopWatchComplicationEntryView : View {
             }
         }
     }
+    
+    func secondsToHoursMinutesSeconds(_ seconds: Int) -> (String, String, String) {
+        let hour = String(format: "%02d", seconds / 3600)
+        let minute = String(format: "%02d", (seconds % 3600) / 60)
+        let second = String(format: "%02d", (seconds % 3600) % 60)
+        return (hour, minute, second)
+    }
 }
 
 @main
 struct StopWatchComplication: Widget {
     let kind: String = "StopWatchComplication"
     
+    private var supportedFamilies:[WidgetFamily] = [
+        .accessoryCircular,
+        .accessoryCorner,
+        .accessoryRectangular
+    ]
+    
     let hm = WorkoutManager()
     
+    @StateObject var stateManager = StateManager()
+    
+    @AppStorage("Entry steps") var entrySteps: Double = 0
+    @AppStorage("Entry workouts") var entryWorkouts: Double = 0
+    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider(workoutManager: hm)) { entry in
+        StaticConfiguration(kind: kind, provider: Provider(workoutManager: hm, stateManager: stateManager, entrySteps: entrySteps, entryWorkouts: entryWorkouts)) { entry in
             StopWatchComplicationEntryView(entry: entry)
+                .onAppear{
+                    let DateIndterval = DateInterval(start: Calendar.current.startOfDay(for: Date()), end: Date())
+                    
+                    hm.queryWidgetSteps(completion: { res, err in
+
+                        hm.getWorkouts(week: DateIndterval, workout: .default(), completion: { workouts in
+                           
+                            if err?._code == 6 {
+                                
+                            } else {
+                                self.entrySteps = res
+                            }
+                            self.entryWorkouts = workouts.data.last?.value ?? 0.1
+                        })
+                    })
+                }
+                .onChange(of: entry.date, perform: { newDate in
+                    let DateIndterval = DateInterval(start: Calendar.current.startOfDay(for: Date()), end: Date())
+                    
+                    hm.queryWidgetSteps(completion: { res, err in
+
+                        hm.getWorkouts(week: DateIndterval, workout: .default(), completion: { workouts in
+                           
+                            if err?._code == 6 {
+                                
+                            } else {
+                                self.entrySteps = res
+                            }
+                            self.entryWorkouts = workouts.data.last?.value ?? 0.1
+                        })
+                    })
+                })
+            
         }
         .configurationDisplayName("Prothesen Timer")
-        .supportedFamilies([.accessoryRectangular, .accessoryCircular])
+        .supportedFamilies(supportedFamilies)
         .description("Starte und Beende deine Prothesenzeiten schnell.")
     }
 }
@@ -251,18 +324,19 @@ struct StopWatchComplication_Previews: PreviewProvider {
     }
 
     static var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
-        return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
+        return (min: 0, max: 10000, current: 4567, error: nil)
     }
     
     static var supportedFamilies:[(widget: WidgetFamily, name: String)] = [
         (widget: .accessoryCircular, name: "Circular"),
+        (widget: .accessoryCorner, name: "Corner"),
         (widget: .accessoryRectangular, name: "Regangular"),
         (widget: .accessoryInline, name: "Inline")
     ]
     
     static var previews: some View {
         let url = URL(string: "ProProthese://pain")
-        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url!, steps: dummySteps, isRunning: true, timer: Date())
+        let entry = SimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url!, steps: dummySteps, isRunning: true, timer: Date(), workout: 0.12)
         Group {
            
             ForEach(supportedFamilies, id:\.0) { item in

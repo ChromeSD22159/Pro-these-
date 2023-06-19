@@ -67,7 +67,8 @@ class PushNotificationManager : ObservableObject {
                 body:           PushNotification.MoodReminder["body"]!,
                 triggerHour:    Int(PushNotification.MoodReminder["triggerHour"]!)!,
                 triggerMinute:  Int(PushNotification.MoodReminder["triggerMinute"]!)!,
-                repeater:       Bool(PushNotification.MoodReminder["repeater"]!) ?? false
+                repeater:       Bool(PushNotification.MoodReminder["repeater"]!) ?? false,
+                url:            PushNotification.MoodReminder["url"]!
             )
         }
 
@@ -78,7 +79,8 @@ class PushNotificationManager : ObservableObject {
                 body:           PushNotification.GoodMorning["body"]!,
                 triggerHour:    Int(PushNotification.GoodMorning["triggerHour"]!)!,
                 triggerMinute:  Int(PushNotification.GoodMorning["triggerMinute"]!)!,
-                repeater:       Bool(PushNotification.GoodMorning["repeater"]!) ?? false
+                repeater:       Bool(PushNotification.GoodMorning["repeater"]!) ?? false,
+                url:            PushNotification.GoodMorning["url"]!
             )
         }
     }
@@ -99,7 +101,8 @@ class PushNotificationManager : ObservableObject {
                 identifier: comeback["identifier"]!,
                 title: comeback["titel"]!,
                 body: comeback["body"]!,
-                triggerTimer: random
+                triggerTimer: random,
+                url: comeback["url"]!
             )
         }
         
@@ -109,7 +112,8 @@ class PushNotificationManager : ObservableObject {
                 identifier: comeback["identifier"]!,
                 title: comeback["titel"]!,
                 body: comeback["body"]!,
-                triggerTimer: random
+                triggerTimer: random,
+                url: comeback["url"]!
             )
         }
         
@@ -122,7 +126,7 @@ class PushNotificationManager : ObservableObject {
     /// - Parameter title:         (String)     - Set Notification Headline (String)
     /// - Parameter body:          (String)     - Set Notification Body Text (String)
     /// - Parameter triggerTimer:  (String)     - Set Notification Timer (Int) in seconds after trigger/ register the Notification
-    func PushNotificationByTimer(identifier: String, title: String, body: String, triggerTimer: Int) {
+    func PushNotificationByTimer(identifier: String, title: String, body: String, triggerTimer: Int, url: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
@@ -135,6 +139,12 @@ class PushNotificationManager : ObservableObject {
         // add our notification request
         UNUserNotificationCenter.current().add(request)
         
+        
+        if let url = URL(string: url) {
+            // Ask the system to open that URL.
+            UIApplication.shared.open(url)
+        }
+        
         print("Register Notification:  \(identifier)")
     }
     
@@ -144,7 +154,7 @@ class PushNotificationManager : ObservableObject {
     /// - Parameter title:         (String)     - Set Notification Headline (String)
     /// - Parameter body:          (String)     - Set Notification Body Text (String)
     /// - Parameter triggerTimer:  (String)     - Set Notification Timer (Int) in seconds after trigger/ register the Notification
-    func PushNotificationByDate(identifier: String, title: String, body: String, triggerHour: Int, triggerMinute: Int, repeater: Bool) {
+    func PushNotificationByDate(identifier: String, title: String, body: String, triggerHour: Int, triggerMinute: Int, repeater: Bool, url: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
@@ -160,6 +170,11 @@ class PushNotificationManager : ObservableObject {
 
         // add our notification request
         UNUserNotificationCenter.current().add(request)
+        
+        if let url = URL(string: url) {
+            // Ask the system to open that URL.
+            UIApplication.shared.open(url)
+        }
         
         print("Register Notification:  \(identifier)")
     }
@@ -186,6 +201,7 @@ class PushNotificationManager : ObservableObject {
             
             print("Register Notification:  \(identifier) für: \(trigger)")
         }
+       
     }
     
     func PushNotificationByAddEvent2(identifier: String, title: String, body: String, triggerDate: Date, repeater: Bool) {

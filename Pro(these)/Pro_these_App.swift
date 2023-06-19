@@ -4,6 +4,7 @@ import SwiftUI
 import HealthKit
 import Combine
 import Foundation
+import WidgetKit
 
 @main
 struct Pro_theseApp: App {
@@ -17,6 +18,9 @@ struct Pro_theseApp: App {
     let cal = MoodCalendar()
     let workoutStatisticViewModel = WorkoutStatisticViewModel()
     let painViewModel = PainViewModel()
+    
+    @StateObject var stateManager = StateManager()
+    
     @AppStorage("Days") var fetchDays:Int = 7
     @State private var LaunchScreen = true
     @State var deepLink:URL?
@@ -33,31 +37,40 @@ struct Pro_theseApp: App {
         WindowGroup {
             ZStack{
                 if loginViewModel.appUnlocked {
-                    ContentView(loc: LocationProvider.shared.getLocation(), deepLink: $deepLink)
-                        .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                        .environmentObject(AppConfig())
-                        .environmentObject(TabManager())
-                        .environmentObject(healthStorage)
-                        .environmentObject(pushNotificationManager)
-                        .environmentObject(eventManager)
-                        .environmentObject(cal)
-                        .environmentObject(workoutStatisticViewModel)
-                        .environmentObject(painViewModel)
-                        .onChange(of: scenePhase) { newPhase in
-                            if newPhase == .active {
-                                pushNotificationManager.removeNotificationsWhenAppLoads()
+                    
+                    if let defaults = UserDefaults(suiteName: "group.FK.Pro-these-") {
+                        ContentView(loc: LocationProvider.shared.getLocation(), deepLink: $deepLink)
+                            .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                            .environmentObject(AppConfig())
+                            .environmentObject(TabManager())
+                            .environmentObject(healthStorage)
+                            .environmentObject(pushNotificationManager)
+                            .environmentObject(eventManager)
+                            .environmentObject(cal)
+                            .environmentObject(workoutStatisticViewModel)
+                            .environmentObject(painViewModel)
+                            .environmentObject(stateManager)
+                            .defaultAppStorage(defaults)
+                            .onChange(of: scenePhase) { newPhase in
+                                if newPhase == .active {
+                                    pushNotificationManager.removeNotificationsWhenAppLoads()
+                                    
+                                } else if newPhase == .inactive {
                                 
-                            } else if newPhase == .inactive {
-                            
-                            } else if newPhase == .background {
-                                print("APP changed to Background")
-                                loginViewModel.appUnlocked = false
-                                if !AppConfig().PushNotificationDisable {
-                                    pushNotificationManager.setUpNonPermanentNotifications()
+                                } else if newPhase == .background {
+                                    print("APP changed to Background")
+                                    loginViewModel.appUnlocked = false
+                                    if !AppConfig().PushNotificationDisable {
+                                        pushNotificationManager.setUpNonPermanentNotifications()
+                                    }
+                                  
                                 }
-                              
                             }
-                        }
+                    } else {
+                        Text("Fehler beim Laden der AppGroup")
+                    }
+                    
+                    
                 
                 } else {
                     LoginScreen()
@@ -78,6 +91,7 @@ struct Pro_theseApp: App {
              
             }
             .onAppear{
+                WidgetCenter.shared.reloadAllTimelines()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                     withAnimation(.easeOut(duration: 2.0)) {
                         LaunchScreen = false
@@ -85,9 +99,7 @@ struct Pro_theseApp: App {
                 })
             }
             .onOpenURL { url in
-                print("onOpenURL1 \(String(describing: deepLink))")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                    print("onOpenURL2 \(String(describing: deepLink))")
                     if url.scheme == "ProProthese" {
                         deepLink = url
                     } else {

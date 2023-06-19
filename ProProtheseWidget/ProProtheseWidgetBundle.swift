@@ -16,10 +16,10 @@ struct ProProtheseWidgetBundle: WidgetBundle {
         ProProthesenWidgetStopWatch()
         ProProtheseWidgetFeeling()
         
-        if #available(iOS 16, *) {
-                ProProtheseWidgetTodaySteps()
-                ProProtheseWidgetShowFeeling()
-        }
+        ProProtheseWidgetTodaySteps()
+        ProProtheseWidgetTodayWorkouts()
+        ProProtheseWidgetShowFeeling()
+        
         
         ProProtheseWidgetLiveActivity()
     }
