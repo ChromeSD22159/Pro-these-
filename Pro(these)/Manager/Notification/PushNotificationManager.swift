@@ -139,12 +139,6 @@ class PushNotificationManager : ObservableObject {
         // add our notification request
         UNUserNotificationCenter.current().add(request)
         
-        
-        if let url = URL(string: url) {
-            // Ask the system to open that URL.
-            UIApplication.shared.open(url)
-        }
-        
         print("Register Notification:  \(identifier)")
     }
     
@@ -170,11 +164,6 @@ class PushNotificationManager : ObservableObject {
 
         // add our notification request
         UNUserNotificationCenter.current().add(request)
-        
-        if let url = URL(string: url) {
-            // Ask the system to open that URL.
-            UIApplication.shared.open(url)
-        }
         
         print("Register Notification:  \(identifier)")
     }

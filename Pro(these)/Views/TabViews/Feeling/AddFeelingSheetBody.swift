@@ -8,114 +8,259 @@
 import SwiftUI
 import WidgetKit
 
+
+
 struct AddFeelingSheetBody: View {
     @EnvironmentObject var cal: MoodCalendar
     let persistenceController = PersistenceController.shared
+    
+    var testFeeling: Feeling? {
+        let newFeeling = Feeling(context: PersistenceController.shared.container.viewContext)
+        newFeeling.date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
+        newFeeling.name = "feeling_1"
+        
+        #if !targetEnvironment(simulator)
+        return cal.editFeeling
+        #endif
+
+        #if targetEnvironment(simulator)
+        return newFeeling
+        #endif
+        
+        
+    }
+    
     var body: some View {
         GeometryReader { geo in
-            VStack {
-                // close
-                HStack {
-                    Spacer()
-                    ZStack{
-                        Image(systemName: "xmark")
-                            .font(.title2)
-                            .padding()
-                    }
-                    .onTapGesture{
-                        withAnimation(.easeInOut) {
-                            cal.isFeelingSheet.toggle()
-                        }
+            
+            if let feeling = testFeeling {
+                VStack {
+                    // close
+                    
+                    SheetHeader("Ändere dein Stimmung", action: {
+                        cal.isFeelingSheet.toggle()
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                             cal.showDatePicker = false
                         })
+                    })
+                    
+                    Spacer()
+                    
+                    VStack(spacing: 8){
+                        Text("Hey! Wie fühlst")
+                            .font(.system(size: 30, weight: .regular))
+                        Text("du dich heute?")
+                            .font(.system(size: 30, weight: .regular))
                     }
-                }
-                .padding()
-                
-                Spacer()
-                VStack(spacing: 8){
-                    Text("Hey! Wie fühlst")
-                        .font(.system(size: 30, weight: .regular))
-                    Text("du dich heute?")
-                        .font(.system(size: 30, weight: .regular))
-                }
-                
-                // DatePicker
-                Button {
-                    withAnimation {
-                        cal.showDatePicker.toggle()
-                    }
-                }  label: {
-                    HStack(spacing: 20){
-                        Image(systemName: "calendar.badge.plus")
-                            .font(.title3)
-                        Text(cal.addFeelingDate, style: .date)
-                    }
-                    .padding()
-                    .padding(.horizontal)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray)
-                    )
-                }
-                .background(
-                    DatePicker("", selection: $cal.addFeelingDate, displayedComponents: .hourAndMinute)
-                        .datePickerStyle(.wheel)
-                        .frame(width: 200, height: 100)
-                        .clipped()
-                        .background(Color.gray.cornerRadius(10))
-                        .opacity(cal.showDatePicker ? 1 : 0 )
-                        .offset(x: 50, y: 90)
-                ).onChange(of: cal.addFeelingDate) { newValue in
-                   withAnimation {
-                       cal.showDatePicker.toggle()
-                   }
-               }// DatePicker
-
-                
-                Spacer()
-
-                
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 10) {
-                    ForEach(cal.feelingItems , id: \.name) { feeling in
-                        
-                        ZStack{
-                            Image("feeling_\(feeling.image)")
-                                .resizable()
-                                .frame(width: geo.size.width / 6.5, height: geo.size.width / 6.5 )
-                                .foregroundColor(feeling.color)
-                                .onTapGesture {
-                                    cal.selectedFeeling = "feeling_\(feeling.image)"
-                                    
-                                    let newFeeling = Feeling(context: persistenceController.container.viewContext)
-                                    newFeeling.date = cal.addFeelingDate
-                                    newFeeling.name = cal.selectedFeeling
-                                    
-                                    do {
-                                        try? persistenceController.container.viewContext.save()
-                                        cal.isFeelingSheet.toggle()
-                                        WidgetCenter.shared.reloadAllTimelines()
-                                        cal.selectedFeeling = ""
-                                    }
-                                    
-                                }
+                    
+                    // DatePicker
+                    Button {
+                        withAnimation {
+                            cal.showDatePicker.toggle()
+                        }
+                    }  label: {
+                        HStack(spacing: 20){
+                            Image(systemName: "calendar.badge.plus")
+                                .font(.title3)
+                            Text(cal.addFeelingDate, style: .date)
                         }
                         .padding()
-                        .frame(width: geo.size.width / 7.5, height: geo.size.width / 7.5 )
-                        .background(cal.selectedFeeling == "feeling_\(feeling.image)" ? .white.opacity(0.2) : .white.opacity(0))
-                        .cornerRadius(20)
+                        .padding(.horizontal)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray)
+                        )
+                    }
+                    .background(
+                        DatePicker("", selection: $cal.addFeelingDate, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .frame(width: 200, height: 100)
+                            .clipped()
+                            .background(Color.gray.cornerRadius(10))
+                            .opacity(cal.showDatePicker ? 1 : 0 )
+                            .offset(x: 50, y: 90)
+                    ).onChange(of: cal.addFeelingDate) { newValue in
+                       withAnimation {
+                           cal.showDatePicker.toggle()
+                       }
+                   }// DatePicker
+
+                    
+                    Spacer()
+
+                    
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 10) {
+                        ForEach(cal.feelingItems , id: \.name) { feeling in
+                            
+                            ZStack{
+                                Image("feeling_\(feeling.image)")
+                                    .resizable()
+                                    .frame(width: geo.size.width / 6.5, height: geo.size.width / 6.5 )
+                                    .foregroundColor(feeling.color)
+                                    .onTapGesture {
+                                        cal.selectedFeeling = "feeling_\(feeling.image)"
+                                    }
+                            }
+                            .padding()
+                            .frame(width: geo.size.width / 7.5, height: geo.size.width / 7.5 )
+                            .background(cal.selectedFeeling == "feeling_\(feeling.image)" ? .white.opacity(0.2) : .white.opacity(0))
+                            .cornerRadius(20)
+                            
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    
+                    HStack {
+                        Button("Abbrechen") {
+                            cal.isFeelingSheet.toggle()
+                            cal.selectedFeeling = ""
+                            cal.addFeelingDate = Calendar.current.date(byAdding: .year, value: -5, to: Date())!
+                            cal.editFeeling = nil
+                        }
                         
+                        Spacer()
+                        
+                        Button("Ändern") {
+                            let newFeeling = feeling
+                            newFeeling.date = cal.addFeelingDate
+                            newFeeling.name = cal.selectedFeeling
+                            
+                            do {
+                                try? persistenceController.container.viewContext.save()
+                                cal.isFeelingSheet.toggle()
+                                WidgetCenter.shared.reloadAllTimelines()
+                                cal.selectedFeeling = ""
+                                cal.editFeeling = nil
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                .presentationDragIndicator(.visible)
+                .foregroundColor(.white)
+                .onAppear{
+                    cal.selectedFeeling = feeling.name!
+                    cal.addFeelingDate = feeling.date!
+                    DispatchQueue.main.async {
+                        cal.showDatePicker = false
                     }
                 }
-                .padding(.horizontal, 20)
                 
-                
-                Spacer()
+            } else {
+                VStack {
+                    // close
+                    
+                    SheetHeader("Wie geht es dir?", action: {
+                        cal.isFeelingSheet.toggle()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                            cal.showDatePicker = false
+                        })
+                    })
+                    
+                    Spacer()
+                    VStack(spacing: 8){
+                        Text("Hey! Wie fühlst")
+                            .font(.system(size: 30, weight: .regular))
+                        Text("du dich heute?")
+                            .font(.system(size: 30, weight: .regular))
+                    }
+                    
+                    // DatePicker
+                    Button {
+                        withAnimation {
+                            cal.showDatePicker.toggle()
+                        }
+                    }  label: {
+                        HStack(spacing: 20){
+                            Image(systemName: "calendar.badge.plus")
+                                .font(.title3)
+                            Text(cal.addFeelingDate, style: .date)
+                        }
+                        .padding()
+                        .padding(.horizontal)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray)
+                        )
+                    }
+                    .background(
+                        DatePicker("", selection: $cal.addFeelingDate, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .frame(width: 200, height: 100)
+                            .clipped()
+                            .background(Color.gray.cornerRadius(10))
+                            .opacity(cal.showDatePicker ? 1 : 0 )
+                            .offset(x: 50, y: 90)
+                    ).onChange(of: cal.addFeelingDate) { newValue in
+                       withAnimation {
+                           cal.showDatePicker.toggle()
+                       }
+                   }// DatePicker
+
+                    
+                    Spacer()
+
+                    
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 10) {
+                        ForEach(cal.feelingItems , id: \.name) { feeling in
+                            
+                            ZStack{
+                                Image("feeling_\(feeling.image)")
+                                    .resizable()
+                                    .frame(width: geo.size.width / 6.5, height: geo.size.width / 6.5 )
+                                    .foregroundColor(feeling.color)
+                                    .onTapGesture {
+                                        cal.selectedFeeling = "feeling_\(feeling.image)"
+                                        
+                                        let newFeeling = Feeling(context: persistenceController.container.viewContext)
+                                        newFeeling.date = cal.addFeelingDate
+                                        newFeeling.name = cal.selectedFeeling
+                                        
+                                        do {
+                                            try? persistenceController.container.viewContext.save()
+                                            cal.isFeelingSheet.toggle()
+                                            WidgetCenter.shared.reloadAllTimelines()
+                                            cal.selectedFeeling = ""
+                                        }
+                                        
+                                    }
+                            }
+                            .padding()
+                            .frame(width: geo.size.width / 7.5, height: geo.size.width / 7.5 )
+                            .background(cal.selectedFeeling == "feeling_\(feeling.image)" ? .white.opacity(0.2) : .white.opacity(0))
+                            .cornerRadius(20)
+                            
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    
+                    Spacer()
+                }
+                .padding()
+                .presentationDragIndicator(.visible)
+                .foregroundColor(.white)
             }
-            .padding()
-            .presentationDragIndicator(.visible)
-            .foregroundColor(.white)
+            
+            
+        }
+    }
+}
+
+
+struct AddFeelingSheetBody_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            AddFeelingSheetBody()
+                .environmentObject(MoodCalendar())
+                .colorScheme(.dark)
         }
     }
 }

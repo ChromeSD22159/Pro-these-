@@ -10,6 +10,7 @@ import SwiftUI
 
 @main
 struct ProProtheseWidgetBundle: WidgetBundle {
+    
     var body: some Widget {
         //ProProtheseWidget()
         ProProtheseWidgetPain()
@@ -19,7 +20,6 @@ struct ProProtheseWidgetBundle: WidgetBundle {
         ProProtheseWidgetTodaySteps()
         ProProtheseWidgetTodayWorkouts()
         ProProtheseWidgetShowFeeling()
-        
         
         ProProtheseWidgetLiveActivity()
     }

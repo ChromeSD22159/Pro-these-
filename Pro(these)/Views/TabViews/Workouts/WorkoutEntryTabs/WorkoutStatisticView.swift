@@ -45,7 +45,7 @@ struct WorkoutStatisticView: View {
     }
     
     var body: some View {
-        VStack(spacing: 10){
+        VStack(spacing: 12){
             // Statistic Card
             StatisticCard()
             
@@ -364,9 +364,7 @@ struct WorkoutStatisticView: View {
             .padding(.horizontal)
         }
     }
-    
-    
-    
+
     func findWorkOutTime() -> Int {
         let kw = vm.getWeekNumberFromDate(vm.currentDay)
         

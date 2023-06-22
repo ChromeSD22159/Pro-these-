@@ -58,13 +58,6 @@ class StateManager: ObservableObject {
             print("Updating of application context failed \(error)")
         }
     }
-    
-    func checkState(){
-        print("---- State Check ----")
-        print(state)
-        print(date)
-        print("---- END Check ----")
-    }
 
 }
 
@@ -160,7 +153,6 @@ class SessionDelegater: NSObject, WCSessionDelegate {
             }
             
             if let date = applicationContext["Date"] as? Date? {
-                print("\(date)")
                 self.dateSubject.send(date ?? nil)
             } else {
                 print("There was an error 'date'")

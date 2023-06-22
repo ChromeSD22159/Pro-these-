@@ -73,11 +73,18 @@ struct WorkoutChart: View {
                                                   }
                                                   
                                                   ZStack{
-                                                      if formDate < Date().endOfDay() || Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
+                                                      if formDate < Date().startEndOfDay().end || Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
                                                           Circle()
                                                               .fill(.white)
                                                               .frame(width: 10)
                                                               .shadow(radius: 2)
+                                                          
+                                                          if Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
+                                                              Circle()
+                                                                  .fill(.white.opacity(0.5))
+                                                                  .frame(width: 20)
+                                                                  .shadow(radius: 2)
+                                                          }
                                                       }
                                                   }
                                               }
@@ -115,26 +122,6 @@ struct WorkoutChart: View {
                                               y: .value("Duration", 0)
                                           )
                                           .interpolationMethod(.catmullRom)
-                                          /* .symbol {
-                                              VStack(spacing: 5){
-                                                  if Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
-                                                      let (h,m,s) = secondsToHoursMinutesSeconds(Int(0))
-                                                      Text("⌀ \(h):\(m):\(s)h").font(.caption2).foregroundColor(.white)
-                                                  } else {
-                                                      Text("").font(.caption2)
-                                                  }
-                                                  
-                                                  ZStack{
-                                                      if formDate < Date().endOfDay() || Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay) {
-                                                          Circle()
-                                                              .fill(.white)
-                                                              .frame(width: 10)
-                                                              .shadow(radius: 2)
-                                                      }
-                                                  }
-                                              }
-                                              .offset(y: -10)
-                                          } */ // TESTBUG
                                           .foregroundStyle(
                                               .linearGradient(
                                                   colors: [
@@ -166,7 +153,7 @@ struct WorkoutChart: View {
                                        
                                        withAnimation {
                                            // only update when the date is not in future
-                                           if date <= Date().endOfDay() {
+                                           if date <= Date().startEndOfDay().end {
                                                vm.currentDay = date
                                            }
                                        }

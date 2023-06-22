@@ -38,3 +38,25 @@ struct FeelingListDailyMoods: View {
         }
     }
 }
+
+struct FeelingListDailyMoods_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            FeelingListDailyMoods()
+                .environmentObject(AppConfig())
+                .environmentObject(TabManager())
+                .environmentObject(HealthStorage())
+                .environmentObject(PushNotificationManager())
+                .environmentObject(EventManager())
+                .environmentObject(MoodCalendar())
+                .environmentObject(WorkoutStatisticViewModel())
+                .environmentObject(PainViewModel())
+                .environmentObject(StateManager())
+                .environmentObject(EntitlementManager())
+                .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                .colorScheme(.dark)
+        }
+    }
+}

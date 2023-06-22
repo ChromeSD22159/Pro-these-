@@ -29,8 +29,22 @@ struct ContactDetailView: View {
                 VStack{
                     // MARK: - Page Header
                     HStack{
+                        Spacer()
+                        
                         Text(contact.name ?? "Unbekannter Name")
                             .foregroundColor(appConfig.fontColor)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            eventManager.editContact = contact
+                            eventManager.isAddContactSheet.toggle()
+                        }, label: {
+                            Image(systemName: "pencil")
+                                .foregroundColor(.white)
+                                .font(.title3)
+                        })
+                        
                     }
                     .padding(.top, 25)
                     
@@ -189,7 +203,7 @@ struct ContactDetailView: View {
         }
         .fullSizeTop()
     }
-    
+
     // MARK: - AddContactPersonSheet
     @ViewBuilder
     func AddContactPersonSheet() -> some View {
@@ -343,19 +357,19 @@ struct ContactDetailView: View {
                         contactManager.countryMobilPrefix = Locale.current.language.region!.identifier
                     }
                     .onChange(of: contactManager.phone, perform: { newPhone in
-                        let p = convertPhoneNumberWithPrefix(number: newPhone, type: "phone")
+                        let _ = convertPhoneNumberWithPrefix(number: newPhone, type: "phone")
                         //print(p)
                     })
                     .onChange(of: contactManager.countryPhonePrefix, perform: { newPhone in
-                        let p = convertPhoneNumberWithPrefix(number: contactManager.phone, type: "phone")
+                        let _ =  convertPhoneNumberWithPrefix(number: contactManager.phone, type: "phone")
                         //print(p)
                     })
                     .onChange(of: contactManager.mobil, perform: { newPhone in
-                        let p = convertPhoneNumberWithPrefix(number: newPhone, type: "mobil")
+                        let _ =  convertPhoneNumberWithPrefix(number: newPhone, type: "mobil")
                        // print(p)
                     })
                     .onChange(of: contactManager.countryMobilPrefix, perform: { newPhone in
-                        let p = convertPhoneNumberWithPrefix(number: contactManager.mobil, type: "mobil")
+                        let _ =  convertPhoneNumberWithPrefix(number: contactManager.mobil, type: "mobil")
                        // print(p)
                     })
                     

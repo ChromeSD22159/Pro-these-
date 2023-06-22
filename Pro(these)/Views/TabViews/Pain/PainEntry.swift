@@ -13,6 +13,8 @@ struct PainEntry: View {
     @EnvironmentObject var cal: MoodCalendar
     @EnvironmentObject var vm: PainViewModel
     @EnvironmentObject var tabManager: TabManager
+    @EnvironmentObject var entitlementManager: EntitlementManager
+    
     let persistenceController = PersistenceController.shared
     
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) private var Pains: FetchedResults<Pain>
@@ -31,7 +33,6 @@ struct PainEntry: View {
         return PainReasons.map({ $0.name ?? "x" })
     }
   
-    
     var body: some View {
         VStack(spacing: 20) {
             
@@ -75,7 +76,7 @@ struct PainEntry: View {
     func Header() -> some View {
         HStack(){
             VStack(spacing: 2){
-                Text("Hallo, \(AppConfig.shared.username)")
+                sayHallo(name: AppConfig.shared.username)
                     .font(.title2)
                     .foregroundColor(AppConfig.shared.fontColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,6 +87,17 @@ struct PainEntry: View {
             }
             
             HStack(spacing: 20){
+                
+                if !entitlementManager.hasPro {
+                    Image(systemName: "trophy.fill")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .onTapGesture {
+                            DispatchQueue.main.async {
+                                tabManager.ishasProFeatureSheet.toggle()
+                            }
+                        }
+                }
+                
                 Image(systemName: vm.showList ? "chart.pie" : "list.bullet.below.rectangle")
                     .foregroundColor(AppConfig.shared.fontColor)
                     .font(.title3)
@@ -182,7 +194,7 @@ struct PainEntry: View {
                     }
                 }
             
-            Label("Edit", systemImage: "slider.vertical.3")
+            Label("Verwalten", systemImage: "slider.vertical.3")
                 .foregroundColor(AppConfig.shared.fontColor)
                 .font(.body.bold())
                 .onTapGesture {
@@ -213,6 +225,13 @@ struct PainEntry: View {
                 PainRow(pain: pain, vm: vm)
 
             }
+            
+            // In-App-ABO
+            InfomationField( // In-App-ABO
+                backgroundStyle: .ultraThinMaterial,
+                text: "In der aktuellen Version steht die Erfassungen von Schmerzen zur Verfügung. Eine ausführlichere Erfassung, in Kombination mit einem Medikamentenplan/Reminder, ist in Planung. Des Weiteren ist eine PDF-Erstellung von den dokumentierten Daten geplant, die leicht geteilt oder per Mail an die jeweiligen Kontakte versendet werden kann. Dazu entstehen mehr Widgets und Statistiken.",
+                visibility: AppConfig.shared.hasUnlockedPro ? AppConfig.shared.hideInfomations : true) 
+                .padding(.horizontal)
         })
     }
     
@@ -302,93 +321,22 @@ struct PainEntry: View {
             .padding(.horizontal)
         }
     }
-}
-
-struct DeleteReasonDrugsSheetBody: View {
-    @EnvironmentObject var vm: PainViewModel
-    private let persistenceController = PersistenceController.shared
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .reverse)]) private var PainReasons: FetchedResults<PainReason>
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .reverse)]) private var PainDrugs: FetchedResults<PainDrug>
     
-    var body: some View {
-        GeometryReader { geo in
-            ScrollView(.vertical, showsIndicators: false) {
-                // Close Button
-                HStack {
-                    Spacer()
-                    ZStack{
-                        Image(systemName: "xmark")
-                            .font(.title2)
-                            .padding()
-                    }
-                    .onTapGesture{
-                        withAnimation(.easeInOut) {
-                            vm.isDeleteReasonDrugsSheet.toggle()
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                            vm.showDatePicker = false
-                        })
-                    }
-                }
-                .padding()
-                
-                // List PainReasons
-                VStack(spacing: 15) {
-                    HStack(){
-                        Text("Schmerzgründe:")
-                        Spacer()
-                    }
-                    
-                    if PainReasons.count == 0 {
-                        HStack{
-                            Text("Keine Gründe Vorhanden")
-                            Spacer()
-                        }
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(20)
-                        .frame(maxWidth: .infinity)
-                    }
-                    
-                    ForEach(PainReasons){ reason in
-                        
-                        ReasonRow(reason: reason, vm: vm)
-                    }
-                }
-                .padding()
-                
-                // List PainDrugs
-                VStack(spacing: 15) {
-                    HStack(){
-                        Text("Schmerzmittel:")
-                        Spacer()
-                    }
-                    
-                    if PainDrugs.count == 0 {
-                        HStack{
-                            Label("Keine Schmerzmittel Vorhanden", systemImage: "pills.fill")
-                                .font(.body.bold())
-                            Spacer()
-                        }
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(20)
-                        .frame(maxWidth: .infinity)
-                    }
-                    
-                    ForEach(PainDrugs){ drug in
-                        
-                        DrugRow(drug: drug, vm: vm)
-                        
-                    }
-                }
-                .padding()
-            }
+    func sayHallo(name: String) -> some View {
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        var string = ""
+        
+        switch hour {
+            case 6..<12 : string = "Guten Morgen, \(name)!"
+            case 12 : string = "Guten Tag, \(name)!"
+            case 13..<17 :  string = "Hallo \(name)!"
+            case 17..<22 : string = "Guten Abend, \(name)!"
+            default: string = "Hallo, \(name)!"
         }
+        
+        return Text(string)
     }
-
 }
 
 struct ReasonRow: View {
@@ -529,13 +477,6 @@ struct PainRow: View {
                 HStack {
                     Text("\(Int(pain.painIndex)) Schmerzgrad")
                         .font(.body.bold())
-                    
-                    /*let reasons = pain.painReasons as! [PainReason]
-                    
-                    ForEach(reasons, id: \.name) { reason in
-                        Text("\(reason.name) Schmerzgrad")
-                            .font(.body.bold())
-                    }*/
                 }
                 
                 let i = vm.dateFormatte(inputDate: pain.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
@@ -547,7 +488,13 @@ struct PainRow: View {
             
             Spacer()
             
-            VStack(alignment: .trailing, spacing: 8) {
+            HStack(alignment: .center, spacing: 15) {
+                Image(systemName: "pencil")
+                    .onTapGesture {
+                        vm.isPainAddSheet.toggle()
+                        vm.editPain = pain
+                    }
+                
                 Image(systemName: "trash")
                     .onTapGesture {
                         confirm = true
@@ -618,4 +565,19 @@ struct BarView: View {
       .fill(gradient)
       .opacity(datum == 0.0 ? 0.0 : 1.0)
   }
+}
+
+struct PainEntry_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            PainEntry()
+                .environmentObject(MoodCalendar())
+                .environmentObject(PainViewModel())
+                .environmentObject(TabManager())
+                .environmentObject(EntitlementManager())
+                .colorScheme(.dark)
+        }
+    }
 }

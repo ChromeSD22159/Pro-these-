@@ -19,31 +19,39 @@ struct SettingToggleButton: View {
             VStack(){
                 Image(systemName: image)
                     .frame(width: 20, height: 20)
-                    .foregroundColor(AppConfig().foreground.opacity(0.5))
+                    .foregroundColor(.white)
             }
             .padding(20)
             .background(AppConfig().background)
             .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(AppConfig().foreground.opacity(0.5), lineWidth: 2)
+                    .stroke(.white, lineWidth: 2)
             )
             .frame(maxWidth: 50)
             
-            HStack{
-                VStack(alignment: .leading){
+            Spacer(minLength: 20)
+            
+            VStack(alignment: .leading, spacing: 5){
+                HStack{
                     Text(toggleDescrition)
-                        .font(.body)
-                        .fontWeight(.medium)
+                        .font(.caption.bold())
+                        .foregroundColor(.white)
                         .padding(.bottom, 1)
+                    Spacer()
+                }
 
+                HStack{
                     Text(info)
                         .font(.caption2)
-                        .foregroundColor(AppConfig().fontLight)
+                        .lineSpacing(3)
+                        .foregroundColor(.white.opacity(0.8))
+                    Spacer()
                 }
             }
-            .padding(.leading, 2)
             .frame(maxWidth: .infinity)
+            
+            Spacer(minLength: 10)
             
             VStack{
                 Toggle("", isOn: $storeBinding)
@@ -52,7 +60,6 @@ struct SettingToggleButton: View {
             .frame(maxWidth: 50)
             
         }
-        .frame(maxWidth: .infinity ,alignment: .leading)
         .padding(.all, 15.0)
         .background(AppConfig().background.opacity(0.5))
         .cornerRadius(10)
@@ -61,6 +68,10 @@ struct SettingToggleButton: View {
 
 struct SettingToggleButton_Previews: PreviewProvider {
     static var previews: some View {
-        SettingToggleButton(image: "info", toggleDescrition: "desc", info: "info", storeBinding: AppConfig().$ChartLineDistanceIsShowing)
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            SettingToggleButton(image: "info", toggleDescrition: "Zeige erfüllte Tagesziele an", info: "Zeigt den Record Button auch auf der Schrittüberischt an.", storeBinding: .constant(false))
+        }
     }
 }

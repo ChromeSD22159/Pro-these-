@@ -13,7 +13,7 @@ struct SettingsSheet: View {
     var body: some View {
         NavigationView {
             ZStack {
-                AppConfig.shared.backgroundRadial
+                appConfig.backgroundGradient
                     .ignoresSafeArea()
             
                 VStack{
@@ -24,10 +24,10 @@ struct SettingsSheet: View {
                             Spacer()
 
                             VStack(alignment: .leading, spacing: 20){
+                                
                                 // MARK: - Personal Settings
-    
                                 NavigateTo( {
-                                    StackLink(icon: "figure.walk", buttonText: "Persönliche Einstellungen", foregroundColor: AppConfig().foreground)
+                                    StackLink(icon: "person.crop.circle", buttonText: "Persönliche Einstellungen", foregroundColor: appConfig.foreground)
                                 }, {
                                     PersonalDeteilsView(titel: "Persönliche Einstellungen")
                                 })
@@ -35,20 +35,31 @@ struct SettingsSheet: View {
                                 // MARK: - Mapped Settings
                                 ForEach(Settings.items, id: \.id) { setting in
                                     NavigateTo( {
-                                        StackLink(icon: "figure.walk", buttonText: setting.titel, foregroundColor: AppConfig().foreground)
+                                        StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
                                     }, {
                                         SettingsDeteilsView(titel: setting.titel, Options: setting.options)
                                     })
                                 }
                                 
-                                
+                                // MARK: - More Settings
+                                NavigateTo( {
+                                    // List Preview
+                                    StackLink(icon: "ellipsis", buttonText: "Mehr Einstellungen", foregroundColor: appConfig.foreground)
+                                }, {
+                                    // List Detail
+                                    MoreDeteilsView(titel: "Mehr Einstellungen")
+                                })
                                 
                                 Spacer()
                             }
                             .padding(.top, 25)
-                        
+                            
+                            
                             Spacer()
+                            
+                            copyright()
                         }
+                        
                     }
                 }
             }
@@ -56,28 +67,6 @@ struct SettingsSheet: View {
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
     }
-    
-    @ViewBuilder
-    func DetailView(title: String, backgroundColor: LinearGradient, foregroundColor: Color) -> some View {
-        ZStack {
-            AppConfig.shared.backgroundRadial
-                .ignoresSafeArea()
-            
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 20){
-                    HStack{
-                        Text(title)
-                            .foregroundColor(.white)
-                    }
-                    
-                }
-                .padding(.top, 80)
-            }
-            .ignoresSafeArea()
-            .padding(.horizontal)
-        }
-    }
-    
     
     @ViewBuilder
     func Link(buttonText: String, foregroundColor: Color) -> some View {
@@ -124,7 +113,7 @@ struct SettingsSheet: View {
             }
             .frame(maxWidth: .infinity)
             .padding()
-            .foregroundColor(foregroundColor)
+            .foregroundColor(.white)
             .background(AppConfig().backgroundLabel)
             .overlay(
                    RoundedRectangle(cornerRadius: 10)
@@ -136,10 +125,56 @@ struct SettingsSheet: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 20)
     }
+    
+    
+}
+
+struct copyright: View {
+    @EnvironmentObject var appConfig: AppConfig
+    
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    var body: some View {
+        VStack(alignment: .center, spacing: 6) {
+            HStack(alignment: .center, content: {
+                Spacer()
+                Text(appConfig.hasUnlockedPro ? "Pro Prothese APP v\(appVersion ?? "")" : "Prothese APP v\(appVersion ?? "")")
+                    .font(.caption.bold())
+                    .foregroundColor(.gray)
+                Spacer()
+            })
+            
+            HStack(alignment: .center, content: {
+                Spacer()
+                Text("© Frederik Kohler \(Date().dateFormatte(date: "yyyy", time: "").date)")
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+                Spacer()
+            })
+        }
+    }
 }
 
 struct SettingsSheet_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsSheet()
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            VStack{
+                SettingsSheet()
+                    .environmentObject(AppConfig())
+                    .environmentObject(TabManager())
+                    .environmentObject(HealthStorage())
+                    .environmentObject(PushNotificationManager())
+                    .environmentObject(EventManager())
+                    .environmentObject(MoodCalendar())
+                    .environmentObject(WorkoutStatisticViewModel())
+                    .environmentObject(PainViewModel())
+                    .environmentObject(StateManager())
+                    .environmentObject(EntitlementManager())
+                    .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                    .colorScheme(.dark)
+            }
+        }
     }
 }
+

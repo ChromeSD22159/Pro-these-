@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct PersonalDeteilsView: View {
     var titel: String
@@ -38,7 +39,13 @@ struct PersonalDeteilsView: View {
                             
                             Picker("Startseite", selection: appConfig.$entrySite) {
                                 ForEach(Tab.allCases, id: \.id) { tab in
-                                    Text("\(tab.TabTitle())").tag(tab)
+                                    
+                                    if tab.TabTitle() == "plus" {
+                                        
+                                    } else {
+                                        Text("\(tab.TabTitle())").tag(tab)
+                                    }
+                                    
                                 }
                             }
                             .pickerStyle(.navigationLink)
@@ -46,6 +53,7 @@ struct PersonalDeteilsView: View {
                            
                         }
                         .padding(.leading)
+                      
                         
                     }
                     .frame(maxWidth: .infinity ,alignment: .leading)
@@ -53,12 +61,48 @@ struct PersonalDeteilsView: View {
                     .frame(maxWidth: .infinity)
                     .background(AppConfig().background.opacity(0.5))
                     .cornerRadius(10)
+                    
+                    VStack(alignment: .leading){
+                        // testToogle
+                        Toggle("Haptisches Feedback", isOn: appConfig.$hapticFeedback).disabled(appConfig.hasUnlockedPro)
+                    }
+                    .frame(maxWidth: .infinity ,alignment: .leading)
+                    .padding(.all, 15.0)
+                    .frame(maxWidth: .infinity)
+                    .background(AppConfig().background.opacity(0.5))
+                    .cornerRadius(10)
+                    
+                    // In-App-ABO
+                    /*
+                    VStack(alignment: .leading){
+                        // testToogle
+                        Toggle("Unlock Pro Featers", isOn: appConfig.$hasUnlockedPro)
+                        
+                        Toggle("Debug", isOn: appConfig.$debug)
+                        
+                        Toggle("Hide Infomations", isOn: appConfig.$hideInfomations)
+                            .disabled(!appConfig.hasUnlockedPro)
+                    }
+                    .frame(maxWidth: .infinity ,alignment: .leading)
+                    .padding(.all, 15.0)
+                    .frame(maxWidth: .infinity)
+                    .background(AppConfig().background.opacity(0.5))
+                    .cornerRadius(10)
+                    */
+                    Spacer()
+                    
+                    copyright()
+                  
                 }
                 .padding(.top, 80)
             }
             .ignoresSafeArea()
             .padding(.horizontal)
         }
+        .onChange(of: appConfig.hasUnlockedPro, perform: { value in
+            WidgetCenter.shared.reloadAllTimelines()
+            print(value)
+        })
     }
     
     @ViewBuilder

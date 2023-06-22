@@ -36,3 +36,35 @@ struct EventDetailView: View {
         .fullSizeTop()
     }
 }
+
+struct EventDetailView_Previews: PreviewProvider {
+    
+    static var testFeeling: Event? {
+        let newEvent = Event(context: PersistenceController.shared.container.viewContext)
+        newEvent.titel = "Standrort Gespräch"
+        newEvent.endDate = Date()
+        newEvent.startDate = Date()
+        
+        return newEvent
+    }
+    
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            EventDetailView(iconColor: .white, item: testFeeling!)
+                .environmentObject(AppConfig())
+                .environmentObject(TabManager())
+                .environmentObject(HealthStorage())
+                .environmentObject(PushNotificationManager())
+                .environmentObject(EventManager())
+                .environmentObject(MoodCalendar())
+                .environmentObject(WorkoutStatisticViewModel())
+                .environmentObject(PainViewModel())
+                .environmentObject(StateManager())
+                .environmentObject(EntitlementManager())
+                .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                .colorScheme(.dark)
+        }
+    }
+}

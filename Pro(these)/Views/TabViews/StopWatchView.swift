@@ -71,7 +71,7 @@ struct StopWatchRecordView: View {
                 }
                 
                 HStack(spacing: 15){
-                   Image(systemName: "gear")
+                   Image(systemName: "chart.pie")
                        .font(.system(size: 20))
                        .foregroundColor(.black)
                        .frame(width: 50, height: 50)
@@ -81,7 +81,7 @@ struct StopWatchRecordView: View {
                                .frame(width: 50, height: 50)
                        )
                        .onTapGesture {
-                           tabViewManager.isSettingSheet.toggle()
+                           tabViewManager.activeTab = .healthCenter
                        }
                    
                     Text( stopWatchProvider.recorderState == .started ? "END" : "START" )
@@ -99,7 +99,7 @@ struct StopWatchRecordView: View {
                             switch stopWatchProvider.recorderState {
                                 case .started :
                                     stopWatchProvider.stopRecording(completion: { bool in  })
-                                    stateManager.updateApplicationContext(with: ["state": false , "date": Calendar.current.date(byAdding: .year, value: -5, to: Date())])
+                                stateManager.updateApplicationContext(with: ["state": false , "date": Calendar.current.date(byAdding: .year, value: -5, to: Date())!])
                                     recorderState = false
                                 
                                 case .notStarted:
@@ -113,7 +113,8 @@ struct StopWatchRecordView: View {
                         
                    
                    
-                    Image(systemName: stateManager.session.isWatchAppInstalled && stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
+                    //Image(systemName: stateManager.session.isWatchAppInstalled && stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
+                    Image(systemName: stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
                        .font(.system(size: 20))
                        .foregroundColor(.black)
                         .frame(width: 50, height: 50)

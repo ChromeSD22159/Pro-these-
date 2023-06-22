@@ -37,7 +37,7 @@ struct EventSection: View {
                     action: {
                         eventManager.openAddEventSheet(date: Date())
                     }, label: {
-                        Label("Termin hinzufügen", systemImage: "plus")
+                        Label("Termin", systemImage: "plus")
                             .font(.caption2)
                             .fontWeight(.medium)
                             .padding(.trailing, 20)
@@ -55,3 +55,44 @@ struct EventSection: View {
     }
 }
 
+
+struct EventSection_Previews: PreviewProvider {
+    
+    static var testEvent: Event? {
+        let newEvent = Event(context: PersistenceController.shared.container.viewContext)
+        newEvent.icon = ""
+        newEvent.titel = "Standrort Gespräch"
+        newEvent.endDate = Date()
+        newEvent.startDate = Date()
+        
+        return newEvent
+    }
+        
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            VStack(spacing: 20) {
+                EventSection(titel: "Nächste 7 Tage", data: [testEvent!])
+
+                EventSection(titel: "Diesen Monat", data: [testEvent!,testEvent!,testEvent!])
+
+            }
+            .padding()
+            .environmentObject(AppConfig())
+            .environmentObject(TabManager())
+            .environmentObject(HealthStorage())
+            .environmentObject(PushNotificationManager())
+            .environmentObject(EventManager())
+            .environmentObject(MoodCalendar())
+            .environmentObject(WorkoutStatisticViewModel())
+            .environmentObject(PainViewModel())
+            .environmentObject(StateManager())
+            .environmentObject(EntitlementManager())
+            .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+            .colorScheme(.dark)
+            
+            
+        }
+    }
+}

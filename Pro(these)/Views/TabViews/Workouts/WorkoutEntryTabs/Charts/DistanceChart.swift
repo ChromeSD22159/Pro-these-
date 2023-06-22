@@ -77,7 +77,7 @@ struct DistanceChart: View {
                                                 
                                                 ZStack{
                                                     // only show when date is not in future
-                                                    if wk.date < Date().endOfDay() || Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
+                                                    if wk.date < Date().startEndOfDay().end || Calendar.current.isDate(wk.date, inSameDayAs: vm.currentDay) {
                                                         // show wenn selected date is same as item
                                                         Circle()
                                                             .fill(.white)
@@ -155,7 +155,7 @@ struct DistanceChart: View {
 
                                       withAnimation {
                                           // only update when the date is not in future
-                                          if date < Date().endOfDay() || Calendar.current.isDate(date, inSameDayAs: vm.currentDay) {
+                                          if date < Date().startEndOfDay().end || Calendar.current.isDate(date, inSameDayAs: vm.currentDay) {
                                               vm.currentDay = date
                                           }
                                       }

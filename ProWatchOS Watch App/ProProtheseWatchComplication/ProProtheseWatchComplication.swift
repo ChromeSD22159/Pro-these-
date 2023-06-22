@@ -271,11 +271,4 @@ extension Date {
         formattedTime.dateFormat = time
         return (date: formattedDate.string(from: self), time: formattedTime.string(from: self))
     }
-
-    func endOfDay(_ date: Date) -> Date {
-        var components = DateComponents()
-            components.day = 1
-            components.second = -1
-            return Calendar.current.date(byAdding: components, to: date)!
-    }
 }

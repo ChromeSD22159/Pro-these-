@@ -12,6 +12,7 @@ struct FeelingView: View {
     
     @EnvironmentObject var cal: MoodCalendar
     @EnvironmentObject var tabManager: TabManager
+    @EnvironmentObject var entitlementManager: EntitlementManager
     @Environment(\.managedObjectContext) var managedObjectContext
     
     @FetchRequest(sortDescriptors: [ SortDescriptor(\.date) ]) var listFeelings: FetchedResults<Feeling>
@@ -25,39 +26,7 @@ struct FeelingView: View {
     var body: some View {
         VStack(spacing: 20){
             
-            HStack(){
-                VStack(spacing: 2){
-                    Text("Hallo, \(AppConfig.shared.username)")
-                        .font(.title2)
-                        .foregroundColor(AppConfig.shared.fontColor)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Dein Tagesziel ist für heute \(AppConfig.shared.targetSteps) Schritte")
-                        .font(.callout)
-                        .foregroundColor(AppConfig.shared.fontLight)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                
-                HStack(spacing: 20){
-                    Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
-                        .foregroundColor(AppConfig.shared.fontColor)
-                        .font(.title3)
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.5)){
-                                cal.isCalendar.toggle()
-                            }
-                        }
-                    
-                    Image(systemName: "gearshape")
-                        .foregroundColor(AppConfig.shared.fontColor)
-                        .font(.title3)
-                        .onTapGesture {
-                            tabManager.isSettingSheet.toggle()
-                        }
-                }
-            }
-            .padding(.top, 20)
-            .padding(.horizontal, 20)
-            .frame(maxWidth: .infinity)
+            header()
             
             if cal.isCalendar {
                 FeelingCalendarView(feelings: listFeelings)
@@ -87,6 +56,54 @@ struct FeelingView: View {
     }
     
     @ViewBuilder
+    func header() -> some View {
+        HStack(){
+            VStack(spacing: 2){
+                sayHallo(name: AppConfig.shared.username)
+                    .font(.title2)
+                    .foregroundColor(AppConfig.shared.fontColor)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("Dein Tagesziel ist für heute \(AppConfig.shared.targetSteps) Schritte")
+                    .font(.callout)
+                    .foregroundColor(AppConfig.shared.fontLight)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+            HStack(spacing: 20){
+                
+                if !entitlementManager.hasPro {
+                    Image(systemName: "trophy.fill")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .onTapGesture {
+                            DispatchQueue.main.async {
+                                tabManager.ishasProFeatureSheet.toggle()
+                            }
+                        }
+                }
+                
+                Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
+                    .foregroundColor(AppConfig.shared.fontColor)
+                    .font(.title3)
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.5)){
+                            cal.isCalendar.toggle()
+                        }
+                    }
+                
+                Image(systemName: "gearshape")
+                    .foregroundColor(AppConfig.shared.fontColor)
+                    .font(.title3)
+                    .onTapGesture {
+                        tabManager.isSettingSheet.toggle()
+                    }
+            }
+        }
+        .padding(.top, 20)
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity)
+    }
+    
+    @ViewBuilder
     func FeelingListView(listFeelings: FetchedResults<Feeling>) -> some View {
         GeometryReader { screen in
             
@@ -102,7 +119,7 @@ struct FeelingView: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         ForEach(sortedDates) { value in
                             // Max Date till now
-                            if value.date < Date().endOfDay() && value.day != -1 || Calendar.current.isDateInToday(value.date) && value.day != -1 {
+                            if value.date < Date().startEndOfDay().end && value.day != -1 || Calendar.current.isDateInToday(value.date) && value.day != -1 {
                                 
                                 // predicate Dates with Feelings
                                 if let _ = listFeelings.first(where: { return cal.isSameDay(d1: $0.date ?? Date(), d2: value.date) }) {
@@ -151,6 +168,22 @@ struct FeelingView: View {
             feelingDayRow(feelings: feelings, screenSize: screenSize, date: date, attempts: $attempts, bottomID: bottomID, dateID: dateID, noneID: noneID )
         }
     }
+    
+    func sayHallo(name: String) -> some View {
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        var string = ""
+        
+        switch hour {
+            case 6..<12 : string = "Guten Morgen, \(name)!"
+            case 12 : string = "Guten Tag, \(name)!"
+            case 13..<17 :  string = "Hallo \(name)!"
+            case 17..<22 : string = "Guten Abend, \(name)!"
+            default: string = "Hallo, \(name)!"
+        }
+        
+        return Text(string)
+    }
 }
 
 struct feelingRowItem: View {
@@ -185,9 +218,15 @@ struct feelingRowItem: View {
         .padding(5)
         .onTapGesture {
             confirm = true
+            cal.editFeeling = feeling
         }
         .confirmationDialog("Lösche Eintrag vom \(feelingDate.date) ", isPresented: $confirm) {
            
+            Button("Eintrag bearbeiten?", role: .destructive) {
+                cal.isFeelingSheet.toggle()
+            }
+            .font(.callout)
+            
             Button("Eintrag löschen?", role: .destructive) {
                 withAnimation{
                     persistenceController.delete(feeling)
@@ -200,10 +239,12 @@ struct feelingRowItem: View {
                 }
             }
             .font(.callout)
+            
+            
+            
         } // Confirm
     }
 }
-
 
 struct feelingDayRow: View {
     
@@ -315,3 +356,16 @@ struct feelingDayRow: View {
     }
 }
 
+struct FeelingView_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            AddFeelingSheetBody()
+                .environmentObject(MoodCalendar())
+                .environmentObject(TabManager())
+                .environmentObject(EntitlementManager())
+                .colorScheme(.dark)
+        }
+    }
+}

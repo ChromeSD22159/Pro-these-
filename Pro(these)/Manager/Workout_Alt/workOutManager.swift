@@ -183,18 +183,7 @@ class WorkoutManager: NSObject, ObservableObject {
 
 
 // global extension
-extension WorkoutManager {
-    func startOfDay(_ date: Date) -> Date {
-        return Calendar.current.startOfDay(for: date)
-    }
-    
-    func endOfDay(_ date: Date) -> Date {
-        var components = DateComponents()
-            components.day = 1
-            components.second = -1
-            return Calendar.current.date(byAdding: components, to: date)!
-    }
-    
+extension WorkoutManager {    
     func isSameDay(date1: Date, date2: Date) -> Bool {
         let diff = Calendar.current.dateComponents([.year], from: date1, to: date2)
         if diff.day == 0 {

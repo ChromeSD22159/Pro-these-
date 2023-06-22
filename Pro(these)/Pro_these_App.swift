@@ -10,15 +10,15 @@ import WidgetKit
 struct Pro_theseApp: App {
     @Environment(\.scenePhase) var scenePhase
     
-    let persistenceController = PersistenceController.shared
-    let healthStorage = HealthStorage()
-    let pushNotificationManager = PushNotificationManager()
-    let tabManager = TabManager()
-    let eventManager = EventManager()
-    let cal = MoodCalendar()
-    let workoutStatisticViewModel = WorkoutStatisticViewModel()
-    let painViewModel = PainViewModel()
-    
+    var persistenceController = PersistenceController.shared
+    @StateObject var healthStorage = HealthStorage()
+    @StateObject var pushNotificationManager = PushNotificationManager()
+    @StateObject var tabManager = TabManager()
+    @StateObject var eventManager = EventManager()
+    @StateObject var cal = MoodCalendar()
+    @StateObject var workoutStatisticViewModel = WorkoutStatisticViewModel()
+    @StateObject var painViewModel = PainViewModel()
+    @StateObject var stopWatchProvider = StopWatchProvider()
     @StateObject var stateManager = StateManager()
     
     @AppStorage("Days") var fetchDays:Int = 7
@@ -26,8 +26,20 @@ struct Pro_theseApp: App {
     @State var deepLink:URL?
     @StateObject private var loginViewModel = LoginViewModel()
     
+    
+    @StateObject private var entitlementManager: EntitlementManager
+
+    @StateObject private var purchaseManager: PurchaseManager
+    
+    @State var identifier = "de-DE"
+    
     init() {
-        pushNotificationManager.registerForPushNotifications()
+        let entitlementManager = EntitlementManager()
+        let purchaseManager = PurchaseManager(entitlementManager: entitlementManager)
+
+        self._entitlementManager = StateObject(wrappedValue: entitlementManager)
+        self._purchaseManager = StateObject(wrappedValue: purchaseManager)
+        
         HealthStoreProvider().setUpHealthRequest(healthStore: HKHealthStore(), readSteps: {
             
         })
@@ -36,10 +48,12 @@ struct Pro_theseApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack{
-                if loginViewModel.appUnlocked {
+                
+                if loginViewModel.appUnlocked || AppConfig.shared.faceID == false {
                     
                     if let defaults = UserDefaults(suiteName: "group.FK.Pro-these-") {
                         ContentView(loc: LocationProvider.shared.getLocation(), deepLink: $deepLink)
+                            .colorScheme(.dark)
                             .environment(\.managedObjectContext, persistenceController.container.viewContext)
                             .environmentObject(AppConfig())
                             .environmentObject(TabManager())
@@ -50,7 +64,10 @@ struct Pro_theseApp: App {
                             .environmentObject(workoutStatisticViewModel)
                             .environmentObject(painViewModel)
                             .environmentObject(stateManager)
+                            .environmentObject(entitlementManager)
+                            .environmentObject(purchaseManager)
                             .defaultAppStorage(defaults)
+                            .environment(\.locale, .init(identifier: identifier))
                             .onChange(of: scenePhase) { newPhase in
                                 if newPhase == .active {
                                     pushNotificationManager.removeNotificationsWhenAppLoads()
@@ -66,6 +83,10 @@ struct Pro_theseApp: App {
                                   
                                 }
                             }
+                            .task {
+                               await purchaseManager.updatePurchasedProducts()
+                            }
+                        
                     } else {
                         Text("Fehler beim Laden der AppGroup")
                     }
@@ -91,6 +112,7 @@ struct Pro_theseApp: App {
              
             }
             .onAppear{
+                pushNotificationManager.registerForPushNotifications()
                 WidgetCenter.shared.reloadAllTimelines()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                     withAnimation(.easeOut(duration: 2.0)) {
@@ -100,7 +122,9 @@ struct Pro_theseApp: App {
             }
             .onOpenURL { url in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    
                     if url.scheme == "ProProthese" {
+                        print("ON OPEN: \(deepLink)")
                         deepLink = url
                     } else {
                         deepLink = nil

@@ -44,6 +44,9 @@ class PainViewModel: ObservableObject {
     @Published var deletePainDrug:PainDrug?
     @Published var deletePainReason:PainReason?
     
+    // Edit Pain
+    @Published var editPain:Pain?
+    
     func dateFormatte(inputDate: Date, dateString: String, timeString: String) -> (date:String, time:String) {
         let formattedDate = DateFormatter()
         formattedDate.dateFormat = dateString

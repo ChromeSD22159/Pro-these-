@@ -36,6 +36,7 @@ struct TabStack: View {
                     .foregroundColor(activeSubTab == .feeling ? .yellow : .yellow.opacity(0.8))
                     .frame(width: 28, height: 28)
                     .onTapGesture{
+                        haptic()
                         newFeeling(moodCalendar: cal, tabManager: tabManager, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
                 
@@ -47,6 +48,7 @@ struct TabStack: View {
                     .frame(width: 28, height: 28)
                     .offset(y: -20)
                     .onTapGesture{
+                        haptic()
                         startStopWatch(stopWatchProvider: stopWatchProvider, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
                 
@@ -58,7 +60,8 @@ struct TabStack: View {
                     .frame(width: 28, height: 28)
                     .offset(y: -20)
                     .onTapGesture{
-                       newPain(painViewModel: pain, showSubTab: $showSubTab, activeTab: $activeTab)
+                        haptic()
+                        newPain(painViewModel: pain, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
                 
                 Image(systemName: SubTab.event.TabIcon())
@@ -68,6 +71,7 @@ struct TabStack: View {
                     .foregroundColor(activeSubTab == .event ? .yellow : .yellow.opacity(0.8))
                     .frame(width: 28, height: 28)
                     .onTapGesture{
+                        haptic()
                         newEvent(eventManager: event, showSubTab: $showSubTab, activeTab: $activeTab)
                     }
             }
@@ -76,14 +80,15 @@ struct TabStack: View {
             .offset(y: showSubTab ? -70 : 100)
             
             // MainTab
-            HStack(spacing: 10){
+            HStack(spacing: 6){
                 ForEach(Tab.allCases, id: \.self){ tab in
+                    
                     VStack {
                         if tab == .add {
                             ZStack{
                                 Circle()
                                     .fill(.yellow)
-                                    .frame(width: 50, height: 50)
+                                    .frame(width: 40, height: 40)
                                 
                                 Image(systemName: tab.TabIcon())
                                     .renderingMode(.template)
@@ -99,7 +104,7 @@ struct TabStack: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(activeTab == tab ? .white : .white.opacity(0.8))
-                                .frame(width: 28, height: 28)
+                                .frame(width: 20, height: 20)
                         }
                         
                         if activeTab == tab {
@@ -111,6 +116,8 @@ struct TabStack: View {
                         }
                     }
                     .onTapGesture {
+                        haptic()
+                        
                         // Add Button
                         if tab == .add {
                             withAnimation(.easeInOut(duration: 0.3)){
@@ -134,6 +141,7 @@ struct TabStack: View {
                         }
                         
                     }
+                    
                    
                 }
                 .frame(maxWidth: .infinity)
@@ -234,6 +242,13 @@ struct TabStack: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             eventManager.isAddEventSheet = true
             eventManager.addEventStarDate = Date()
+        }
+    }
+    
+    func haptic() {
+        if AppConfig.shared.hapticFeedback {
+            let impactMed = UIImpactFeedbackGenerator(style: .heavy)
+                impactMed.impactOccurred()
         }
     }
 }

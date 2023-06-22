@@ -175,7 +175,7 @@ struct FeelingCalendarView: View {
                            )
                            .frame(width: screenSize.width / 9, height: screenSize.width / 9 )
                            .onTapGesture(perform: {
-                               if value.date < Date().endOfDay() || Calendar.current.isDateInToday(value.date) {
+                               if value.date < Date().startEndOfDay().end || Calendar.current.isDateInToday(value.date) {
                                    cal.isFeelingSheet.toggle()
                                    
                                    let calendar = Calendar.current
@@ -302,6 +302,29 @@ struct FeelingCalendarView: View {
         case "feeling_4": return .orange
         case "feeling_5": return .red
         default: return Color.white.opacity(0.1)
+        }
+    }
+}
+
+
+struct FeelingCalendarView_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            AddFeelingSheetBody()
+                .environmentObject(AppConfig())
+                .environmentObject(TabManager())
+                .environmentObject(HealthStorage())
+                .environmentObject(PushNotificationManager())
+                .environmentObject(EventManager())
+                .environmentObject(MoodCalendar())
+                .environmentObject(WorkoutStatisticViewModel())
+                .environmentObject(PainViewModel())
+                .environmentObject(StateManager())
+                .environmentObject(EntitlementManager())
+                .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                .colorScheme(.dark)
         }
     }
 }

@@ -10,9 +10,11 @@ import SwiftUI
 import Foundation
 
 struct TodayStepsProvider: TimelineProvider {
-    let url = URL(string: "ProProthese://statistic")
+    let urlEntry = URL(string: "ProProthese://statistic")
     
     @AppStorage("Entry steps") var entrySteps: Int = -10
+    
+    var unlocked: Bool
     
     var nextUpdate: Date {
         return Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
@@ -23,29 +25,43 @@ struct TodayStepsProvider: TimelineProvider {
     }
     
     func placeholder(in context: Context) -> TodayStepsSimpleEntry {
-        TodayStepsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: dummySteps)
+        TodayStepsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: urlEntry, steps: dummySteps, hasUnlockedPro: true)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (TodayStepsSimpleEntry) -> ()) {
-        let entry = TodayStepsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, steps: dummySteps)
+        let entry = TodayStepsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: urlEntry, steps: dummySteps, hasUnlockedPro: true)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        
         var entries:[TodayStepsSimpleEntry] = []
         var entryDate = Date()
         
-        entryDate = Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
-        
-        let s:(min: Int, max: Int, current: Int, error: Error?) = (min: 0, max: AppConfig.shared.targetSteps, current: 0, error: nil)
-        let entrie = TodayStepsSimpleEntry(date: Date(), nextUpdate: entryDate, url: url, steps: s)
+        if unlocked {
+            entryDate = Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
+            
+            let s:(min: Int, max: Int, current: Int, error: Error?) = (min: 0, max: AppConfig.shared.targetSteps, current: 0, error: nil)
+            let entrie = TodayStepsSimpleEntry(date: Date(), nextUpdate: entryDate, url: URL(string: "ProProthese://statistic"), steps: s, hasUnlockedPro: unlocked)
 
-        entries.append(entrie)
+            entries.append(entrie)
+            
+            let timeline = Timeline(entries: entries, policy: .atEnd)
+            
+            completion(timeline)
+        } else {
+            entryDate = Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
+            
+            let s:(min: Int, max: Int, current: Int, error: Error?) = (min: 0, max: AppConfig.shared.targetSteps, current: 0, error: nil)
+            let entrie = TodayStepsSimpleEntry(date: Date(), nextUpdate: entryDate, url: URL(string: "ProProthese://unlock"), steps: s, hasUnlockedPro: unlocked)
+
+            entries.append(entrie)
+            
+            let timeline = Timeline(entries: entries, policy: .atEnd)
+            
+            completion(timeline)
+        }
         
-        let timeline = Timeline(entries: entries, policy: .atEnd)
         
-        completion(timeline)
         
     }
 }
@@ -55,6 +71,7 @@ struct TodayStepsSimpleEntry: TimelineEntry {
     let nextUpdate: Date
     let url: URL?
     let steps: (min: Int , max: Int , current: Int, error: Error?)
+    let hasUnlockedPro: Bool
 }
 
 struct ProProtheseWidgetTodayStepsEntryView : View {
@@ -148,31 +165,35 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                 case .accessoryRectangular:
                     ZStack {
                         
-                        ViewThatFits {
-                            HStack {
-                                VStack {
-                                    Image("prothesis")
-                                        .imageScale(.large)
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
-                                }
-                                
-                                VStack(alignment: .leading) {
-                                    Text("\(entrySteps)")
-                                        .font(.body.bold())
-                                        .multilineTextAlignment(.center)
-                                        .foregroundColor(.white)
+                        hasProFeatureOverlay(binding: !entry.hasUnlockedPro) { state in
+                            ViewThatFits {
+                                HStack {
+                                    VStack {
+                                        Image("prothesis")
+                                            .imageScale(.large)
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.white)
+                                    }
                                     
-                                    Text("\(entry.date.convertDateToDayNames()). \(entry.date.dateFormatte(date: "dd.MM", time: "").date)")
-                                        .font(.caption2.bold())
-                                        .multilineTextAlignment(.center)
-                                        .foregroundColor(.gray)
+                                    VStack(alignment: .leading) {
+                                        Text("\(entrySteps)")
+                                            .font(.body.bold())
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(.white)
+                                        
+                                        Text("\(entry.date.convertDateToDayNames()). \(entry.date.dateFormatte(date: "dd.MM", time: "").date)")
+                                            .font(.caption2.bold())
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    Spacer()
                                 }
-                                
-                                Spacer()
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
+                            .hasProBlurry(state)
                         }
+  
                     }.widgetURL(entry.url)
                     
                 case .accessoryInline:
@@ -234,8 +255,11 @@ struct ProProtheseWidgetTodaySteps: Widget {
         .accessoryInline
     ]
     
+    // FIX UNLOCK
+    @AppStorage("unlocked") var unlocked: Bool = true
+    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: TodayStepsProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: TodayStepsProvider(unlocked: unlocked)) { entry in
             ProProtheseWidgetTodayStepsEntryView(entry: entry)
                 .background(.clear)
                 .cornerRadius(20)
@@ -263,17 +287,19 @@ struct ProProtheseWidgetTodaySteps_Previews: PreviewProvider {
         Group {
             
             ForEach(supportedFamilies, id:\.0) { item in
+                
                 ProProtheseWidgetTodayStepsEntryView( entry: TodayStepsSimpleEntry(
                         date: Date(),
                         nextUpdate: Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!,
                         url: URL(string: "ProProthese://statistic"),
-                        steps: dummySteps
+                        steps: dummySteps,
+                        hasUnlockedPro: false
                     )
-                    
                 )
                 .previewContext(WidgetPreviewContext(family: item.widget))
                 .previewDisplayName("\(item.name)")
                 .cornerRadius(20)
+                
             }
  
         }

@@ -196,8 +196,10 @@ class WorkoutManager: NSObject, ObservableObject {
     
     func queryWidgetSteps(completion: @escaping (Double, Error?) -> Void){
         let stepQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)
-         
-        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: Date()), end: Date().endOfDay(), options: .strictStartDate)
+        
+        let date = Date()
+        
+        let predicate = HKQuery.predicateForSamples(withStart: date.startEndOfDay().start, end: date.startEndOfDay().end, options: .strictStartDate)
         
         let query = HKStatisticsQuery(quantityType: stepQuantityType!, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             

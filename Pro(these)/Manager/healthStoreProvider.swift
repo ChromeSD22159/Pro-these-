@@ -48,8 +48,8 @@ class HealthStoreProvider: NSObject, ObservableObject {
 extension HealthStoreProvider {
     func queryWeekCountbyType(week: DateInterval, type: HKQuantityTypeIdentifier ,completion: @escaping (ChartDataPacked) -> Void) {
         guard let stepQuantityType = HKQuantityType.quantityType(forIdentifier: type) else { return }
-         
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay(week.start), end: endOfDay(week.end), options: .strictStartDate)
+        
+        let predicate = HKQuery.predicateForSamples(withStart: week.start.startEndOfDay().start, end: week.end.startEndOfDay().end, options: .strictStartDate)
         
         let query = HKStatisticsCollectionQuery(quantityType: stepQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum, anchorDate: Date.mondayAt12AM(), intervalComponents: DateComponents(day: 1))
         
@@ -103,8 +103,12 @@ extension HealthStoreProvider {
     
     func queryDayCountbyType(date: Date, type: HKQuantityTypeIdentifier ,completion: @escaping (Double) -> Void) {
         guard let stepQuantityType = HKQuantityType.quantityType(forIdentifier: type) else { return }
-         
-        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: date), end: endOfDay(date), options: .strictStartDate)
+
+        let calendar = Calendar.current
+        let startTime = calendar.startOfDay(for: date)
+        let endTime = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)
+
+        let predicate = HKQuery.predicateForSamples(withStart: startTime, end: endTime, options: .strictStartDate)
         
         let query = HKStatisticsQuery(quantityType: stepQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             
@@ -128,7 +132,12 @@ extension HealthStoreProvider {
     func queryWidgetSteps(completion: @escaping (Double, Error?) -> Void){
         let stepQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)
          
-        let predicate = HKQuery.predicateForSamples(withStart: Calendar.current.startOfDay(for: Date()), end: endOfDay(Date()), options: .strictStartDate)
+        let date = Date()
+        let calendar = Calendar.current
+        let startTime = calendar.startOfDay(for: date)
+        let endTime = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)
+        
+        let predicate = HKQuery.predicateForSamples(withStart: startTime, end: endTime, options: .strictStartDate)
         
         let query = HKStatisticsQuery(quantityType: stepQuantityType!, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             
@@ -177,17 +186,6 @@ extension HealthStoreProvider {
         
         let healthStore = HKHealthStore()
         healthStore.execute(workoutQuery)
-    }
-    
-    func startOfDay(_ date: Date) -> Date {
-        return Calendar.current.startOfDay(for: date)
-    }
-    
-    func endOfDay(_ date: Date) -> Date {
-        var components = DateComponents()
-            components.day = 1
-            components.second = -1
-            return Calendar.current.date(byAdding: components, to: date)!
     }
 }
 

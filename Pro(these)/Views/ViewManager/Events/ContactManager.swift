@@ -32,6 +32,8 @@ class ContactManager: ObservableObject {
     @Published var showTimePicker = false
     @Published var addRecurringEventDate = Date()
     
+    @Published var isShowEditContactSheet = false
+    
     var counntrys: [(identifier: String, prefix: String)] = [
         (identifier: "CH", prefix: "+41"),
         (identifier: "AT", prefix: "+43"),

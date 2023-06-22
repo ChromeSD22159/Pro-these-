@@ -10,7 +10,10 @@ import SwiftUI
 import Foundation
 
 struct TodayWorkoutsProvider: TimelineProvider {
-    let url = URL(string: "ProProthese://statistic")
+    let urlEntry = URL(string: "ProProthese://statistic")
+    let urlUnlock = URL(string: "ProProthese://unlock")
+    
+    var unlocked: Bool
     
     private let entryCache = EntryCache()
     
@@ -19,16 +22,18 @@ struct TodayWorkoutsProvider: TimelineProvider {
     }
     
     func placeholder(in context: Context) -> TodayWorkoutsSimpleEntry {
-        TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: Date(), url: url)
+        TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: Date(), url: urlEntry, hasUnlockedPro: true)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (TodayWorkoutsSimpleEntry) -> ()) {
-        let entry = TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: Date(), url: url)
+        let entry = TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: Date(), url: urlEntry, hasUnlockedPro: true)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        let entrie = TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url)
+        let url = unlocked ? urlEntry : urlUnlock
+        
+        let entrie = TodayWorkoutsSimpleEntry(date: Date(), nextUpdate: nextUpdate, url: url, hasUnlockedPro: unlocked)
         
         let timeline = Timeline(entries: [entrie], policy: .after(nextUpdate))
         completion(timeline)
@@ -39,6 +44,7 @@ struct TodayWorkoutsSimpleEntry: TimelineEntry {
     let date: Date
     let nextUpdate: Date
     let url: URL?
+    let hasUnlockedPro: Bool
 }
 
 struct ProProtheseWidgetTodayWorkoutsEntryView : View {
@@ -128,31 +134,35 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
                 case .accessoryRectangular:
                     ZStack {
                         
-                        ViewThatFits {
-                            HStack {
-                                VStack {
-                                    Image("prothesis")
-                                        .imageScale(.large)
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
-                                }
-                                
-                                VStack(alignment: .leading) {
-                                    Text("\(entryWorkouts)")
-                                        .font(.body.bold())
-                                        .multilineTextAlignment(.center)
-                                        .foregroundColor(.white)
+                        hasProFeatureOverlay(binding: !entry.hasUnlockedPro) { state in
+                            ViewThatFits {
+                                HStack {
+                                    VStack {
+                                        Image("prothesis")
+                                            .imageScale(.large)
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.white)
+                                    }
                                     
-                                    Text("\(entry.date.convertDateToDayNames()). \(entry.date.dateFormatte(date: "dd.MM", time: "").date)")
-                                        .font(.caption2.bold())
-                                        .multilineTextAlignment(.center)
-                                        .foregroundColor(.gray)
+                                    VStack(alignment: .leading) {
+                                        Text("\(entryWorkouts)")
+                                            .font(.body.bold())
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(.white)
+                                        
+                                        Text("\(entry.date.convertDateToDayNames()). \(entry.date.dateFormatte(date: "dd.MM", time: "").date)")
+                                            .font(.caption2.bold())
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    Spacer()
                                 }
-                                
-                                Spacer()
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
+                            .hasProBlurry(state)
                         }
+                        
                     }.widgetURL(entry.url)
                 case .accessoryInline:
                     ZStack {
@@ -231,6 +241,9 @@ struct ProProtheseWidgetTodayWorkouts: Widget {
     
     let kind: String = "ProProtheseWidgetTodayWorkouts"
     
+    // FIX UNLOCK
+    @AppStorage("unlocked") var unlocked: Bool = true
+    
     private var supportedFamilies:[WidgetFamily] = [
         .systemSmall,
         .accessoryCircular,
@@ -241,7 +254,7 @@ struct ProProtheseWidgetTodayWorkouts: Widget {
     @State var entryError: Error?
     
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: TodayWorkoutsProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: TodayWorkoutsProvider(unlocked: unlocked)) { entry in
             ProProtheseWidgetTodayWorkoutsEntryView(entry: entry)
                 .background(.clear)
                 .cornerRadius(20)
@@ -276,7 +289,8 @@ struct ProProtheseWidgetTodayWorkouts_Previews: PreviewProvider {
                     entry: TodayWorkoutsSimpleEntry(
                         date: Date(),
                         nextUpdate: Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!,
-                        url: URL(string: "ProProthese://statistic")
+                        url: URL(string: "ProProthese://statistic"),
+                        hasUnlockedPro: false
                     )
                 )
                 .background(.clear)

@@ -11,6 +11,7 @@ struct ContactCardComponent: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var contactManager: ContactManager
     @FocusState private var focusedTask: EventTasks?
     var color: Color
     var contact: Contact
@@ -96,8 +97,17 @@ struct ContactCardComponent: View {
                 Confirm(message: "\( contact.name ?? "" ) löschen? \n \n Es werden alle dazugehörigen Termine \n und Notizen gelöscht!", buttonText: "\(contact.name ?? "Termin") löschen", buttonIcon: "trash", content: {
                     Button("Löschen") { eventManager.deleteContact(contact) }.foregroundColor(.red)
                 })
+                .foregroundColor(.white)
                 
                 Spacer()
+
+                Button(action: {
+                    eventManager.editContact = contact
+                    eventManager.isAddContactSheet.toggle()
+                }, label: {
+                    Label(contact.name!, systemImage: "pencil")
+                        .foregroundColor(.white)
+                })
             }
             .padding(20)
             .background(Color.white.opacity(0.05))

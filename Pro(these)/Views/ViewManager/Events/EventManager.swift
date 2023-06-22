@@ -37,8 +37,9 @@ class EventManager: ObservableObject {
     // sheets
     @Published var isAddContactSheet: Bool = false
     @Published var isAddEventSheet: Bool = false
-    @Published var isAddTasktSheet: Bool = false
 
+    @Published var editContact: Contact?
+    @Published var editEvent: Event?
     
     @Published var addEventIcon = "bandage.fill"
     @Published var addEventStarDate = Date()
@@ -112,12 +113,32 @@ class EventManager: ObservableObject {
       
     }
     
+    func editContact(_ contact: Contact, completion: @escaping (_ success: Bool) -> Void ){
+        
+        contact.name = self.addContactName
+        contact.phone = self.addContactPhone
+        contact.mail = self.addContactEmail
+        contact.titel = self.addContactTitel
+        
+        do {
+            try PersistenceController.shared.container.viewContext.save()
+            
+            completion(true)
+        } catch {
+            let nsError = error as NSError
+            completion(false)
+            fatalError("cant update contact \(nsError), \(nsError.userInfo)")
+            
+        }
+    }
+    
     func generateNewEventDates(date: Date) -> (start: Date, end: Date) {
         let newDate = Calendar.current.date(byAdding: .day, value: 1, to: date)!
         return (start: Calendar.current.date(byAdding: .hour, value: 0, to: newDate)!, end: Calendar.current.date(byAdding: .hour, value: 1, to: newDate)!)
     }
     
     func openAddEventSheet(date: Date) {
+        self.editEvent = nil
         let newEventDate = self.generateNewEventDates(date: date)
         self.addEventStarDate = newEventDate.start
         self.addEventEndDate = newEventDate.end
@@ -128,12 +149,11 @@ class EventManager: ObservableObject {
         guard addEventTitel != "" else {
             return error = "Bitte gebe eine Terminbeschreibung ein!"
         }
+        
         guard addEventContact != nil else {
             return error = "Bitte gebe einen Kontakt an!"
         }
-        
-        
-        
+ 
         let newEvent = Event(context: viewContext)
         newEvent.eventID = UUID().uuidString
         newEvent.titel = addEventTitel
@@ -188,12 +208,17 @@ class EventManager: ObservableObject {
             self.error = ""
             //fetchContacts()
             self.isAddEventSheet = false
-            
            
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
+    }
+    
+   // asdsad
+    func saveEditEvent(_ event: Event, completion: @escaping (_ success: Bool) -> Void ){
+        self.deleteEvent(event)
+        self.addEvent()
     }
     
     func fetchContacts() {
@@ -281,7 +306,7 @@ class EventManager: ObservableObject {
                 sortAllEvents()
             } catch {
                 let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                print("Unresolved error \(nsError), \(nsError.userInfo)")
             }
 
         }

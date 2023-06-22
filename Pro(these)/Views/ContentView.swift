@@ -24,7 +24,8 @@ struct ContentView: View {
     @EnvironmentObject private var healthStore: HealthStorage
     @EnvironmentObject private var cal: MoodCalendar
     @EnvironmentObject var pain: PainViewModel
-    @StateObject var stopWatchProvider = StopWatchProvider()
+    @EnvironmentObject var purchaseManager: PurchaseManager
+  
     
     @State var activeTab: Tab = .healthCenter
     @State var activeSubTab: SubTab = .event
@@ -64,7 +65,7 @@ struct ContentView: View {
                     // Content
                     VStack(){
                         switch activeTab {
-                            case .home: ZStack{}.padding(.bottom, 10)
+                            case .home: HomeView().padding(.bottom, 10)
                             case .event: Events().padding(.bottom, 10)
                             case .healthCenter: WorkOutEntryView().padding(.bottom, 10)
                             case .stopWatch: StopWatchView().padding(.bottom, 10)
@@ -75,7 +76,7 @@ struct ContentView: View {
                         
                         Spacer(minLength: 70)
                     }
-                    .foregroundColor(AppConfig().foreground)
+                    .foregroundColor(AppConfig.shared.foreground)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     
                     // Navigation
@@ -101,7 +102,7 @@ struct ContentView: View {
                         TabStack(deepLink: $deepLink, activeTab: $activeTab, activeSubTab: $activeSubTab, showSubTab: $showSubTab)
                             .frame(height: 70)
                     }
-                    .foregroundColor(AppConfig().foreground)
+                    .foregroundColor(AppConfig.shared.foreground)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     
                     // Header blur
@@ -115,11 +116,16 @@ struct ContentView: View {
         .blurredSheet(.init(.ultraThinMaterial), show: $tabManager.isSettingSheet, onDismiss: {}, content: {
             SettingsSheet()
         })
+        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $tabManager.ishasProFeatureSheet, onDismiss: {
+            print("dismiss ProFeatureSheet")
+        }, content: {
+            ProFeatureSheet()
+        })
         // Overlay
         .overlay(overlay ? Launch_Screen().opacity(1) : Launch_Screen().opacity(0), alignment: .topTrailing)
         // Set EntryView from User Settings
-        .onAppear{
-            activeTab = AppConfig().entrySite
+        .onAppear{            
+            activeTab = AppConfig.shared.entrySite
             
             RecordViewRegion = LocationProvider.shared.region
         }
@@ -134,6 +140,13 @@ struct ContentView: View {
             overlay.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
                 overlay.toggle()
+            }
+        }
+        .task {
+            do {
+                try await purchaseManager.loadProducts()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }

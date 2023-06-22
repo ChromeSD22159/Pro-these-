@@ -15,150 +15,276 @@ struct PainAddSheet: View {
     
     var body: some View {
         GeometryReader { geo in
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 30) {
-                    // close
-                    
-                    CloseButtonRow()
-                   
-                    
-                    Spacer()
-                    
-                    // header
-                    Header()
-                    
-                    // PainPicker
-                    PainPicker(screen: geo.size)
-                    
-                    
-                    // DatePicker
-                    Button {
-                        withAnimation {
-                            vm.showDatePicker.toggle()
-                        }
-                    }  label: {
-                        HStack(spacing: 20){
-                            Image(systemName: "calendar.badge.plus")
-                                .font(.title3)
-                            
-                            Spacer()
-                            
-                            Text(vm.addPainDate, style: .date)
-                        }
-                        .padding()
-                        .padding(.horizontal)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.gray)
-                        )
-                    }
-                    .background(
-                        DatePicker("", selection: $vm.addPainDate, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(.wheel)
-                            .frame(width: 200, height: 100)
-                            .clipped()
-                            .background(Color.gray.cornerRadius(10))
-                            .opacity(vm.showDatePicker ? 1 : 0 )
-                            .offset(x: 50, y: 90)
-                    ).onChange(of: vm.addPainDate) { newValue in
-                       withAnimation {
-                           vm.showDatePicker.toggle()
-                       }
-                   }// DatePicker
-                    
-                    HStack(alignment: .top, spacing: 8) {
-                        Reason()
+            
+            if let pain = vm.editPain {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 30) {
+                        // close
                         
-                        Drugs()
-                    }
-                    
-                    Spacer()
-
-                    HStack{
-                        Button("Abbrechen"){
-                            vm.resetStates()
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        
-                        Button("Speichern"){
-                            // save
-                            
-                            let newPain = Pain(context: persistenceController.container.viewContext)
-                            newPain.date = vm.addPainDate
-                            newPain.painIndex = Int16(vm.selectedPain)
-                            newPain.painReasons = vm.selectedReason
-                            newPain.painDrugs = vm.selectedDrug
-                            
-                            if vm.AddPainReasonText != "" {
-                                let newPainReason = PainReason(context: persistenceController.container.viewContext)
-                                newPainReason.name = vm.AddPainReasonText
-                                newPainReason.date = vm.addPainDate
-                                newPain.painReasons = newPainReason
-                            }
-                            
-                            if vm.AddPainDrugText != "" {
-                                let newPainDrug = PainDrug(context: persistenceController.container.viewContext)
-                                newPainDrug.name = vm.AddPainDrugText
-                                newPainDrug.date = vm.addPainDate
-                                newPain.painDrugs = newPainDrug
-                            }
-
-                            do {
-                                try? persistenceController.container.viewContext.save()
+                        SheetHeader("Schmerz bearbeiten", action: {
+                            withAnimation(.easeInOut) {
                                 vm.isPainAddSheet.toggle()
+                                vm.isPainAddSheet = false
+                                vm.selectedPain = 0
+                                vm.painReason = ""
+                                vm.AddPainReasonText = ""
+                                vm.painDrug = ""
+                                vm.AddPainDrugText = ""
+                                vm.showPainReasonPicker = false
+                                vm.showPainDrugPicker = false
+                                vm.showDatePicker = false
+                            }
+                        })
+                        
+                        Spacer()
+                        
+                        // header
+                        Header()
+                        
+                        // PainPicker
+                        PainPicker(screen: geo.size)
+                        
+                        
+                        // DatePicker
+                        Button {
+                            withAnimation {
+                                vm.showDatePicker.toggle()
+                            }
+                        }  label: {
+                            HStack(spacing: 20){
+                                Image(systemName: "calendar.badge.plus")
+                                    .font(.title3)
                                 
-                                // reset
+                                Spacer()
+                                
+                                Text(vm.addPainDate, style: .date)
+                            }
+                            .padding()
+                            .padding(.horizontal)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.gray)
+                            )
+                        }
+                        .background(
+                            DatePicker("", selection: $vm.addPainDate, displayedComponents: .hourAndMinute)
+                                .datePickerStyle(.wheel)
+                                .frame(width: 200, height: 100)
+                                .clipped()
+                                .background(Color.gray.cornerRadius(10))
+                                .opacity(vm.showDatePicker ? 1 : 0 )
+                                .offset(x: 50, y: 90)
+                        ).onChange(of: vm.addPainDate) { newValue in
+                           withAnimation {
+                               vm.showDatePicker.toggle()
+                           }
+                       }// DatePicker
+                        
+                        HStack(alignment: .top, spacing: 8) {
+                            Reason()
+                            
+                            Drugs()
+                        }
+                        
+                        Spacer()
+
+                        HStack{
+                            Button("Abbrechen"){
                                 vm.resetStates()
                             }
-                           
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            
+                            Button("Ändern"){
+                                // save
+                                
+                                let newPain = pain
+                                newPain.date = vm.addPainDate
+                                newPain.painIndex = Int16(vm.selectedPain)
+                                newPain.painReasons = vm.selectedReason
+                                newPain.painDrugs = vm.selectedDrug
+                                
+                                if vm.AddPainReasonText != "" {
+                                    let newPainReason = pain.painReasons
+                                    newPainReason?.name = vm.AddPainReasonText
+                                    newPainReason?.date = vm.addPainDate
+                                    newPain.painReasons = newPainReason
+                                }
+                                
+                                if vm.AddPainDrugText != "" {
+                                    let newPainDrug = pain.painDrugs
+                                    newPainDrug?.name = vm.AddPainDrugText
+                                    newPainDrug?.date = vm.addPainDate
+                                    newPain.painDrugs = newPainDrug
+                                }
+
+                                do {
+                                    try? persistenceController.container.viewContext.save()
+                                    vm.isPainAddSheet.toggle()
+                                    
+                                    // reset
+                                    vm.resetStates()
+                                }
+                               
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
                         }
                         .frame(maxWidth: .infinity)
-                        .padding()
+                        .background(Color.white.opacity(0.05))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 10)
+                        .opacity( withAnimation(.easeOut(duration: 0.3)){
+                            vm.validation()
+                        } )
+                        
+                        
                     }
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white.opacity(0.05))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding(.bottom, 10)
-                    .opacity( withAnimation(.easeOut(duration: 0.3)){
-                        vm.validation()
-                    } )
-                    
-                    
-                }
-                .padding()
-                .presentationDragIndicator(.visible)
-                .foregroundColor(.white)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func CloseButtonRow() -> some View {
-        HStack {
-            Spacer()
-            ZStack{
-                Image(systemName: "xmark")
-                    .font(.title2)
                     .padding()
-            }
-            .onTapGesture{
-                withAnimation(.easeInOut) {
-                    vm.isPainAddSheet.toggle()
-                    vm.isPainAddSheet = false
-                    vm.selectedPain = 0
-                    vm.painReason = ""
-                    vm.AddPainReasonText = ""
-                    vm.painDrug = ""
-                    vm.AddPainDrugText = ""
-                    vm.showPainReasonPicker = false
-                    vm.showPainDrugPicker = false
-                    vm.showDatePicker = false
+                    .presentationDragIndicator(.visible)
+                    .foregroundColor(.white)
+                    .onAppear{
+                        vm.addPainDate = pain.date ?? Date()
+                        vm.showDatePicker.toggle()
+                        vm.selectedPain = Int(pain.painIndex)
+                        vm.selectedReason = pain.painReasons
+                        vm.selectedDrug = pain.painDrugs
+                    }
+                }
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 30) {
+                        // close
+                        
+                        SheetHeader("Hast du Schmerzen?", action: {
+                            withAnimation(.easeInOut) {
+                                vm.isPainAddSheet.toggle()
+                                vm.isPainAddSheet = false
+                                vm.selectedPain = 0
+                                vm.painReason = ""
+                                vm.AddPainReasonText = ""
+                                vm.painDrug = ""
+                                vm.AddPainDrugText = ""
+                                vm.showPainReasonPicker = false
+                                vm.showPainDrugPicker = false
+                                vm.showDatePicker = false
+                            }
+                        })
+                        
+                        Spacer()
+                        
+                        // header
+                        Header()
+                        
+                        // PainPicker
+                        PainPicker(screen: geo.size)
+                        
+                        
+                        // DatePicker
+                        Button {
+                            withAnimation {
+                                vm.showDatePicker.toggle()
+                            }
+                        }  label: {
+                            HStack(spacing: 20){
+                                Image(systemName: "calendar.badge.plus")
+                                    .font(.title3)
+                                
+                                Spacer()
+                                
+                                Text(vm.addPainDate, style: .date)
+                            }
+                            .padding()
+                            .padding(.horizontal)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.gray)
+                            )
+                        }
+                        .background(
+                            DatePicker("", selection: $vm.addPainDate, displayedComponents: .hourAndMinute)
+                                .datePickerStyle(.wheel)
+                                .frame(width: 200, height: 100)
+                                .clipped()
+                                .background(Color.gray.cornerRadius(10))
+                                .opacity(vm.showDatePicker ? 1 : 0 )
+                                .offset(x: 50, y: 90)
+                        ).onChange(of: vm.addPainDate) { newValue in
+                           withAnimation {
+                               vm.showDatePicker.toggle()
+                           }
+                       }// DatePicker
+                        
+                        HStack(alignment: .top, spacing: 8) {
+                            Reason()
+                            
+                            Drugs()
+                        }
+                        
+                        Spacer()
+
+                        HStack{
+                            Button("Abbrechen"){
+                                vm.resetStates()
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            
+                            Button("Speichern"){
+                                // save
+                                
+                                let newPain = Pain(context: persistenceController.container.viewContext)
+                                newPain.date = vm.addPainDate
+                                newPain.painIndex = Int16(vm.selectedPain)
+                                newPain.painReasons = vm.selectedReason
+                                newPain.painDrugs = vm.selectedDrug
+                                
+                                if vm.AddPainReasonText != "" {
+                                    let newPainReason = PainReason(context: persistenceController.container.viewContext)
+                                    newPainReason.name = vm.AddPainReasonText
+                                    newPainReason.date = vm.addPainDate
+                                    newPain.painReasons = newPainReason
+                                }
+                                
+                                if vm.AddPainDrugText != "" {
+                                    let newPainDrug = PainDrug(context: persistenceController.container.viewContext)
+                                    newPainDrug.name = vm.AddPainDrugText
+                                    newPainDrug.date = vm.addPainDate
+                                    newPain.painDrugs = newPainDrug
+                                }
+
+                                do {
+                                    try? persistenceController.container.viewContext.save()
+                                    vm.isPainAddSheet.toggle()
+                                    
+                                    // reset
+                                    vm.resetStates()
+                                }
+                               
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white.opacity(0.05))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 10)
+                        .opacity( withAnimation(.easeOut(duration: 0.3)){
+                            vm.validation()
+                        } )
+                        
+                        
+                    }
+                    .padding()
+                    .presentationDragIndicator(.visible)
+                    .foregroundColor(.white)
                 }
             }
+            
+            
         }
-        .padding()
     }
     
     @ViewBuilder

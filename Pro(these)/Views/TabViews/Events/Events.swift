@@ -14,6 +14,7 @@ struct Events: View {
     @EnvironmentObject var eventManager: EventManager
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var cal: MoodCalendar
+    @EnvironmentObject var entitlementManager: EntitlementManager
     @Environment(\.managedObjectContext) var managedObjectContext
     
     @FocusState var focusedTask: EventTasks?
@@ -55,7 +56,7 @@ struct Events: View {
                     }
                     .listRowBackground(Color.white.opacity(0.001))
                     
-                    if eventManager.showCal {
+                    if appConfig.EventShowCalendar {
                         EventCalendar(events: events)
                     } else {
                         List {
@@ -89,12 +90,12 @@ struct Events: View {
             .foregroundColor(appConfig.fontColor)
             .fullSizeTop()
             .blurredOverlaySheet(.init(Material.ultraThinMaterial), show: $eventManager.isAddContactSheet, onDismiss: {}, content: {
-                ContentAddSheetBoby(titel: "Kontakt hinzufügen")
+                ContentAddSheetBoby(titel: "Erstelle einen Kontakt")
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             })
             .blurredOverlaySheet(.init(Material.ultraThinMaterial), show: $eventManager.isAddEventSheet, onDismiss: {}, content: {
-                EventAddSheetBoby(titel: "Termin hinzufügen")
+                EventAddSheetBoby(titel: "Erstelle einen Termin")
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             })
@@ -119,7 +120,7 @@ extension Events {
     func header() -> some View {
         HStack(){
             VStack(spacing: 2){
-                Text("Hallo, \(AppConfig.shared.username)")
+                sayHallo(name: appConfig.username)
                     .font(.title2)
                     .foregroundColor(AppConfig.shared.fontColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -130,12 +131,22 @@ extension Events {
             }
             
             HStack(spacing: 20){
+                if !entitlementManager.hasPro {
+                    Image(systemName: "trophy.fill")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .onTapGesture {
+                            DispatchQueue.main.async {
+                                tabManager.ishasProFeatureSheet.toggle()
+                            }
+                        }
+                }
+                
                 Image(systemName: eventManager.showCal ? "calendar" : "list.bullet.below.rectangle")
                     .foregroundColor(AppConfig.shared.fontColor)
                     .font(.title3)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)){
-                            eventManager.showCal.toggle()
+                            appConfig.EventShowCalendar.toggle()
                         }
                     }
                 
@@ -177,8 +188,20 @@ extension Events {
         .frame(maxWidth: .infinity)
     }
 
-    func sayHallo(name: String) -> String {
-        return "Hallo, \(name)!"
+    func sayHallo(name: String) -> some View {
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        var string = ""
+        
+        switch hour {
+            case 6..<12 : string = "Guten Morgen, \(name)!"
+            case 12 : string = "Guten Tag, \(name)!"
+            case 13..<17 :  string = "Hallo \(name)!"
+            case 17..<22 : string = "Guten Abend, \(name)!"
+            default: string = "Hallo, \(name)!"
+        }
+        
+        return Text(string)
     }
 
 }

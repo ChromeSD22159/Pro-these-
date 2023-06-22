@@ -36,6 +36,8 @@ class MoodCalendar: ObservableObject {
         Mood(image: "5", name: "Sehr Schlecht", color: .red),
     ]
     
+    @Published var editFeeling: Feeling?
+    
     // MARK: - Formatte Date to "May 2023"
     func extractDate() -> [String] {
         let formatter = DateFormatter()

@@ -10,6 +10,7 @@ import SwiftUI
 struct HeaderComponent: View {
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var tabManager: TabManager
+    @EnvironmentObject var entitlementManager: EntitlementManager
     var body: some View {
         HStack(){
             VStack(spacing: 2) {
@@ -22,7 +23,19 @@ struct HeaderComponent: View {
                     .foregroundColor(appConfig.fontLight)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            VStack(){
+            
+            HStack(spacing: 20){
+                
+                if !entitlementManager.hasPro {
+                    Image(systemName: "trophy.fill")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .onTapGesture {
+                            DispatchQueue.main.async {
+                                tabManager.ishasProFeatureSheet.toggle()
+                            }
+                        }
+                }
+                
                 Image(systemName: "gearshape")
                     .foregroundColor(appConfig.fontColor)
                     .onTapGesture {
@@ -35,23 +48,26 @@ struct HeaderComponent: View {
     }
     
     func sayHallo(name: String) -> String {
-        //let hour = Calendar.current.component(.hour, from: Date())
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        let string = ""
+        
+        switch hour {
+            case 6..<12 : return "Guten Morgen, \(name)!"
+            case 12 : return "Guten Tag, \(name)!"
+            case 13..<17 :  return "Hallo \(name)!"
+            case 17..<22 : return "Guten Abend, \(name)!"
+            default: return "Hallo, \(name)!"
+        }
 
-        /*
-         switch hour {
-         case 0..<12 : return "Guten Morgen, \(name)!"
-         case 12 : return "Guten Tag, \(name)!"
-         case 13..<17 : return "Hallo \(name)!"
-         case 17..<0 : return "Guten Abend, \(name)!"
-         default: return "Hallo, \(name)!"
-         }
-         */
-        return "Hallo, \(name)!"
     }
 }
 
 struct HeaderComponent_Previews: PreviewProvider {
     static var previews: some View {
         HeaderComponent()
+            .environmentObject(AppConfig())
+            .environmentObject(TabManager())
+            .environmentObject(EntitlementManager())
     }
 }

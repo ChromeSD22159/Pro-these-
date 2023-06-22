@@ -43,3 +43,39 @@ struct EventPreview: View {
         .padding(10)
     }
 }
+
+
+struct EventPreview_Previews: PreviewProvider {
+    
+    static var testEvent: Event? {
+        let newEvent = Event(context: PersistenceController.shared.container.viewContext)
+        newEvent.icon = ""
+        newEvent.titel = "Standrort Gespräch"
+        newEvent.endDate = Date()
+        newEvent.startDate = Date()
+        
+        return newEvent
+    }
+    
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            VStack{
+                EventPreview(item: testEvent!)
+                    .environmentObject(AppConfig())
+                    .environmentObject(TabManager())
+                    .environmentObject(HealthStorage())
+                    .environmentObject(PushNotificationManager())
+                    .environmentObject(EventManager())
+                    .environmentObject(MoodCalendar())
+                    .environmentObject(WorkoutStatisticViewModel())
+                    .environmentObject(PainViewModel())
+                    .environmentObject(StateManager())
+                    .environmentObject(EntitlementManager())
+                    .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                    .colorScheme(.dark)
+            }
+        }
+    }
+}

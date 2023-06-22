@@ -42,7 +42,9 @@ class FK_EventProvider {
         newEvent.title = "\(event.titel ?? AppConfig.shared.EventTitelUnknown) bei \(event.contact?.name ??  AppConfig.shared.ContactTitelUnknown)"
         newEvent.startDate = event.startDate
         newEvent.endDate = event.endDate
-        newEvent.url = URL(string: "ProProthese://event")
+        //newEvent.url = URL(string: "ProProthese://event")
+        newEvent.url = URL(string: "https://www.prothese.pro")
+        newEvent.notes = "Erstellt von Pro Prothesen App"
         
         if alarm != 0 {
             let alarm = EKAlarm(relativeOffset: TimeInterval(alarm))
@@ -60,12 +62,9 @@ class FK_EventProvider {
         } catch {
            print("Error saving event in calendar")
         }
-        
-        
     }
-    
+
     func insertRecurringEvent(store: EKEventStore, event: RecurringEvents, completionHandler: (String) -> Void) {
-        
         let newEvent = EKEvent(eventStore: store)
         newEvent.calendar = store.defaultCalendarForNewEvents
         newEvent.title = "\(event.name ?? AppConfig.shared.EventTitelUnknown) bei \(event.contact?.name ??  AppConfig.shared.ContactTitelUnknown)"
@@ -76,7 +75,8 @@ class FK_EventProvider {
         newEvent.recurrenceRules = recurrenceRules(option: convertRhymus(event.rhymus))
         
         //newEvent.calendar = createNewCalendar(withName: "Pro Prothese", store: store)
-        newEvent.url = URL(string: "ProProthese://event")
+        newEvent.url = URL(string: "https://www.prothese.pro")
+        newEvent.notes = "Erstellt von Pro Prothesen App"
         
         guard self.checkEventExists(store: store, event: newEvent) != true else {
             print("Event Already exist")
@@ -171,8 +171,6 @@ class FK_EventProvider {
                return print(e)
             }
         }
-     
-
     }
     
     func removeRecurringEvent(store: EKEventStore, event: RecurringEvents) {
@@ -185,8 +183,25 @@ class FK_EventProvider {
                return print(e)
             }
         }
-     
-
+    }
+    
+    func changeEvent(store: EKEventStore, event: Event, completion: @escaping (_ success: Bool) -> Void) {
+        let foundEvent = fetchEvent(store: store, event: event)
+        
+        let newEvent = foundEvent[0]
+        newEvent.title = "\(event.titel ?? AppConfig.shared.EventTitelUnknown) bei \(event.contact?.name ??  AppConfig.shared.ContactTitelUnknown)"
+        newEvent.startDate = event.startDate
+        newEvent.endDate = event.endDate
+        
+        if foundEvent.count > 0 {
+            do{
+                try store.save(foundEvent[0], span: EKSpan.thisEvent)
+                completion(true)
+            } catch let e as NSError{
+                completion(false)
+                return print(e)
+            }
+        }
     }
     
     func removeRecurringAllEvents(store: EKEventStore, event: RecurringEvents) {

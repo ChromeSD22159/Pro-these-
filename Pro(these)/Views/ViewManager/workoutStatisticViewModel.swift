@@ -69,40 +69,6 @@ class WorkoutStatisticViewModel: ObservableObject {
         return data
     }
     
-    /// extract Weekdates by adding Date -> Fired on applaunch 
-    /*func extractCurrentWeek( _ date: Date){
-        self.currentWeek.removeAll(keepingCapacity: true)
-        let calendar = Calendar.current
-        let week = Calendar.current.dateInterval(of: .weekOfMonth, for: date)
-
-        guard let firstDay = week?.start else {
-            return
-        }
-
-        (0..<7).forEach{ day in
-            if let weekDay = calendar.date(byAdding: .day, value: day, to: firstDay) {
-                currentWeek.append(weekDay)
-            }
-        }
-    }*/
-    
-   /* func getHealthDataWeekly( _ date: Date ) {
-        let DateIndterval = DateInterval(start: Calendar.current.startOfDay(for: self.currentWeek.first!), end: Calendar.current.endOfDay(for: self.currentWeek.last!))
-        
-        healthStore.queryWeekCountbyType(week: DateIndterval, type: .stepCount, completion: { stepCount in
-            DispatchQueue.main.async {
-                self.WeeklySteps = stepCount
-            }
-        })
-        
-        healthStore.queryWeekCountbyType(week: DateIndterval, type: .distanceWalkingRunning, completion: { distance in
-            DispatchQueue.main.async {
-                self.WeeklyDistanz = distance
-            }
-        })
-
-    } */
-    
     /// fetch Steps / Distances by week collection, calc the avg data and save it as an Array with weekly Step/Distances
     func getCollectionOfWeeklyHealthData(){
         self.CollectionWeeklySteps.removeAll(keepingCapacity: true)

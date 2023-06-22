@@ -11,6 +11,7 @@ struct WorkOutEntryView: View {
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var workoutStatisticViewModel: WorkoutStatisticViewModel
     @EnvironmentObject var cal: MoodCalendar
+    @EnvironmentObject var entitlementManager: EntitlementManager
     
     @State var healthTab: WorkoutTab?
     @State var isScreenShotSheet = false
@@ -24,7 +25,7 @@ struct WorkOutEntryView: View {
                     
                     HStack(){
                         VStack(spacing: 2){
-                            Text("Hallo, \(AppConfig.shared.username)")
+                            sayHallo(name: AppConfig.shared.username)
                                 .font(.title2)
                                 .foregroundColor(AppConfig.shared.fontColor)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -35,6 +36,17 @@ struct WorkOutEntryView: View {
                         }
                         
                         HStack(spacing: 20){
+                            
+                            if !entitlementManager.hasPro {
+                                Image(systemName: "trophy.fill")
+                                    .foregroundColor(AppConfig.shared.fontColor)
+                                    .onTapGesture {
+                                        DispatchQueue.main.async {
+                                            tabManager.ishasProFeatureSheet.toggle()
+                                        }
+                                    }
+                            }
+                            
                             if tabManager.workoutTab == .feelings {
                                 Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
                                     .foregroundColor(AppConfig.shared.fontColor)
@@ -71,48 +83,6 @@ struct WorkOutEntryView: View {
                     
                     // Content
                     ScrollView(showsIndicators: false) {
-                        
-                        /*// Tab
-                        HStack(spacing: 10) {
-                            ForEach(WorkoutTab.allCases, id: \.self) { tab in
-           
-                                VStack{
-                                    Text(tab.title())
-                                        .foregroundColor(tabManager.workoutTab == tab ? .yellow : .white)
-                                        .font(.callout)
-                                }
-                                .padding(.vertical, 5)
-                                .frame(maxWidth: .infinity)
-                                .background(tabManager.workoutTab == tab ? Material.ultraThinMaterial.opacity(1) : Material.ultraThinMaterial.opacity(0.25))
-                                .cornerRadius(15)
-                                .onTapGesture {
-                                    withAnimation(.easeInOut){
-                                        tabManager.workoutTab = tab
-                                    }
-                                }
-         
-                            }
-                        } // tab
-                        .padding(.horizontal)
-                        .onAppear{
-                            healthTab = tabManager.workoutTab
-                        }
-                        .onChange(of: tabManager.workoutTab, perform: { new in
-                            healthTab = new
-                            
-                            // set Statistic Date on Today
-                            workoutStatisticViewModel.currentDay = Date()
-                            
-                            // set Calendar Current Date = Today and month at current Month
-                            cal.currentDate = Date()
-                            cal.currentMonth = 0
-                        })
-                        
-                        switch tabManager.workoutTab {
-                            case .statistic: WorkoutStatisticView(isScreenShotSheet: $isScreenShotSheet).environmentObject(workoutStatisticViewModel)
-                            case .feelings: FeelingView()
-                        } */
-                        
                         WorkoutStatisticView(isScreenShotSheet: $isScreenShotSheet).environmentObject(workoutStatisticViewModel)
                     }
                    
@@ -122,6 +92,22 @@ struct WorkOutEntryView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
            
         }
+    }
+    
+    func sayHallo(name: String) -> some View {
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        var string = ""
+        
+        switch hour {
+            case 6..<12 : string = "Guten Morgen, \(name)!"
+            case 12 : string = "Guten Tag, \(name)!"
+            case 13..<17 :  string = "Hallo \(name)!"
+            case 17..<22 : string = "Guten Abend, \(name)!"
+            default: string = "Hallo, \(name)!"
+        }
+        
+        return Text(string)
     }
 }
 

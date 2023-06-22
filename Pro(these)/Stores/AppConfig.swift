@@ -33,7 +33,9 @@ class AppConfig: ObservableObject {
 
     // MARK: PERSONAL
     /// Saves the Username
-    @AppStorage("Username") var username = "Frederik"
+    @AppStorage("Username") var username = "Max Mustermann"
+    
+    @AppStorage("hapticFeedback") var hapticFeedback = true
     
     /// Saves the Username
     @AppStorage("UserPin") var userPin:String = ""
@@ -44,16 +46,8 @@ class AppConfig: ObservableObject {
     @AppStorage("EntrySite") var entrySite:Tab = .event
     
     
-    // MARK: SETTINGS StepsCount
-    /// BarMarks - Shows a green bar when your daily target has been reached
-    @AppStorage("ChartBarIsShowing") var ChartBarIsShowing = false
-    /// LineMark - Show a red line Marker Stroke, with the daily distance
-    @AppStorage("ChartLineDistanceIsShowing") var ChartLineDistanceIsShowing = false
-    ///  LineMark - Show a white/blue line Marker Stroke, with the daily steps
-    @AppStorage("ChartLineStepsIsShowing") var ChartLineStepsIsShowing = true
-    
-    ///  LineMark - Show mini Recorder on the StepCounterView
-    @AppStorage("ShowRecordOnHomeView") var ShowRecordOnHomeView = true
+    // MARK: - SETTINGS StepsCount
+
     
     ///  LineMark - Show mini Recorder on the StepCounterView
     @AppStorage("ShowToDayRecordingPercentageToAvg") var ShowToDayRecordingPercentageToAvg = true
@@ -73,13 +67,23 @@ class AppConfig: ObservableObject {
     /// Live Notification
     @AppStorage("showLiveActivity") var showLiveActivity = true
     
-    // MARK: SETTINGS Terminplaner
+    // MARK: - SETTINGS Terminplaner
     @AppStorage("showPastEvents") var showPastEvents = true
     @AppStorage("showAllEvents") var showAllEvents = true
+    @AppStorage("EventShowCalendar") var EventShowCalendar = false
+    @AppStorage("EventShowList") var EventShowList = true
     
+    @AppStorage("faceID") var faceID = false
     
     @AppStorage("debug") var debug = false
     
+    @AppStorage("hideInfomations") var hideInfomations = true
+    
+    @AppStorage("hasUnlockedPro") var hasUnlockedPro = false
+    
+    var placeholder = [
+        "info": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren."
+    ]
     
     // MARK: - Global Strings
     /// Shows the App Name

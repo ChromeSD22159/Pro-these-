@@ -162,10 +162,6 @@ struct EventCalendar: View {
                                .frame(width: itemWidth, height: itemWidth )
                                .onTapGesture {
                                    cal.currentDate = value.date
-                                   
-                                   /*if value.date > Date() { // || cal.isSameDay(d1: value.date , d2: Date())
-                                       eventManager.openAddEventSheet(date: value.date)
-                                   }*/
                                }
                        }
                        .padding(5)

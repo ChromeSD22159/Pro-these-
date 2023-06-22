@@ -58,9 +58,10 @@ struct EventCardComponent: View {
         
         HStack{
 
-            Confirm(message: "Den Termin '\( item.titel ?? "" )' löschen?", buttonText: "\(item.titel ?? "Termin") löschen", buttonIcon: "trash", content: {
+            Confirm(message: "Den Termin '\( item.titel ?? "" )' löschen?", buttonText: "Löschen", buttonIcon: "trash", content: {
                 Button("Löschen") { eventManager.deleteEvent(item) }
             })
+            .foregroundColor(.yellow)
             
             Spacer()
         }
@@ -70,3 +71,36 @@ struct EventCardComponent: View {
     }
 }
 
+struct EventCardComponent_Previews: PreviewProvider {
+    
+    static var testEvent: Event? {
+        let newEvent = Event(context: PersistenceController.shared.container.viewContext)
+        newEvent.titel = "Standrort Gespräch"
+        newEvent.endDate = Date()
+        newEvent.startDate = Date()
+        
+        return newEvent
+    }
+    
+    static var previews: some View {
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            VStack{
+                EventCardComponent(color: .white, item: testEvent!)
+                    .environmentObject(AppConfig())
+                    .environmentObject(TabManager())
+                    .environmentObject(HealthStorage())
+                    .environmentObject(PushNotificationManager())
+                    .environmentObject(EventManager())
+                    .environmentObject(MoodCalendar())
+                    .environmentObject(WorkoutStatisticViewModel())
+                    .environmentObject(PainViewModel())
+                    .environmentObject(StateManager())
+                    .environmentObject(EntitlementManager())
+                    .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                    .colorScheme(.dark)
+            }
+        }
+    }
+}

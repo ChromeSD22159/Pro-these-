@@ -87,7 +87,7 @@ struct StepChart: View {
                                                 
                                                 ZStack{
                                                     // only show when date is not in future
-                                                    if formDate < Date().endOfDay() { // || Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay)
+                                                    if formDate < Date().startEndOfDay().end { // || Calendar.current.isDate(formDate, inSameDayAs: vm.currentDay)
                                                         let (targetReached, _) = vm.checkTargetSteps(steps: wk.value)
                                                         
                                                         Image(systemName: targetReached ? "hand.thumbsup.fill" : "circle.fill")
@@ -172,9 +172,27 @@ struct StepChart: View {
 
                                       withAnimation {
                                           // only update when the date is not in future
-                                          if date < Date().endOfDay() || Calendar.current.isDate(date, inSameDayAs: vm.currentDay) {
+                                          if date < Date() { 
                                               vm.currentDay = date
+                                              
+                                              if Calendar.current.isDateInToday(date) {
+                                                  // today
+                                                  print(date)
+                                                  vm.currentDay = Date()
+                                              } else {
+                                                  // not today
+                                                  print(date)
+                                                  print(date.startEndOfDay().end)
+                                                  vm.currentDay = date.startEndOfDay().end
+                                              }
+                                              
+                                              
                                           }
+                                          
+                                          // if is today
+                                          
+                                          // else
+                                          
                                       }
                                   }
                                   
