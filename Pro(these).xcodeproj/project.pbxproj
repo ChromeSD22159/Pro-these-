@@ -53,10 +53,6 @@
 		B620B38D2A420EDB00A61B1D /* syncProducts.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B620B38C2A420EDB00A61B1D /* syncProducts.storekit */; };
 		B620B3912A4216E000A61B1D /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B3902A4216E000A61B1D /* PurchaseManager.swift */; };
 		B629A71C2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */; };
-		B635A6302A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
-		B635A6312A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
-		B635A6332A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
-		B635A6342A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
 		B635A6362A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
 		B635A6372A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
 		B635A6392A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
@@ -68,8 +64,9 @@
 		B635A6642A42E68C00AF87FA /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6632A42E68C00AF87FA /* CloseButton.swift */; };
 		B635A66A2A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6692A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift */; };
 		B635A66C2A434C4A00AF87FA /* MoreDeteilsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A66B2A434C4A00AF87FA /* MoreDeteilsView.swift */; };
-		B635A6722A44F87A00AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
-		B635A6732A44F89200AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
+		B635A6792A44FF9300AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6782A44FF9300AF87FA /* Calendar.swift */; };
+		B635A67B2A44FFAD00AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6782A44FF9300AF87FA /* Calendar.swift */; };
+		B635A67C2A45000B00AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
 		B63874F62A33A0F0008500A3 /* EventCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63874F52A33A0F0008500A3 /* EventCalendar.swift */; };
 		B63874F82A33A153008500A3 /* EventCalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63874F72A33A153008500A3 /* EventCalendarViewModel.swift */; };
 		B6407B572A403903008D9539 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6407B562A403903008D9539 /* ExtensionDelegate.swift */; };
@@ -295,7 +292,6 @@
 		B620B38C2A420EDB00A61B1D /* syncProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = syncProducts.storekit; sourceTree = "<group>"; };
 		B620B3902A4216E000A61B1D /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetTodaySteps.swift; sourceTree = "<group>"; };
-		B635A62F2A42250800AF87FA /* Calendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		B635A6352A42251600AF87FA /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		B635A6472A42254600AF87FA /* ScreenshotMakerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenshotMakerView.swift; sourceTree = "<group>"; };
 		B635A64D2A42255300AF87FA /* ViewExtention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtention.swift; sourceTree = "<group>"; };
@@ -303,6 +299,7 @@
 		B635A6632A42E68C00AF87FA /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		B635A6692A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteReasonDrugsSheetBody.swift; sourceTree = "<group>"; };
 		B635A66B2A434C4A00AF87FA /* MoreDeteilsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDeteilsView.swift; sourceTree = "<group>"; };
+		B635A6782A44FF9300AF87FA /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		B63874F52A33A0F0008500A3 /* EventCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendar.swift; sourceTree = "<group>"; };
 		B63874F72A33A153008500A3 /* EventCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendarViewModel.swift; sourceTree = "<group>"; };
 		B6407B562A403903008D9539 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
@@ -896,7 +893,7 @@
 				B635A64D2A42255300AF87FA /* ViewExtention.swift */,
 				B635A6472A42254600AF87FA /* ScreenshotMakerView.swift */,
 				B635A6352A42251600AF87FA /* DateExtension.swift */,
-				B635A62F2A42250800AF87FA /* Calendar.swift */,
+				B635A6782A44FF9300AF87FA /* Calendar.swift */,
 			);
 			path = Extention;
 			sourceTree = "<group>";
@@ -1126,7 +1123,6 @@
 				B635A63A2A42251600AF87FA /* DateExtension.swift in Sources */,
 				B615DF6E2A3B20B4007C27E9 /* Tab.swift in Sources */,
 				B64FE9A82A3C5EA9002B51F7 /* Workout.swift in Sources */,
-				B635A6342A42250800AF87FA /* Calendar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1134,12 +1130,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B635A6732A44F89200AF87FA /* Calendar.swift in Sources */,
-				B635A6722A44F87A00AF87FA /* DateExtension.swift in Sources */,
 				B697CF722A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift in Sources */,
+				B635A67B2A44FFAD00AF87FA /* Calendar.swift in Sources */,
 				B629A71C2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift in Sources */,
 				B6AB87072A3C693300D3D3BC /* AppConfig.swift in Sources */,
 				B66670ED2A3C96C9009CB426 /* Persistence.swift in Sources */,
+				B635A67C2A45000B00AF87FA /* DateExtension.swift in Sources */,
 				B6D727012A3F387800C8523F /* ProProtheseWidgetWorkoutsToday.swift in Sources */,
 				B6AB87082A3C693E00D3D3BC /* Tab.swift in Sources */,
 				B64FE9A42A3C5C4B002B51F7 /* healthStoreProvider.swift in Sources */,
@@ -1162,7 +1158,6 @@
 			files = (
 				B6A530142A3CF32100BB0F8F /* WatchConnectivityProvider.swift in Sources */,
 				B635A6392A42251600AF87FA /* DateExtension.swift in Sources */,
-				B635A6332A42250800AF87FA /* Calendar.swift in Sources */,
 				B697CFA32A3A0AD200A4CD01 /* Tab.swift in Sources */,
 				B697CF972A3A043200A4CD01 /* ProProtheseWatchComplication.swift in Sources */,
 				B615DF572A3B1459007C27E9 /* WorkoutManager.swift in Sources */,
@@ -1185,7 +1180,6 @@
 				B6407B572A403903008D9539 /* ExtensionDelegate.swift in Sources */,
 				B6525FE82A0BEA430024B9D2 /* SessionTabView.swift in Sources */,
 				B6525FF62A0C0D330024B9D2 /* MetricsView.swift in Sources */,
-				B635A6312A42250800AF87FA /* Calendar.swift in Sources */,
 				B6525FF02A0C02E60024B9D2 /* WorkoutManager.swift in Sources */,
 				B6EEC4BB29FD40D8004E2F2F /* HealthStorage.swift in Sources */,
 				B635A6372A42251600AF87FA /* DateExtension.swift in Sources */,
@@ -1237,7 +1231,6 @@
 				B6C16B6E29F84CB600B5BD70 /* TabManager.swift in Sources */,
 				B609A2DB2A093DB100C88BC6 /* PercentualChangeBadge.swift in Sources */,
 				B68C6DFD2A17E73C00167F9B /* WorkOutEntryView.swift in Sources */,
-				B635A6302A42250800AF87FA /* Calendar.swift in Sources */,
 				B6F948F329F6ED8500BBE3A2 /* ContentView.swift in Sources */,
 				B68C6E2D2A211EED00167F9B /* PainViewModel.swift in Sources */,
 				B6F948F129F6ED8500BBE3A2 /* Pro_these_App.swift in Sources */,
@@ -1252,6 +1245,7 @@
 				B63874F62A33A0F0008500A3 /* EventCalendar.swift in Sources */,
 				B635A6482A42254600AF87FA /* ScreenshotMakerView.swift in Sources */,
 				B635A66A2A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift in Sources */,
+				B635A6792A44FF9300AF87FA /* Calendar.swift in Sources */,
 				B6C1286029FA74CC0018C71D /* SettingsDeteilsView.swift in Sources */,
 				B612E31B29FAA6AA00C6BF88 /* SettingChangeName.swift in Sources */,
 				B612E31229FA9BF400C6BF88 /* BackBTN.swift in Sources */,
