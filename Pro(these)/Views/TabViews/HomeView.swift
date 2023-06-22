@@ -10,73 +10,106 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var entitlementManager: EntitlementManager
+    
     var body: some View {
         VStack(spacing: 20){
             
-            Header(name: AppConfig().username, target: AppConfig().targetSteps)
+            header()
             
-            GeometryReader { proxy in
-                carusell(screenSize: proxy)
+            ScrollView(showsIndicators: false) {
+                
+                VStack(alignment: .center, spacing: 20){
+                    Image("GetProProthesePNG")
+                        .resizable()
+                        .scaledToFit()
+                        .tag("V1")
+                        .padding(.horizontal)
+                    
+                    Text("ProFeature und ProWidgets")
+                        .font(.title3.bold())
+                        .foregroundColor(.white)
+                    
+                    Text("Mit einem Upgrade auf die Premium- \n Version wird die App noch besser!")
+                        .foregroundColor(.white)
+                        .font(.callout)
+                        .multilineTextAlignment(.center)
+                    
+                    Button("Hol dir dein Premium Abo!") {
+                        tabManager.ishasProFeatureSheet.toggle()
+                    }
+                    .padding(6)
+                    .frame(maxWidth: .infinity)
+                    .background(.yellow)
+                    .foregroundColor(.black)
+                    .cornerRadius(20)
+                }
+                .foregroundColor(.white)
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(20)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+                
             }
-            
-            Text(NSUserName())
-            
-            Text(NSFullUserName())
-            
-            Spacer()
             
         }
     }
         
     @ViewBuilder
-    func Header(name: String, target: Int) -> some View {
+    func header() -> some View {
         HStack(){
-            VStack {
-                Text("Hallo \(AppConfig().username)")
-                    .font(.title3)
+            VStack(spacing: 2){
+                sayHallo(name: appConfig.username)
+                    .font(.title2)
+                    .foregroundColor(appConfig.fontColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Dein Tagesziel ist für heute \(target) Schritte")
+                Text("Deine Termine und Notizen im Überblick.")
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(appConfig.fontLight)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            VStack(){
+            
+            HStack(spacing: 20){
+                if !entitlementManager.hasPro {
+                    Image(systemName: "trophy.fill")
+                        .foregroundColor(AppConfig.shared.fontColor)
+                        .onTapGesture {
+                            DispatchQueue.main.async {
+                                tabManager.ishasProFeatureSheet.toggle()
+                            }
+                        }
+                }
+                
                 Image(systemName: "gearshape")
-                    .foregroundColor(appConfig.fontColor)
+                    .foregroundColor(AppConfig.shared.fontColor)
+                    .font(.title3)
                     .onTapGesture {
                         tabManager.isSettingSheet.toggle()
                     }
             }
         }
-        .padding()
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
         .frame(maxWidth: .infinity)
     }
     
-    @ViewBuilder
-    func carusell(screenSize: GeometryProxy) -> some View {
-        let screenSize = screenSize.size
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 20){
-                ForEach(ScrollItem.sampleItems){ item in
-                    SliderItem(titel: item.titel, size: screenSize.width)
-                }
-            }
+    func sayHallo(name: String) -> some View {
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        var string = ""
+        
+        switch hour {
+            case 6..<12 : string = "Guten Morgen, \(name)!"
+            case 12 : string = "Guten Tag, \(name)!"
+            case 13..<17 :  string = "Hallo \(name)!"
+            case 17..<22 : string = "Guten Abend, \(name)!"
+            default: string = "Hallo, \(name)!"
         }
-        .frame(height: 300)
+        
+        return Text(string)
     }
     
-    @ViewBuilder
-    func SliderItem(titel:String, size: CGFloat) -> some View {
-        ZStack {
-            VStack(){
-                Text(titel)
-                    .foregroundColor(.white)
-            }
-            .frame(width: 300, height: 300)
-            .background(.red)
-        }
-        .frame(width: size)
-    }
 }
 
 struct ScrollItem: Identifiable {
@@ -92,6 +125,25 @@ struct ScrollItem: Identifiable {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        ZStack {
+            AppConfig.shared.background.ignoresSafeArea()
+            
+            VStack{
+                HomeView()
+                    .environmentObject(AppConfig())
+                    .environmentObject(TabManager())
+                    .environmentObject(HealthStorage())
+                    .environmentObject(PushNotificationManager())
+                    .environmentObject(EventManager())
+                    .environmentObject(MoodCalendar())
+                    .environmentObject(WorkoutStatisticViewModel())
+                    .environmentObject(PainViewModel())
+                    .environmentObject(StateManager())
+                    .environmentObject(EntitlementManager())
+                    .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
+                    .colorScheme(.dark)
+            }
+        }
     }
 }
+

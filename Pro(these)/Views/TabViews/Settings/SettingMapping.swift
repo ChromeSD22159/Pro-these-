@@ -26,32 +26,42 @@ struct MoreViewList: Identifiable {
 struct Settings: Identifiable {
     var id: String { titel }
     var titel: String
+    var icon: String
     var options: [Options]
     
     static var items = [
-        Settings(
-            titel: "Schritte",
+        /*
+        Settings( // checked
+            titel: "Fitness Statistik",
+            icon: "chart.bar.xaxis",
             options: [
-                Options(titel: "Tages Ziel in Chart", icon: "target", desc: "Zeige erfüllte Tagesziele an", info: "Zeigt den Record Button auch auf der Schrittüberischt an.", binding: AppConfig().$ChartBarIsShowing),
-                Options(titel: "Schritte in Chart", icon:  "figure.walk", desc:  "Zeige Schritte", info: "Zeigt den Record Button auch auf der Schrittüberischt an.", binding: AppConfig().$ChartLineStepsIsShowing),
-                Options(titel: "Distanz in Chart", icon:  "figure.walk.diamond", desc:  "Zeige Distance", info: "Zeigt den Record Button auch auf der Schrittüberischt an.", binding: AppConfig().$ChartLineDistanceIsShowing),
-                Options(titel: "Durchschnittliche Schritte", icon: "waveform", desc: "Zeige Durchschnittliche Schritte", info: "Zeigt den Record Button auch auf der Schrittüberischt an.", binding: AppConfig().$stepRuleMark),
-                Options(titel: "Mini StopWatch im Schrittzähler", icon: "stopwatch", desc: "Aktiviere eine mini StopWatch im Schrittzähler", info: "Aktiviere eine mini StopWatch im Schrittzähler", binding: AppConfig().$ShowRecordOnHomeView)
             ]
         ),
         
-        Settings(
-            titel: "StopWatch", options: [
-                Options(titel: "Mini StopWatch im Schrittzähler", icon: "stopwatch", desc: "Aktiviere eine mini StopWatch im Schrittzähler", info: "Aktiviere eine mini StopWatch im Schrittzähler", binding: AppConfig().$ShowRecordOnHomeView),
-                
-                Options(titel: "Prozentuale Tragezeit zum Durchschnitt", icon: "stopwatch", desc: "Prozentuale Tragezeit zum Durchschnitt", info: "Zeige die Prozentuale Tragezeit im Vergleich zur Durchschnittlichen Tragezeit.", binding: AppConfig().$ShowToDayRecordingPercentageToAvg)
+        Settings( // checked
+            titel: "Prothesen Recorder",
+            icon: "figure.walk",
+            options: [
+                Options(titel: "1", icon: "stopwatch", desc: "Prozentuale Tragezeit zum Durchschnitt", info: "Zeige die Prozentuale Tragezeit im Vergleich zur Durchschnittlichen Tragezeit.", binding: AppConfig().$ShowToDayRecordingPercentageToAvg)
+            ]),
+        */
+        
+        Settings( // checked
+            titel: "Terminplaner",
+            icon: "calendar",
+            options: [
+                Options(titel: "1", icon: "exclamationmark.circle",  desc: "Zeige alle abgelaufene Termine Sortiert an.", info: "Zeige alle abgelaufene Termine Sortiert an.", binding: AppConfig().$showPastEvents),
+                Options(titel: "2", icon: "repeat.circle", desc: "Zeige alle Termine Sortiert an.", info: "Zeige alle Termine Sortiert an.", binding: AppConfig().$showAllEvents),
+               // Options(titel: "3", icon: "calendar", desc: "Priorisiert Listenansicht", info: "Diese Einstellung legt die standartisierte Erscheinung der Termine als Übersicht fest.", binding: AppConfig.shared.$EventShowList),
+               // Options(titel: "4", icon: "calendar", desc: "Priorisiert Kalendarische-Ansicht", info: "Diese Einstellung legt die standartisierte Erscheinung der Termine als Übersicht fest.", binding: AppConfig.shared.$EventShowCalendar)
             ]),
         
-        Settings(
-            titel: "Terminplaner", options: [
-                Options(titel: "Zeige abgelaufene Termine", icon: "stopwatch", desc: "Zeige alle abgelaufene Termine Sortiert an.", info: "Zeige alle abgelaufene Termine Sortiert an.", binding: AppConfig().$showPastEvents),
-                Options(titel: "Zeige alle Termine", icon: "stopwatch", desc: "Zeige alle Termine Sortiert an.", info: "Zeige alle Termine Sortiert an.", binding: AppConfig().$showAllEvents)
-            ])
+        Settings( // new
+            titel: "Sicherheit",
+            icon: "lock.square",
+            options: [
+                Options(titel: "1", icon: "stopwatch", desc: "Schütze deine Daten mit FaceID", info: "Aktiviere FaceID Prüfung wenn App startet.", binding: AppConfig.shared.$faceID),
+            ]),
     ]
     
 }

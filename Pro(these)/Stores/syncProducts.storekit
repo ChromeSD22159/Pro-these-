@@ -1,0 +1,106 @@
+{
+  "identifier" : "9FAA7542",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6450190396",
+    "_developerTeamID" : "ZD275Y62U7",
+    "_lastSynchronizedDate" : 708976380.20136499,
+    "_locale" : "de",
+    "_storefront" : "DEU"
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21353714",
+      "localizations" : [
+
+      ],
+      "name" : "Pro Abo",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : true,
+          "groupNumber" : 2,
+          "internalID" : "6450482547",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Detusch",
+              "displayName" : "Detusch",
+              "locale" : "de"
+            }
+          ],
+          "productID" : "9999",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Jählich",
+          "subscriptionGroupID" : "21353714",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "6450434151",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Deutschsprachiger Raum",
+              "displayName" : "Deutschsprachiger Raum",
+              "locale" : "de"
+            }
+          ],
+          "productID" : "1000",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monatlich",
+          "subscriptionGroupID" : "21353714",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6450482713",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Deutsch",
+              "displayName" : "Deuscht",
+              "locale" : "de"
+            }
+          ],
+          "productID" : "0000",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Probe Abo",
+          "subscriptionGroupID" : "21353714",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}
