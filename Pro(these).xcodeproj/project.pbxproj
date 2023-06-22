@@ -55,24 +55,12 @@
 		B629A71C2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */; };
 		B635A6302A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
 		B635A6312A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
-		B635A6322A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
 		B635A6332A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
 		B635A6342A42250800AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
 		B635A6362A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
 		B635A6372A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
-		B635A6382A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
 		B635A6392A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
 		B635A63A2A42251600AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
-		B635A63C2A42252000AF87FA /* DoubleExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A63B2A42252000AF87FA /* DoubleExtention.swift */; };
-		B635A63D2A42252000AF87FA /* DoubleExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A63B2A42252000AF87FA /* DoubleExtention.swift */; };
-		B635A63E2A42252000AF87FA /* DoubleExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A63B2A42252000AF87FA /* DoubleExtention.swift */; };
-		B635A63F2A42252000AF87FA /* DoubleExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A63B2A42252000AF87FA /* DoubleExtention.swift */; };
-		B635A6402A42252000AF87FA /* DoubleExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A63B2A42252000AF87FA /* DoubleExtention.swift */; };
-		B635A6422A42253B00AF87FA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6412A42253B00AF87FA /* URL.swift */; };
-		B635A6432A42253B00AF87FA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6412A42253B00AF87FA /* URL.swift */; };
-		B635A6442A42253B00AF87FA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6412A42253B00AF87FA /* URL.swift */; };
-		B635A6452A42253B00AF87FA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6412A42253B00AF87FA /* URL.swift */; };
-		B635A6462A42253B00AF87FA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6412A42253B00AF87FA /* URL.swift */; };
 		B635A6482A42254600AF87FA /* ScreenshotMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6472A42254600AF87FA /* ScreenshotMakerView.swift */; };
 		B635A64E2A42255300AF87FA /* ViewExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A64D2A42255300AF87FA /* ViewExtention.swift */; };
 		B635A6612A4233ED00AF87FA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B635A65F2A4233ED00AF87FA /* Localizable.strings */; };
@@ -80,7 +68,8 @@
 		B635A6642A42E68C00AF87FA /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6632A42E68C00AF87FA /* CloseButton.swift */; };
 		B635A66A2A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6692A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift */; };
 		B635A66C2A434C4A00AF87FA /* MoreDeteilsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A66B2A434C4A00AF87FA /* MoreDeteilsView.swift */; };
-		B635A66E2A449B6200AF87FA /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A66D2A449B6200AF87FA /* Integer.swift */; };
+		B635A6722A44F87A00AF87FA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A6352A42251600AF87FA /* DateExtension.swift */; };
+		B635A6732A44F89200AF87FA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B635A62F2A42250800AF87FA /* Calendar.swift */; };
 		B63874F62A33A0F0008500A3 /* EventCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63874F52A33A0F0008500A3 /* EventCalendar.swift */; };
 		B63874F82A33A153008500A3 /* EventCalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63874F72A33A153008500A3 /* EventCalendarViewModel.swift */; };
 		B6407B572A403903008D9539 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6407B562A403903008D9539 /* ExtensionDelegate.swift */; };
@@ -306,17 +295,14 @@
 		B620B38C2A420EDB00A61B1D /* syncProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = syncProducts.storekit; sourceTree = "<group>"; };
 		B620B3902A4216E000A61B1D /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		B629A71B2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetTodaySteps.swift; sourceTree = "<group>"; };
-		B635A62F2A42250800AF87FA /* Calendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Calendar.swift; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/Calendar.swift"; sourceTree = "<group>"; };
-		B635A6352A42251600AF87FA /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DateExtension.swift; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/DateExtension.swift"; sourceTree = "<group>"; };
-		B635A63B2A42252000AF87FA /* DoubleExtention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DoubleExtention.swift; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/DoubleExtention.swift"; sourceTree = "<group>"; };
-		B635A6412A42253B00AF87FA /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URL.swift; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/URL.swift"; sourceTree = "<group>"; };
-		B635A6472A42254600AF87FA /* ScreenshotMakerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScreenshotMakerView.swift; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/ScreenshotMakerView.swift"; sourceTree = "<group>"; };
-		B635A64D2A42255300AF87FA /* ViewExtention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewExtention.swift; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/ViewExtention.swift"; sourceTree = "<group>"; };
+		B635A62F2A42250800AF87FA /* Calendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
+		B635A6352A42251600AF87FA /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		B635A6472A42254600AF87FA /* ScreenshotMakerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenshotMakerView.swift; sourceTree = "<group>"; };
+		B635A64D2A42255300AF87FA /* ViewExtention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtention.swift; sourceTree = "<group>"; };
 		B635A6602A4233ED00AF87FA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B635A6632A42E68C00AF87FA /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		B635A6692A43145200AF87FA /* DeleteReasonDrugsSheetBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteReasonDrugsSheetBody.swift; sourceTree = "<group>"; };
 		B635A66B2A434C4A00AF87FA /* MoreDeteilsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDeteilsView.swift; sourceTree = "<group>"; };
-		B635A66D2A449B6200AF87FA /* Integer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer.swift; sourceTree = "<group>"; };
 		B63874F52A33A0F0008500A3 /* EventCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendar.swift; sourceTree = "<group>"; };
 		B63874F72A33A153008500A3 /* EventCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendarViewModel.swift; sourceTree = "<group>"; };
 		B6407B562A403903008D9539 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
@@ -911,9 +897,6 @@
 				B635A6472A42254600AF87FA /* ScreenshotMakerView.swift */,
 				B635A6352A42251600AF87FA /* DateExtension.swift */,
 				B635A62F2A42250800AF87FA /* Calendar.swift */,
-				B635A6412A42253B00AF87FA /* URL.swift */,
-				B635A66D2A449B6200AF87FA /* Integer.swift */,
-				B635A63B2A42252000AF87FA /* DoubleExtention.swift */,
 			);
 			path = Extention;
 			sourceTree = "<group>";
@@ -1138,9 +1121,7 @@
 				B6A530132A3CF2FF00BB0F8F /* WatchConnectivityProvider.swift in Sources */,
 				B615DF6F2A3B20BD007C27E9 /* AppConfig.swift in Sources */,
 				B607A4DB2A40DE1E00F5D05E /* ExtensionDelegate.swift in Sources */,
-				B635A6462A42253B00AF87FA /* URL.swift in Sources */,
 				B615DF742A3B596B007C27E9 /* WorkoutManager.swift in Sources */,
-				B635A6402A42252000AF87FA /* DoubleExtention.swift in Sources */,
 				B615DF642A3B201F007C27E9 /* StopWatchComplication.swift in Sources */,
 				B635A63A2A42251600AF87FA /* DateExtension.swift in Sources */,
 				B615DF6E2A3B20B4007C27E9 /* Tab.swift in Sources */,
@@ -1153,12 +1134,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B635A6732A44F89200AF87FA /* Calendar.swift in Sources */,
+				B635A6722A44F87A00AF87FA /* DateExtension.swift in Sources */,
 				B697CF722A388B3900A4CD01 /* ProProtheseWidgetLiveActivity.swift in Sources */,
-				B635A6382A42251600AF87FA /* DateExtension.swift in Sources */,
 				B629A71C2A3C4E17002D57D4 /* ProProtheseWidgetTodaySteps.swift in Sources */,
 				B6AB87072A3C693300D3D3BC /* AppConfig.swift in Sources */,
 				B66670ED2A3C96C9009CB426 /* Persistence.swift in Sources */,
-				B635A63E2A42252000AF87FA /* DoubleExtention.swift in Sources */,
 				B6D727012A3F387800C8523F /* ProProtheseWidgetWorkoutsToday.swift in Sources */,
 				B6AB87082A3C693E00D3D3BC /* Tab.swift in Sources */,
 				B64FE9A42A3C5C4B002B51F7 /* healthStoreProvider.swift in Sources */,
@@ -1170,10 +1151,8 @@
 				B6A530152A3CF32100BB0F8F /* WatchConnectivityProvider.swift in Sources */,
 				B697CF842A38957C00A4CD01 /* ProProthesenWidgetStopWatch.swift in Sources */,
 				B66670EC2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift in Sources */,
-				B635A6442A42253B00AF87FA /* URL.swift in Sources */,
 				B697CF742A388B3900A4CD01 /* ProProtheseWidget.swift in Sources */,
 				B697CF882A3898F300A4CD01 /* ProProtheseWidgetPain.swift in Sources */,
-				B635A6322A42250800AF87FA /* Calendar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1185,8 +1164,6 @@
 				B635A6392A42251600AF87FA /* DateExtension.swift in Sources */,
 				B635A6332A42250800AF87FA /* Calendar.swift in Sources */,
 				B697CFA32A3A0AD200A4CD01 /* Tab.swift in Sources */,
-				B635A63F2A42252000AF87FA /* DoubleExtention.swift in Sources */,
-				B635A6452A42253B00AF87FA /* URL.swift in Sources */,
 				B697CF972A3A043200A4CD01 /* ProProtheseWatchComplication.swift in Sources */,
 				B615DF572A3B1459007C27E9 /* WorkoutManager.swift in Sources */,
 				B697CFA22A3A0A8400A4CD01 /* AppConfig.swift in Sources */,
@@ -1208,14 +1185,12 @@
 				B6407B572A403903008D9539 /* ExtensionDelegate.swift in Sources */,
 				B6525FE82A0BEA430024B9D2 /* SessionTabView.swift in Sources */,
 				B6525FF62A0C0D330024B9D2 /* MetricsView.swift in Sources */,
-				B635A6432A42253B00AF87FA /* URL.swift in Sources */,
 				B635A6312A42250800AF87FA /* Calendar.swift in Sources */,
 				B6525FF02A0C02E60024B9D2 /* WorkoutManager.swift in Sources */,
 				B6EEC4BB29FD40D8004E2F2F /* HealthStorage.swift in Sources */,
 				B635A6372A42251600AF87FA /* DateExtension.swift in Sources */,
 				B6525FED2A0C00770024B9D2 /* ControlView.swift in Sources */,
 				B6525FF42A0C071D0024B9D2 /* SummaryView.swift in Sources */,
-				B635A63D2A42252000AF87FA /* DoubleExtention.swift in Sources */,
 				B6E3B3DD29FD1B5900341144 /* ProWatchOSApp.swift in Sources */,
 				B6525FE52A0BE25D0024B9D2 /* FitnessView.swift in Sources */,
 				B6525FD62A0AFD530024B9D2 /* Tab.swift in Sources */,
@@ -1240,7 +1215,6 @@
 				B6F9490F29F6EECC00BBE3A2 /* AppConfig.swift in Sources */,
 				B63874F82A33A153008500A3 /* EventCalendarViewModel.swift in Sources */,
 				B60DDCE22A04674000372957 /* SettingsSheet.swift in Sources */,
-				B635A66E2A449B6200AF87FA /* Integer.swift in Sources */,
 				B65260002A0D4A040024B9D2 /* workOutManager.swift in Sources */,
 				B68C6E032A17F13C00167F9B /* workoutStatisticViewModel.swift in Sources */,
 				B68C6E192A1D7F5800167F9B /* AddFeelingSheetBody.swift in Sources */,
@@ -1260,7 +1234,6 @@
 				B6F9490D29F6EEB600BBE3A2 /* HealthStorage.swift in Sources */,
 				B607D8CA2A09825A0087F414 /* EmailController.swift in Sources */,
 				B65260022A0D5C5C0024B9D2 /* workOutViewModel.swift in Sources */,
-				B635A63C2A42252000AF87FA /* DoubleExtention.swift in Sources */,
 				B6C16B6E29F84CB600B5BD70 /* TabManager.swift in Sources */,
 				B609A2DB2A093DB100C88BC6 /* PercentualChangeBadge.swift in Sources */,
 				B68C6DFD2A17E73C00167F9B /* WorkOutEntryView.swift in Sources */,
@@ -1307,7 +1280,6 @@
 				B612E32129FABF6F00C6BF88 /* HeaderComponent.swift in Sources */,
 				B68C6E0F2A1B54D000167F9B /* LoginViewModel.swift in Sources */,
 				B612E31429FA9C1100C6BF88 /* GlassBackGround.swift in Sources */,
-				B635A6422A42253B00AF87FA /* URL.swift in Sources */,
 				B612E31729FA9C6B00C6BF88 /* SettingMapping.swift in Sources */,
 				B635A64E2A42255300AF87FA /* ViewExtention.swift in Sources */,
 				B60FDC252A163BBE00BE64D1 /* DistanceStatistic.swift in Sources */,
