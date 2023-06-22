@@ -17,11 +17,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Gilroy-ExtraBold.otf</string>
-		<string>Gilroy-Light.otf</string>
-	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
