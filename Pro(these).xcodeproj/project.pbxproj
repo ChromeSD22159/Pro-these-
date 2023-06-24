@@ -93,6 +93,12 @@
 		B66670EC2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66670EB2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift */; };
 		B66670ED2A3C96C9009CB426 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F948F929F6ED8700BBE3A2 /* Persistence.swift */; };
 		B66670EE2A3C96FF009CB426 /* Pro_these_.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B6F948FB29F6ED8700BBE3A2 /* Pro_these_.xcdatamodeld */; };
+		B6676B9B2A45F39600260C8F /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6676B9A2A45F39600260C8F /* SetupView.swift */; };
+		B6676BA32A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
+		B6676BA42A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
+		B6676BA52A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
+		B6676BA62A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
+		B6676BA72A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
 		B66F2C4629FD0649006CA21E /* WatchConnectivityProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F2C4529FD0649006CA21E /* WatchConnectivityProvider.swift */; };
 		B68C6DF02A17D59600167F9B /* healthStoreProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DEF2A17D59600167F9B /* healthStoreProvider.swift */; };
 		B68C6DF22A17D62900167F9B /* StopWatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68C6DF12A17D62900167F9B /* StopWatchProvider.swift */; };
@@ -319,6 +325,8 @@
 		B65870302A3CF06500003497 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
 		B66670EB2A3C924B009CB426 /* ProProtheseWidgetShowFeeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProProtheseWidgetShowFeeling.swift; sourceTree = "<group>"; };
 		B66670EF2A3CA9F5009CB426 /* ProProtheseWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProProtheseWidgetExtension.entitlements; sourceTree = "<group>"; };
+		B6676B9A2A45F39600260C8F /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		B6676BA22A466FC200260C8F /* StoreConnect.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreConnect.storekit; sourceTree = "<group>"; };
 		B66F2C4529FD0649006CA21E /* WatchConnectivityProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityProvider.swift; sourceTree = "<group>"; };
 		B68C6DEF2A17D59600167F9B /* healthStoreProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = healthStoreProvider.swift; sourceTree = "<group>"; };
 		B68C6DF12A17D62900167F9B /* StopWatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchProvider.swift; sourceTree = "<group>"; };
@@ -842,6 +850,7 @@
 				B6F948F229F6ED8500BBE3A2 /* ContentView.swift */,
 				B620B38A2A41EBE000A61B1D /* ProFeatureSheet.swift */,
 				B6525FD42A0AEF8F0024B9D2 /* LaunchScreenView.swift */,
+				B6676B9A2A45F39600260C8F /* SetupView.swift */,
 				B60DDCE12A04674000372957 /* SettingsSheet.swift */,
 				B6C16B6F29F84CE700B5BD70 /* LaunchScreen.swift */,
 				B68C6E0C2A1B548500167F9B /* LoginScreen.swift */,
@@ -854,6 +863,7 @@
 			isa = PBXGroup;
 			children = (
 				B620B38C2A420EDB00A61B1D /* syncProducts.storekit */,
+				B6676BA22A466FC200260C8F /* StoreConnect.storekit */,
 				B6F948F929F6ED8700BBE3A2 /* Persistence.swift */,
 				B6F9490E29F6EECC00BBE3A2 /* AppConfig.swift */,
 				B6F9490C29F6EEB600BBE3A2 /* HealthStorage.swift */,
@@ -1068,6 +1078,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B615DF662A3B2020007C27E9 /* Assets.xcassets in Resources */,
+				B6676BA72A466FC200260C8F /* StoreConnect.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1076,6 +1087,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B697CF762A388B3B00A4CD01 /* Assets.xcassets in Resources */,
+				B6676BA52A466FC200260C8F /* StoreConnect.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1084,6 +1096,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B697CF992A3A043400A4CD01 /* Assets.xcassets in Resources */,
+				B6676BA62A466FC200260C8F /* StoreConnect.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1094,6 +1107,7 @@
 				B635A6612A4233ED00AF87FA /* Localizable.strings in Resources */,
 				B6E3B3E429FD1B5A00341144 /* Preview Assets.xcassets in Resources */,
 				B6E3B3E129FD1B5A00341144 /* Assets.xcassets in Resources */,
+				B6676BA42A466FC200260C8F /* StoreConnect.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1105,6 +1119,7 @@
 				B6F948F529F6ED8700BBE3A2 /* Assets.xcassets in Resources */,
 				B635A6622A4233ED00AF87FA /* Localizable.strings in Resources */,
 				B620B38D2A420EDB00A61B1D /* syncProducts.storekit in Resources */,
+				B6676BA32A466FC200260C8F /* StoreConnect.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1219,6 +1234,7 @@
 				B60DDCC62A04151200372957 /* EventTaskHeader.swift in Sources */,
 				B68C6DF02A17D59600167F9B /* healthStoreProvider.swift in Sources */,
 				B6C1285D29FA52870018C71D /* HomeView.swift in Sources */,
+				B6676B9B2A45F39600260C8F /* SetupView.swift in Sources */,
 				B6F9491629F6EF2A00BBE3A2 /* MoreListStaks.swift in Sources */,
 				B60DDCD62A041C7300372957 /* EventAddSheetBoby.swift in Sources */,
 				B6C16B9429F8779F00B5BD70 /* CircleAnimationInBackground.swift in Sources */,
@@ -1341,11 +1357,11 @@
 				INFOPLIST_FILE = "ProWatchOS Watch App/StopWatchComplication/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = StopWatchComplication;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Data";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Data";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Data";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationUsageDescription = "Location Data";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1376,11 +1392,11 @@
 				INFOPLIST_FILE = "ProWatchOS Watch App/StopWatchComplication/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = StopWatchComplication;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Data";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Data";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Data";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationUsageDescription = "Location Data";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1411,9 +1427,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWidget;
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Use Healtdata";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Healtdata";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Healtdata";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1443,9 +1459,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWidget;
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Use Healtdata";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Healtdata";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Healtdata";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1474,11 +1490,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS Watch App/ProProtheseWatchComplication/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWatchComplication;
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Health ";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Use Health ";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Health ";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationUsageDescription = "location Data";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1508,11 +1524,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS Watch App/ProProtheseWatchComplication/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = ProProtheseWatchComplication;
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Health ";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Use Health ";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Health ";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationUsageDescription = "location Data";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1546,11 +1562,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Pro Prothese ";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Records Health Data";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Health Data";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Health Data";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "FK.Pro-these-";
@@ -1585,11 +1601,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Pro Prothese ";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Records Health Data";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Health Data";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Health Data";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "FK.Pro-these-";
@@ -1742,15 +1758,15 @@
 				INFOPLIST_FILE = "Pro-these--Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Pro Prothese";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSCalendarsUsageDescription = "Calendar ";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use FaceId vor unlock";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Healthkit Data";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Healthkit Data";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Healthkit Data";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Local GPS when in use";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Local GPS always";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Local GPS when always in use";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Snapshot";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Prothesen App möchte auf deinen Kalender zugreifen und Einträge erstellen oder löschen.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Prothesen App möchte die App über FaceID entsperren";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Prothesen App möchte Snapshots in deiner Photo App speichern";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1792,15 +1808,15 @@
 				INFOPLIST_FILE = "Pro-these--Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Pro Prothese";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSCalendarsUsageDescription = "Calendar ";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use FaceId vor unlock";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Record Healthkit Data";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Share Healthkit Data";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Update Healthkit Data";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Local GPS when in use";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Local GPS always";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Local GPS when always in use";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Snapshot";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Prothesen App möchte auf deinen Kalender zugreifen und Einträge erstellen oder löschen.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Prothesen App möchte die App über FaceID entsperren";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte speichern";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Prothesen App möchte deine aktiven Messwerte Zugreifen";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Prothesen App möchte deine aktiven Messwerte ändern";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Prothesen App möchte Snapshots in deiner Photo App speichern";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

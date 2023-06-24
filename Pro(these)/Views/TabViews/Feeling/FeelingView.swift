@@ -29,7 +29,11 @@ struct FeelingView: View {
             header()
             
             if cal.isCalendar {
-                FeelingCalendarView(feelings: listFeelings)
+                ScrollView(showsIndicators: false, content: {
+                    
+                    FeelingCalendarView(feelings: listFeelings)
+                    
+                })
                 
                 Spacer()
             } else {

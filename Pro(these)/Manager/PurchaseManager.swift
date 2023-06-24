@@ -13,7 +13,7 @@ import SwiftUI
 class PurchaseManager: NSObject, ObservableObject {
     private let entitlementManager: EntitlementManager
     
-    private let productIds = ["pro_monthly", "pro_yearly", "pro_lifetime"]
+    private let productIds = ["0000", "1000", "9999", "9990"]
 
     private var updates: Task<Void, Never>? = nil
     

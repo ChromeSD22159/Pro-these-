@@ -19,15 +19,7 @@ struct AddFeelingSheetBody: View {
         newFeeling.date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
         newFeeling.name = "feeling_1"
         
-        #if !targetEnvironment(simulator)
         return cal.editFeeling
-        #endif
-
-        #if targetEnvironment(simulator)
-        return newFeeling
-        #endif
-        
-        
     }
     
     var body: some View {

@@ -41,6 +41,64 @@ class HealthStoreProvider: NSObject, ObservableObject {
             }
         }
     }
+    
+    func requestAuthorization(healthStore: HKHealthStore, completion: @escaping (_ success: Bool) -> Void) {
+        
+        // The quantity type to write to the health store.
+        let typesToShare: Set = [
+            HKQuantityType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        // The quantity types to read from the health store.
+        let typesToRead: Set = [
+            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+            HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)!,
+            HKQuantityType.quantityType(forIdentifier: .stepCount)!,
+            HKObjectType.activitySummaryType(),
+            HKSeriesType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
+            completion(success)
+        }
+    }
+    
+    func authorizationStatus(completion: @escaping (_ success: Bool) -> Void) {
+        
+        // The quantity type to write to the health store.
+        let typesToShare: Set = [
+            HKQuantityType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        // The quantity types to read from the health store.
+        let typesToRead: Set = [
+            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+            HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)!,
+            HKQuantityType.quantityType(forIdentifier: .stepCount)!,
+            HKObjectType.activitySummaryType(),
+            HKSeriesType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        HKHealthStore().requestAuthorization(toShare: typesToShare, read: typesToRead, completion: { state, erro in
+            if (state) {
+                completion(true)
+            } else {
+               completion(false)
+            }
+            
+        })
+    }
+    
 }
 
 

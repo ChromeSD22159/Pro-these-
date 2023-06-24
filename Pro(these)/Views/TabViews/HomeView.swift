@@ -35,14 +35,27 @@ struct HomeView: View {
                         .font(.callout)
                         .multilineTextAlignment(.center)
                     
-                    Button("Hol dir dein Premium Abo!") {
-                        tabManager.ishasProFeatureSheet.toggle()
+                    if !entitlementManager.hasPro {
+                        Button("Hol dir dein Premium Abo!") {
+                            tabManager.ishasProFeatureSheet.toggle()
+                        }
+                        .padding(6)
+                        .frame(maxWidth: .infinity)
+                        .background(.yellow)
+                        .foregroundColor(.black)
+                        .cornerRadius(20)
+                    } else {
+                        Button("Du hast das Premium Abo!") {
+                            tabManager.ishasProFeatureSheet.toggle()
+                        }
+                        .padding(6)
+                        .frame(maxWidth: .infinity)
+                        .background(.yellow)
+                        .foregroundColor(.black)
+                        .cornerRadius(20)
+                        .disabled(true)
                     }
-                    .padding(6)
-                    .frame(maxWidth: .infinity)
-                    .background(.yellow)
-                    .foregroundColor(.black)
-                    .cornerRadius(20)
+                    
                 }
                 .foregroundColor(.white)
                 .padding()

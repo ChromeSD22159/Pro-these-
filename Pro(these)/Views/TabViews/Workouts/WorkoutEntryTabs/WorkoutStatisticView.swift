@@ -13,7 +13,7 @@ import WidgetKit
 struct WorkoutStatisticView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var vm: WorkoutStatisticViewModel
-    
+    @EnvironmentObject var entitlementManager: EntitlementManager
     @State var activeActivityChart:WorkoutActivityTab = .steps
     @State var workoutTime:Int = 0
     
@@ -67,7 +67,7 @@ struct WorkoutStatisticView: View {
             vm.getDistanceForDate( day )
             
             /// extraxt weekdays and save it in weekly based arrays
-            vm.extractWeeks(numberofWeeks: 8)
+            vm.extractWeeks(numberofWeeks: entitlementManager.hasPro ? 8 : 2)
             
             vm.getCollectionOfWeeklyHealthData()
             

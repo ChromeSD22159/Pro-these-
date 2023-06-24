@@ -28,12 +28,11 @@ class AppConfig: ObservableObject {
     var gaugeGradientBad = LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255)], startPoint: .top, endPoint: .bottom)
     var gaugeGradientGood = LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255)], startPoint: .top, endPoint: .bottom)
     
-    
     @AppStorage("Days") var fetchDays:Int = 7
-
+    
     // MARK: PERSONAL
     /// Saves the Username
-    @AppStorage("Username") var username = "Max Mustermann"
+    @AppStorage("Username") var username = ""
     
     @AppStorage("hapticFeedback") var hapticFeedback = true
     

@@ -152,6 +152,7 @@ struct TabStack: View {
             .background(AppConfig().backgroundLabel.opacity(0.1))
         }
         .onAppear{
+            print("tabstack \(deepLink)")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: {
                 if deepLink?.host == "showFeeling" {
                     tabManager.workoutTab = .feelings

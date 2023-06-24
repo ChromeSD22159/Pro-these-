@@ -121,23 +121,39 @@ struct ContentView: View {
         }, content: {
             ProFeatureSheet()
         })
+        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $tabManager.isSetupSheet, onDismiss: {
+            print("dismiss SetupView")
+        }, content: {
+            SetupView()
+        })
+        .fullScreenCover(isPresented: $tabManager.isSetupSheet, onDismiss: {}) {
+            SetupView()
+                .background(RemoveBackgroundColor())
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .background(
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .ignoresSafeArea(.container, edges: .all)
+                )
+        }
         // Overlay
         .overlay(overlay ? Launch_Screen().opacity(1) : Launch_Screen().opacity(0), alignment: .topTrailing)
         // Set EntryView from User Settings
-        .onAppear{            
+        .onAppear{
             activeTab = AppConfig.shared.entrySite
-            
+
             RecordViewRegion = LocationProvider.shared.region
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                if AppConfig.shared.username.count == 0 {
+                    tabManager.isSetupSheet = true
+                    print(tabManager.isSetupSheet)
+                }
+            })
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)) { _ in
             overlay.toggle()
            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-                overlay.toggle()
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)) { _ in
-            overlay.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
                 overlay.toggle()
             }

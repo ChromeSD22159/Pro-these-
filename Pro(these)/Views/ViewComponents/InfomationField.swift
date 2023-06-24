@@ -36,7 +36,7 @@ struct InfomationField: View {
                 HStack{
                     Text((text ?? AppConfig.shared.placeholder["info"]) ?? "")
                         .lineSpacing(lineSpacing ?? 3)
-                    
+                        .truncationMode(.head)
                     Spacer()
                 }
             }

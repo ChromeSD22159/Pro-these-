@@ -11,6 +11,7 @@ class TabManager: ObservableObject {
     @Published var currentTab: Tab = .healthCenter // StartTab
     @Published var isSettingSheet: Bool = false
     @Published var ishasProFeatureSheet: Bool = false
+    @Published var isSetupSheet: Bool = false
     @Published var workoutTab: WorkoutTab = .statistic
     @AppStorage("startTab") var startTab:Tab = .healthCenter
     

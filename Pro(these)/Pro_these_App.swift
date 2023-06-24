@@ -127,6 +127,7 @@ struct Pro_theseApp: App {
                         print("ON OPEN: \(deepLink)")
                         deepLink = url
                     } else {
+                        print("ON OPEN: \(deepLink)")
                         deepLink = nil
                     }
                 })

@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsSheet: View {
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var tabManager: TabManager
+    @EnvironmentObject var entitlementManager: EntitlementManager
     var body: some View {
         NavigationView {
             ZStack {
@@ -34,11 +35,23 @@ struct SettingsSheet: View {
                                 
                                 // MARK: - Mapped Settings
                                 ForEach(Settings.items, id: \.id) { setting in
-                                    NavigateTo( {
-                                        StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
-                                    }, {
-                                        SettingsDeteilsView(titel: setting.titel, Options: setting.options)
-                                    })
+
+                                    if setting.titel == "Sicherheit" && entitlementManager.hasPro {
+                                        NavigateTo( {
+                                            StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
+                                        }, {
+                                            SettingsDeteilsView(titel: setting.titel, Options: setting.options)
+                                        })
+                                        .opacity(entitlementManager.hasPro ? 1 : 0)
+                                    } else {
+                                        NavigateTo( {
+                                            StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
+                                        }, {
+                                            SettingsDeteilsView(titel: setting.titel, Options: setting.options)
+                                        })
+                                    }
+                                    
+                                    
                                 }
                                 
                                 // MARK: - More Settings
@@ -49,6 +62,27 @@ struct SettingsSheet: View {
                                     // List Detail
                                     MoreDeteilsView(titel: "Mehr Einstellungen")
                                 })
+                                
+                                HStack {
+                                    Button("Setup Screen") {
+                                        tabManager.isSettingSheet = false
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                                            tabManager.isSetupSheet = true
+                                        })
+                                    }
+                                    .foregroundColor(.white)
+                                    .font(.callout)
+                                    .padding(.horizontal)
+                                    
+                                    Spacer()
+                                }
+                                .frame(maxWidth: .infinity ,alignment: .leading)
+                                .padding(.all, 15.0)
+                                .frame(maxWidth: .infinity)
+                                .background(AppConfig().background.opacity(0.5))
+                                .cornerRadius(10)
+                                .padding(.horizontal)
                                 
                                 Spacer()
                             }

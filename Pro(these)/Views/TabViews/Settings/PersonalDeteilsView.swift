@@ -11,6 +11,7 @@ import WidgetKit
 struct PersonalDeteilsView: View {
     var titel: String
     @StateObject var appConfig = AppConfig()
+    @EnvironmentObject var entitlementManager: EntitlementManager
     var body: some View {
         ZStack {
             AppConfig().backgroundGradient
@@ -73,22 +74,22 @@ struct PersonalDeteilsView: View {
                     .cornerRadius(10)
                     
                     // In-App-ABO
-                    /*
+                    
                     VStack(alignment: .leading){
                         // testToogle
                         Toggle("Unlock Pro Featers", isOn: appConfig.$hasUnlockedPro)
                         
                         Toggle("Debug", isOn: appConfig.$debug)
-                        
+
                         Toggle("Hide Infomations", isOn: appConfig.$hideInfomations)
-                            .disabled(!appConfig.hasUnlockedPro)
+                            .disabled(!entitlementManager.hasPro)
                     }
                     .frame(maxWidth: .infinity ,alignment: .leading)
                     .padding(.all, 15.0)
                     .frame(maxWidth: .infinity)
                     .background(AppConfig().background.opacity(0.5))
                     .cornerRadius(10)
-                    */
+                    
                     Spacer()
                     
                     copyright()

@@ -26,7 +26,7 @@ struct ContentAddSheetBoby: View {
     func editContact(_ contact: Contact) -> some View {
         VStack(spacing: 10){
             
-            SheetHeader("Bearbeite \(contact.name ?? "")", action: {
+            SheetHeader("Bearbeiten", action: {
                 eventManager.isAddContactSheet.toggle()
             })
             
@@ -82,7 +82,7 @@ struct ContentAddSheetBoby: View {
                         Button("Abbrechen") {}
                             .listRowBackground(Color.white.opacity(0.05))
                         Spacer()
-                        Button("Speicher \(contact.name ?? "")") {
+                        Button("Speichern") {
                             eventManager.editContact(contact) { success in
                                 if success {
                                     eventManager.editContact = nil

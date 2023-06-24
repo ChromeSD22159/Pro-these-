@@ -95,25 +95,6 @@ struct ProFeatureSheet: View {
                                     Text("Premium Optionen")
                                         .font(.title3.bold())
                                         .foregroundColor(.white)
-
-                                    /*
-                                    if purchaseManager.products.count == 0 {
-                                        ForEach(testProducts, id: \.self) { text in
-                                            Button {
-                                                
-                                            } label: {
-                                                Text(text)
-                                                    .foregroundColor(.white)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                            .padding()
-                                            .background(Material.ultraThinMaterial)
-                                            .cornerRadius(20)
-                                        }
-                                    } else {
-                                        
-                                    }
-                                    */
                                     
                                     ForEach(purchaseManager.products) { (product) in
                                         Button {
@@ -194,6 +175,9 @@ struct ProFeatureSheet_Previews: PreviewProvider {
             Color.blue.ignoresSafeArea()
             
             ProFeatureSheet()
+                .environmentObject(TabManager())
+                .environmentObject(PurchaseManager(entitlementManager: EntitlementManager()))
+                .environmentObject(EntitlementManager())
         }
     }
 }

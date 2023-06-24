@@ -76,13 +76,16 @@ struct TodayStepsSimpleEntry: TimelineEntry {
 
 struct ProProtheseWidgetTodayStepsEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
+    
     var entry: TodayStepsProvider.Entry
     
     private let debug = true
     
     @AppStorage("Entry Date") var entryDate: String = ""
     @AppStorage("Entry steps") var entrySteps: Int = 123
+    
     @State var entryError: Error?
+
     
     var body: some View {
         ZStack {
@@ -282,12 +285,11 @@ struct ProProtheseWidgetTodaySteps_Previews: PreviewProvider {
     static var dummySteps: (min: Int, max: Int, current: Int, error: Error?) {
         return (min: 0, max: AppConfig.shared.targetSteps, current: 4567, error: nil)
     }
-    
+
     static var previews: some View {
         Group {
             
             ForEach(supportedFamilies, id:\.0) { item in
-                
                 ProProtheseWidgetTodayStepsEntryView( entry: TodayStepsSimpleEntry(
                         date: Date(),
                         nextUpdate: Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!,

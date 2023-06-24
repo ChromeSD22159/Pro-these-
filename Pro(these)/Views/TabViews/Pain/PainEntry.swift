@@ -181,13 +181,13 @@ struct PainEntry: View {
                         vm.isPainAddSheet.toggle()
                         
                         if PainReasons.count != 0 {
-                            vm.selectedReason = PainReasons.first
+                            vm.selectedReason = PainReasons.first(where: { $0.name == "Wetter" })
                         } else {
                             vm.selectedReason = nil
                         }
                         
                         if PainDrugs.count != 0 {
-                            vm.selectedDrug = PainDrugs.first
+                            vm.selectedDrug = PainDrugs.first(where: { $0.name == "Kein Schmerzmittel" })
                         } else {
                             vm.selectedDrug = nil
                         }

@@ -1,8 +1,8 @@
 {
-  "identifier" : "9FAA7542",
+  "identifier" : "E88C92E4",
   "nonRenewingSubscriptions" : [
     {
-      "displayPrice" : "44.99",
+      "displayPrice" : "39.99",
       "familyShareable" : false,
       "internalID" : "6450559981",
       "localizations" : [
@@ -21,13 +21,10 @@
 
   ],
   "settings" : {
-    "_billingIssuesEnabled" : true,
-    "_compatibilityTimeRate" : {
-      "3" : 6
-    },
-    "_locale" : "de",
-    "_storefront" : "DEU",
-    "_timeRate" : 1004
+    "_applicationInternalID" : "6450190396",
+    "_askToBuyEnabled" : true,
+    "_developerTeamID" : "ZD275Y62U7",
+    "_lastSynchronizedDate" : 709262597.02225602
   },
   "subscriptionGroups" : [
     {
@@ -44,7 +41,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "19.99",
+          "displayPrice" : "17.99",
           "familyShareable" : true,
           "groupNumber" : 2,
           "internalID" : "6450482547",
@@ -115,10 +112,6 @@
       ]
     }
   ],
-  "subscriptionOffersKeyPair" : {
-    "id" : "4E678AC5",
-    "privateKey" : "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgmeOwC6FyRVGEHns86R6qem/OfUmpPQQbQ65PQ2yfOtegCgYIKoZIzj0DAQehRANCAASuZJVrxAGgV51Ru/MKK+Wkxc3bBXdtGAL8nnjaFXi95RPPAMWhg1zCuPV9iraUDn0QTyJ3Ua8C0yX6RB6a4Aat"
-  },
   "version" : {
     "major" : 2,
     "minor" : 0
