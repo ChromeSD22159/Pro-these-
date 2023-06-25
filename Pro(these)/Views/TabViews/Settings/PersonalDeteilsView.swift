@@ -63,26 +63,13 @@ struct PersonalDeteilsView: View {
                     .background(AppConfig().background.opacity(0.5))
                     .cornerRadius(10)
                     
-                    VStack(alignment: .leading){
-                        // testToogle
-                        Toggle("Haptisches Feedback", isOn: appConfig.$hapticFeedback).disabled(appConfig.hasUnlockedPro)
-                    }
-                    .frame(maxWidth: .infinity ,alignment: .leading)
-                    .padding(.all, 15.0)
-                    .frame(maxWidth: .infinity)
-                    .background(AppConfig().background.opacity(0.5))
-                    .cornerRadius(10)
-                    
                     // In-App-ABO
                     
                     VStack(alignment: .leading){
-                        // testToogle
-                        Toggle("Unlock Pro Featers", isOn: appConfig.$hasUnlockedPro)
-                        
-                        Toggle("Debug", isOn: appConfig.$debug)
-
-                        Toggle("Hide Infomations", isOn: appConfig.$hideInfomations)
-                            .disabled(!entitlementManager.hasPro)
+                        Toggle("Haptisches Feedback", isOn: appConfig.$hapticFeedback).disabled(appConfig.hasUnlockedPro)
+                           // .disabled(!entitlementManager.hasPro)
+                        Toggle("Verstecke Infomationen", isOn: appConfig.$hideInfomations)
+                           // .disabled(!entitlementManager.hasPro)
                     }
                     .frame(maxWidth: .infinity ,alignment: .leading)
                     .padding(.all, 15.0)

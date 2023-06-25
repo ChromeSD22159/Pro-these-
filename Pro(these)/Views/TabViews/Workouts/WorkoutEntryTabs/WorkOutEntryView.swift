@@ -36,7 +36,7 @@ struct WorkOutEntryView: View {
                         }
                         
                         HStack(spacing: 20){
-                            
+                            /* HASPRO
                             if !entitlementManager.hasPro {
                                 Image(systemName: "trophy.fill")
                                     .foregroundColor(AppConfig.shared.fontColor)
@@ -46,7 +46,7 @@ struct WorkOutEntryView: View {
                                         }
                                     }
                             }
-                            
+                             */
                             if tabManager.workoutTab == .feelings {
                                 Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
                                     .foregroundColor(AppConfig.shared.fontColor)
@@ -99,12 +99,17 @@ struct WorkOutEntryView: View {
         
         var string = ""
         
+        var nameString = ""
+        if name != "" {
+            nameString = ", \(name)"
+        }
+
         switch hour {
-            case 6..<12 : string = "Guten Morgen, \(name)!"
-            case 12 : string = "Guten Tag, \(name)!"
-            case 13..<17 :  string = "Hallo \(name)!"
-            case 17..<22 : string = "Guten Abend, \(name)!"
-            default: string = "Hallo, \(name)!"
+            case 6..<12 : string = "Guten Morgen\(nameString)!"
+            case 12 : string = "Guten Tag\(nameString)!"
+            case 13..<17 :  string = "Hallo\(nameString)!"
+            case 17..<22 : string = "Guten Abend\(nameString)!"
+            default: string = "Hallo\(nameString)!"
         }
         
         return Text(string)

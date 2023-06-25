@@ -232,6 +232,15 @@ class EventManager: ObservableObject {
             contacts = try PersistenceController.shared.container.viewContext.fetch(fetchContacts)
             events = try PersistenceController.shared.container.viewContext.fetch(fetchEvents)
             sortAllEvents()
+            
+            self.addEventTitel = ""
+            self.addEventIcon = "bandage.fill"
+            self.addEventStarDate = Date()
+            self.addEventEndDate = Date()
+            self.addEventContact = nil
+            self.error = ""
+            //fetchContacts()
+            self.isAddEventSheet = false
         }catch {
           print("DEBUG: Some error occured while fetching Times")
         }

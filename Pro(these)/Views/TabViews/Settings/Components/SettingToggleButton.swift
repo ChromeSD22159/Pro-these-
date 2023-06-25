@@ -11,6 +11,7 @@ struct SettingToggleButton: View {
     var image:String
     var toggleDescrition:String
     var info: String
+    var inVisible: Bool?
     @Binding var storeBinding: Bool
     
     var body: some View {
@@ -56,6 +57,7 @@ struct SettingToggleButton: View {
             VStack{
                 Toggle("", isOn: $storeBinding)
                     .toggleStyle(SwitchToggleStyle(tint: .green))
+                    .disabled(inVisible != nil ? true : false)
             }
             .frame(maxWidth: 50)
             

@@ -114,7 +114,7 @@ struct FeelingCalendarView: View {
                if let feeling = feelings.first(where: { return cal.isSameDay(d1: $0.date ?? Date(), d2: value.date) }) {
                    let fe = feelings.map( { return  cal.isSameDay(d1: $0.date ?? Date(), d2: value.date) ? Int(($0.name?.trimFeelings()) ?? "") : nil } )
                    if fe.count > 0 {
-                       
+
                        let avg:Int = fe.compactMap{ $0 }.reduce(0, +) / fe.compactMap{ $0 }.count
 
                     
@@ -139,7 +139,7 @@ struct FeelingCalendarView: View {
                            
                            VStack{
                                Text("\(value.day)")
-                                   .font(.caption)
+                                   .font(.system(size: 10))
                                    .foregroundColor(.white)
                            }
                            .frame(maxWidth: .infinity)
@@ -177,7 +177,8 @@ struct FeelingCalendarView: View {
                            .onTapGesture(perform: {
                                if value.date < Date().startEndOfDay().end || Calendar.current.isDateInToday(value.date) {
                                    cal.isFeelingSheet.toggle()
-                                   
+                                   cal.editFeeling = nil
+                                   print("none feeling")
                                    let calendar = Calendar.current
                                    var dateComponents = DateComponents()
                                    dateComponents.year = calendar.component(.year, from: value.date)
@@ -192,7 +193,7 @@ struct FeelingCalendarView: View {
                        
                        VStack{
                            Text(value.date > Date() ? "" : "\(value.day)")
-                               .font(.caption)
+                               .font(.system(size: 10))
                                .foregroundColor(.white)
                        }
                        .frame(maxWidth: .infinity)

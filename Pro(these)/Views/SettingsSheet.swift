@@ -36,21 +36,11 @@ struct SettingsSheet: View {
                                 // MARK: - Mapped Settings
                                 ForEach(Settings.items, id: \.id) { setting in
 
-                                    if setting.titel == "Sicherheit" && entitlementManager.hasPro {
-                                        NavigateTo( {
-                                            StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
-                                        }, {
-                                            SettingsDeteilsView(titel: setting.titel, Options: setting.options)
-                                        })
-                                        .opacity(entitlementManager.hasPro ? 1 : 0)
-                                    } else {
-                                        NavigateTo( {
-                                            StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
-                                        }, {
-                                            SettingsDeteilsView(titel: setting.titel, Options: setting.options)
-                                        })
-                                    }
-                                    
+                                    NavigateTo( {
+                                        StackLink(icon: setting.icon, buttonText: setting.titel, foregroundColor: appConfig.foreground)
+                                    }, {
+                                        SettingsDeteilsView(titel: setting.titel, Options: setting.options)
+                                    })
                                     
                                 }
                                 

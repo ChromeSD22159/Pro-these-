@@ -12,25 +12,21 @@ import WidgetKit
 
 struct AddFeelingSheetBody: View {
     @EnvironmentObject var cal: MoodCalendar
-    let persistenceController = PersistenceController.shared
+    @Environment(\.dismiss) private var dismiss
     
-    var testFeeling: Feeling? {
-        let newFeeling = Feeling(context: PersistenceController.shared.container.viewContext)
-        newFeeling.date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
-        newFeeling.name = "feeling_1"
-        
-        return cal.editFeeling
-    }
+    let persistenceController = PersistenceController.shared
     
     var body: some View {
         GeometryReader { geo in
             
-            if let feeling = testFeeling {
+            if let feeling = cal.editFeeling {
                 VStack {
                     // close
                     
                     SheetHeader("Ändere dein Stimmung", action: {
                         cal.isFeelingSheet.toggle()
+                        
+                        dismiss()
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                             cal.showDatePicker = false
@@ -135,8 +131,8 @@ struct AddFeelingSheetBody: View {
                 .presentationDragIndicator(.visible)
                 .foregroundColor(.white)
                 .onAppear{
-                    cal.selectedFeeling = feeling.name!
-                    cal.addFeelingDate = feeling.date!
+                    cal.selectedFeeling = feeling.name ?? ""
+                    cal.addFeelingDate = feeling.date ?? Date()
                     DispatchQueue.main.async {
                         cal.showDatePicker = false
                     }

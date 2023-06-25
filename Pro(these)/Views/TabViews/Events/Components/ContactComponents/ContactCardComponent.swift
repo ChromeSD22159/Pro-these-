@@ -94,7 +94,7 @@ struct ContactCardComponent: View {
             
             HStack{
  
-                Confirm(message: "\( contact.name ?? "" ) löschen? \n \n Es werden alle dazugehörigen Termine \n und Notizen gelöscht!", buttonText: "\(contact.name ?? "Termin") löschen", buttonIcon: "trash", content: {
+                Confirm(message: "\( contact.name ?? "" ) löschen? \n \n Es werden alle dazugehörigen Termine \n und Notizen gelöscht!", buttonText: "Löschen", buttonIcon: "trash", content: {
                     Button("Löschen") { eventManager.deleteContact(contact) }.foregroundColor(.red)
                 })
                 .foregroundColor(.white)
@@ -105,7 +105,7 @@ struct ContactCardComponent: View {
                     eventManager.editContact = contact
                     eventManager.isAddContactSheet.toggle()
                 }, label: {
-                    Label(contact.name!, systemImage: "pencil")
+                    Label("Bearbeiten", systemImage: "pencil")
                         .foregroundColor(.white)
                 })
             }

@@ -25,7 +25,7 @@ struct HeaderComponent: View {
             }
             
             HStack(spacing: 20){
-                
+                /* HASPRO
                 if !entitlementManager.hasPro {
                     Image(systemName: "trophy.fill")
                         .foregroundColor(AppConfig.shared.fontColor)
@@ -35,7 +35,7 @@ struct HeaderComponent: View {
                             }
                         }
                 }
-                
+                 */
                 Image(systemName: "gearshape")
                     .foregroundColor(appConfig.fontColor)
                     .onTapGesture {
@@ -52,12 +52,17 @@ struct HeaderComponent: View {
         
         let string = ""
         
+        var nameString = ""
+        if name != "" {
+            nameString = ", \(name)"
+        }
+        
         switch hour {
-            case 6..<12 : return "Guten Morgen, \(name)!"
-            case 12 : return "Guten Tag, \(name)!"
-            case 13..<17 :  return "Hallo \(name)!"
-            case 17..<22 : return "Guten Abend, \(name)!"
-            default: return "Hallo, \(name)!"
+            case 6..<12 : return "Guten Morgen\(nameString)!"
+            case 12 : return "Guten Tag\(nameString)!"
+            case 13..<17 :  return "Hallo\(nameString)!"
+            case 17..<22 : return "Guten Abend\(nameString)!"
+            default: return "Hallo\(nameString)!"
         }
 
     }

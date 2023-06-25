@@ -30,6 +30,8 @@ class AppConfig: ObservableObject {
     
     @AppStorage("Days") var fetchDays:Int = 7
     
+    @AppStorage("isSetupSheet") var isSetupSheet = true
+    
     // MARK: PERSONAL
     /// Saves the Username
     @AppStorage("Username") var username = ""

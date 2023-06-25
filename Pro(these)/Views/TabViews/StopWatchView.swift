@@ -71,18 +71,21 @@ struct StopWatchRecordView: View {
                 }
                 
                 HStack(spacing: 15){
-                   Image(systemName: "chart.pie")
-                       .font(.system(size: 20))
-                       .foregroundColor(.black)
-                       .frame(width: 50, height: 50)
-                       .background(
-                           Circle()
-                               .fill(Color.yellow)
-                               .frame(width: 50, height: 50)
-                       )
-                       .onTapGesture {
-                           tabViewManager.activeTab = .healthCenter
-                       }
+                    Button(action: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            tabViewManager.activeTab = .healthCenter
+                        }
+                    }, label: {
+                        Image(systemName: "location.slash")
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .frame(width: 50, height: 50)
+                            .background(
+                                Circle()
+                                    .fill(Color.yellow)
+                                    .frame(width: 50, height: 50)
+                            )
+                    })
                    
                     Text( stopWatchProvider.recorderState == .started ? "END" : "START" )
                         .font(Font.system(size: 20))
@@ -114,18 +117,19 @@ struct StopWatchRecordView: View {
                    
                    
                     //Image(systemName: stateManager.session.isWatchAppInstalled && stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
-                    Image(systemName: stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
-                       .font(.system(size: 20))
-                       .foregroundColor(.black)
-                        .frame(width: 50, height: 50)
-                       .background(
-                           Circle()
-                               .fill(Color.yellow)
-                               .frame(width: 50, height: 50)
-                       )
-                       .onTapGesture {
-                           stateManager.paired = stateManager.session.isPaired
-                       }
+                    Button(action: {
+                        stateManager.paired = stateManager.session.isPaired
+                    }, label: {
+                        Image(systemName: stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .frame(width: 50, height: 50)
+                            .background(
+                                Circle()
+                                    .fill(Color.yellow)
+                                    .frame(width: 50, height: 50)
+                            )
+                    })
                }
                 .padding(.bottom, 30)
             }

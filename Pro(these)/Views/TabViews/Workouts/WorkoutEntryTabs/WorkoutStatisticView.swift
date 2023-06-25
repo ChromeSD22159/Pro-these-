@@ -67,7 +67,7 @@ struct WorkoutStatisticView: View {
             vm.getDistanceForDate( day )
             
             /// extraxt weekdays and save it in weekly based arrays
-            vm.extractWeeks(numberofWeeks: entitlementManager.hasPro ? 8 : 2)
+            vm.extractWeeks(numberofWeeks: 8)
             
             vm.getCollectionOfWeeklyHealthData()
             

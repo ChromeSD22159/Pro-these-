@@ -47,7 +47,7 @@ struct PainEntry: View {
             if vm.showList {
                 ListPainEntrys()
             } else {
-                PainStatisticEntrys(min: Pains.map{ Int($0.painIndex) }.min()!, max: Pains.map{ Int($0.painIndex) }.max()!, avg: avg)
+                PainStatisticEntrys(min: Pains.map{ Int($0.painIndex) }.min() ?? 0, max: Pains.map{ Int($0.painIndex) }.max() ?? 0, avg: avg)
                 Spacer()
             }
         }
@@ -67,7 +67,7 @@ struct PainEntry: View {
             if PainReasons.count == 0 {
                 vm.addDefaultPainReason(["Wetter", "Kälte", "Wärme"])
             } else if PainDrugs.count == 0 {
-                vm.addDefaultPainDrugs(["Kein Schmerzmittel","Ibuprofen", "Tillidin", "Novalgin"])
+                vm.addDefaultPainDrugs(["Kein Schmerzmittel"]) // "Ibuprofen", "Tillidin", "Novalgin"
             }
         }
     }
@@ -87,7 +87,7 @@ struct PainEntry: View {
             }
             
             HStack(spacing: 20){
-                
+                /* HASPRO
                 if !entitlementManager.hasPro {
                     Image(systemName: "trophy.fill")
                         .foregroundColor(AppConfig.shared.fontColor)
@@ -97,7 +97,7 @@ struct PainEntry: View {
                             }
                         }
                 }
-                
+                 */
                 Image(systemName: vm.showList ? "chart.pie" : "list.bullet.below.rectangle")
                     .foregroundColor(AppConfig.shared.fontColor)
                     .font(.title3)
@@ -327,12 +327,17 @@ struct PainEntry: View {
         
         var string = ""
         
+        var nameString = ""
+        if name != "" {
+            nameString = ", \(name)"
+        }
+
         switch hour {
-            case 6..<12 : string = "Guten Morgen, \(name)!"
-            case 12 : string = "Guten Tag, \(name)!"
-            case 13..<17 :  string = "Hallo \(name)!"
-            case 17..<22 : string = "Guten Abend, \(name)!"
-            default: string = "Hallo, \(name)!"
+            case 6..<12 : string = "Guten Morgen\(nameString)!"
+            case 12 : string = "Guten Tag\(nameString)!"
+            case 13..<17 :  string = "Hallo\(nameString)!"
+            case 17..<22 : string = "Guten Abend\(nameString)!"
+            default: string = "Hallo\(nameString)!"
         }
         
         return Text(string)

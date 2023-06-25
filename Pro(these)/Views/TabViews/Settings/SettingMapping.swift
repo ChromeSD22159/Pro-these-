@@ -60,7 +60,7 @@ struct Settings: Identifiable {
             titel: "Sicherheit",
             icon: "lock.square",
             options: [
-                Options(titel: "1", icon: "stopwatch", desc: "Schütze deine Daten mit FaceID", info: "Aktiviere FaceID Prüfung wenn App startet.", binding: AppConfig.shared.$faceID),
+                Options(titel: "1", icon: "stopwatch", desc: "Schütze deine Daten mit FaceID", info: "Aktiviere FaceID Prüfung wenn App startet.", binding: AppConfig.shared.$faceID, inVisible: true),
             ]),
     ]
     
@@ -73,4 +73,5 @@ struct Options : Identifiable {
     var desc: String
     var info: String
     var binding: Binding<Bool>
+    var inVisible: Bool?
 }

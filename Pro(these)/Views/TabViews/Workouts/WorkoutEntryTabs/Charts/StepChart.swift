@@ -11,18 +11,13 @@ import Foundation
 
 struct StepChart: View {
     @EnvironmentObject var vm: WorkoutStatisticViewModel
-    
+    @EnvironmentObject var entitlementManager: EntitlementManager
     @State private var currentWeek:[Date] = []
     @State private var currentIndex = 7
 
     var body: some View {
         VStack(spacing: 10) {
             VStack(alignment: .leading, spacing: 10){
-          /*
-           Text("Schritte der letzten Wochen")
-               .font(.callout)
-               .padding([.top, .leading])
-           */
                 
                 ChartSnapView(spacing: 0, trailingSpace: 0, index: $currentIndex, list: vm.CollectionWeeklySteps.sorted { $0.weekNr > $1.weekNr }.reversed(), content: { week in
                     GeometryReader { proxy in
@@ -256,8 +251,24 @@ struct StepChart: View {
                 ForEach(vm.CollectionWeeklySteps.indices , id: \.self) { index in
                     VStack(spacing: 6) {
                         ZStack{
+                            
                             Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
                                 .font(.caption2)
+                            /* HASPRO
+                            if entitlementManager.hasPro {
+                                Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
+                                    .font(.caption2)
+                            } else {
+                                if index >= 5 {
+                                    Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
+                                        .font(.caption2)
+                                } else {
+                                    Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
+                                        .font(.caption2)
+                                        .blur(radius: 2)
+                                }
+                            }
+                             */
                         }
                         .padding(.horizontal, currentIndex == index ? 12 : 6)
                         .padding(.vertical, 6)
@@ -266,6 +277,15 @@ struct StepChart: View {
                         .animation(.easeInOut,  value: currentIndex == index)
                         .onTapGesture(perform: {
                             currentIndex = index
+                            /* HASPRO
+                            if entitlementManager.hasPro {
+                                currentIndex = index
+                            } else {
+                                if index >= 5 {
+                                    currentIndex = index
+                                }
+                            }
+                             */
                         })
                         
                         Circle()

@@ -18,8 +18,27 @@ class WorkoutManager: NSObject, ObservableObject {
     let healthStore = HKHealthStore()
     
     func setUpHealthRequest(healthStore: HKHealthStore, readSteps: @escaping () -> Void) {
+        // The quantity type to write to the health store.
+        let typesToShare: Set = [
+            HKQuantityType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        // The quantity types to read from the health store.
+        let typesToRead: Set = [
+            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+            HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
+            HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)!,
+            HKQuantityType.quantityType(forIdentifier: .stepCount)!,
+            HKObjectType.activitySummaryType(),
+            HKSeriesType.workoutType(),
+            HKSeriesType.workoutRoute()
+        ]
+        
         if HKHealthStore.isHealthDataAvailable(), let stepCount = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) {
-            healthStore.requestAuthorization(toShare: [stepCount], read: [stepCount]) { success, error in
+            healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
                 if success {
                     readSteps()
                 }

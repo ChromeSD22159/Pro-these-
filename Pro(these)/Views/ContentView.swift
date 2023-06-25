@@ -121,11 +121,12 @@ struct ContentView: View {
         }, content: {
             ProFeatureSheet()
         })
-        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $tabManager.isSetupSheet, onDismiss: {
+        /*
+        .blurredOverlaySheet(.init(.ultraThinMaterial), show: AppConfig.shared.$isSetupSheet, onDismiss: { // $tabManager.isSetupSheet
             print("dismiss SetupView")
         }, content: {
             SetupView()
-        })
+        })*/
         .fullScreenCover(isPresented: $tabManager.isSetupSheet, onDismiss: {}) {
             SetupView()
                 .background(RemoveBackgroundColor())
@@ -144,12 +145,9 @@ struct ContentView: View {
 
             RecordViewRegion = LocationProvider.shared.region
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                if AppConfig.shared.username.count == 0 {
-                    tabManager.isSetupSheet = true
-                    print(tabManager.isSetupSheet)
-                }
-            })
+            if AppConfig.shared.username.count == 0 {
+                AppConfig.shared.isSetupSheet = true
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)) { _ in
             overlay.toggle()

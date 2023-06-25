@@ -19,7 +19,7 @@ struct SheetHeader: View {
         self.action = action
         self.color = color
     }
-    
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         HStack(alignment: .center) {
             
@@ -35,6 +35,8 @@ struct SheetHeader: View {
                     // Execute code only intended for the simulator or Previews
                     action()
                     #endif
+                    
+                    dismiss()
                 }, label: {
                     HStack {
                         Spacer()

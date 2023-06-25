@@ -11,7 +11,7 @@ import Foundation
 
 struct DistanceChart: View {
     @EnvironmentObject var vm: WorkoutStatisticViewModel
-    
+    @EnvironmentObject var entitlementManager: EntitlementManager
     @State private var currentWeek:[Date] = []
     @State private var currentIndex = 7
     var body: some View {
@@ -224,6 +224,21 @@ struct DistanceChart: View {
                         ZStack{
                             Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
                                 .font(.caption2)
+                            /* HASPRO
+                            if entitlementManager.hasPro {
+                             Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
+                                 .font(.caption2)
+                            } else {
+                                if index >= 5 {
+                                    Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
+                                        .font(.caption2)
+                                } else {
+                                    Text(currentIndex == index ? isThisWeek(date: reversedArray[index].data.first?.date ?? Date()) ? "Diese Woche" : "KW \(reversedArray[index].weekNr)" : "\(reversedArray[index].weekNr)")
+                                        .font(.caption2)
+                                        .blur(radius: 2)
+                                }
+                            }
+                             */
                         }
                         .padding(.horizontal, currentIndex == index ? 12 : 6)
                         .padding(.vertical, 6)
@@ -240,9 +255,16 @@ struct DistanceChart: View {
                             .scaleEffect(currentIndex == index ? 1.4 : 1)
                             .animation(.easeInOut,  value: currentIndex == index)
                             .onTapGesture(perform: {
-                                withAnimation(.easeInOut) {
+                                currentIndex = index
+                                /*
+                                if entitlementManager.hasPro {
                                     currentIndex = index
-                               }
+                                } else {
+                                    if index >= 5 {
+                                        currentIndex = index
+                                    }
+                                }
+                                 */
                             })
                     }
                 }

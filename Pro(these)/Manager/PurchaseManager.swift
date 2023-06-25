@@ -92,6 +92,9 @@ class PurchaseManager: NSObject, ObservableObject {
         }
         
         self.entitlementManager.hasPro = !self.purchasedProductIDs.isEmpty
+        
+        
+        print("has PRo: \(self.entitlementManager.hasPro)")
     }
 }
 

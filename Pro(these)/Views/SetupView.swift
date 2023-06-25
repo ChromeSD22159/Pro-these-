@@ -17,6 +17,8 @@ struct SetupView: View {
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var location: LocationProvider
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State var showLogo = true
     @State var index = 0
     @State var name = ""
@@ -281,9 +283,10 @@ struct SetupView: View {
             .cornerRadius(20)
             .padding()
             .onAppear{
-                HealthStoreProvider().authorizationStatus(completion: { state in
+                /*HealthStoreProvider().authorizationStatus(completion: { state in
                     healthKitAuth = state
-                })
+                }) */
+                
                 
                 switch LocationProvider.shared.manager.authorizationStatus {
                     case .notDetermined:  LocationAuth = false
@@ -343,15 +346,16 @@ struct SetupView: View {
         Button(action: {
             withAnimation(.easeInOut) {
                 showLogo = false
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                    withAnimation(.easeInOut) {
-                        index += 1
-                    }
-                })
-                
+
                 if type == .end {
-                    tabManager.isSetupSheet.toggle()
+                    appConfig.isSetupSheet = false
+                    dismiss()
+                } else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        withAnimation(.easeInOut) {
+                            index += 1
+                        }
+                    })
                 }
             }
         }, label: {
@@ -367,39 +371,6 @@ struct SetupView: View {
     }
 }
 
-struct PercmissionButton<Content:View>: View {
-    private var text: String
-    private var action: () -> Void
-    @ViewBuilder var content: Content
-    
-    init(text: String, action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
-        self.text = text
-        self.action = action
-        self.content = content()
-    }
-    
-    var body: some View {
-        HStack {
-            content
-            
-            Spacer()
-            
-            Button(action: {
-                action()
-            }, label: {
-                Text("\(text)")
-                    .font(.body.bold())
-                    .foregroundColor(.black)
-                    .textCase(.uppercase)
-            })
-            .padding(.horizontal, 18)
-            .padding(.vertical, 9)
-            .background(.yellow)
-            .cornerRadius(20)
-        }
-        
-    }
-}
 
 extension SetupView {
     func reduceSteps(input: Int) {
@@ -451,12 +422,13 @@ enum getStartedButton: String {
     case getStarted = "Loslegen"
     case next = "Weiter"
     case end = "ende"
-    
+    case finish = "Fertig"
     func image() -> String {
         switch self {
         case .getStarted: return "background"
         case .next: return "background2"
         case .end: return "background2"
+        case .finish: return "background2"
         }
     }
 }

@@ -140,7 +140,7 @@ struct EventAddSheetBoby: View {
             } else {
                 VStack(){
                     
-                    SheetHeader("Termin erstellen", action: {
+                    SheetHeader("Neuen Termin erstellen", action: {
                         eventManager.isAddEventSheet.toggle()
                     })
                     

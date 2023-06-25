@@ -183,7 +183,7 @@ struct ContentAddSheetBoby: View {
                         Button("Abbrechen") {}
                             .listRowBackground(Color.white.opacity(0.05))
                         Spacer()
-                        Button("Ertelle Kontakt") {
+                        Button("Speichern") {
                             eventManager.addContact()
                         }.listRowBackground(Color.white.opacity(0.05))
                     }

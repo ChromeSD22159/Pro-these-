@@ -24,7 +24,8 @@ struct SettingsDeteilsView: View {
                     }
                     
                     ForEach(Options, id: \.id){ s in
-                        SettingToggleButton(image: s.icon, toggleDescrition: s.desc, info: s.info, storeBinding: s.binding)
+                        
+                        SettingToggleButton(image: s.icon, toggleDescrition: s.desc, info: s.info, inVisible: s.inVisible, storeBinding: s.binding)
                     }
                     
                     Spacer()
