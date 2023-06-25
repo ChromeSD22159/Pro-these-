@@ -11,7 +11,8 @@ struct HomeView: View {
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var entitlementManager: EntitlementManager
-    
+    @State var isPresentWebView = false
+    @State var link: URL = URL(string: "https://www.prothese.pro/kontakt/")!
     var body: some View {
         VStack(spacing: 20){
             
@@ -26,14 +27,39 @@ struct HomeView: View {
                         .tag("V1")
                         .padding(.horizontal)
                     
-                    Text("ProFeature und ProWidgets")
+                    //Text("ProFeature und ProWidgets")
+                    Text("Deine Meinung ist gefragt!")
                         .font(.title3.bold())
                         .foregroundColor(.white)
                     
-                    Text("Mit einem Upgrade auf die Premium- \n Version wird die App noch besser!")
+                   // Text("Mit einem Upgrade auf die Premium- \n Version wird die App noch besser!")
+                    Text("Mit deiner Hilfe wird die App noch besser!")
                         .foregroundColor(.white)
                         .font(.callout)
                         .multilineTextAlignment(.center)
+                    
+                    Text("Schreibe uns deine Anregungen, wenn dir ein Feature fehlt oder du Vorschläge hast!")
+                        .foregroundColor(.white)
+                        .font(.callout)
+                        .multilineTextAlignment(.center)
+                    
+                    Button("Kontaktiere uns!") {
+                        isPresentWebView = true
+                        link = URL(string: "https://prothese.pro/datenschutz/")!
+                    }
+                    .padding(6)
+                    .frame(maxWidth: .infinity)
+                    .background(.yellow)
+                    .foregroundColor(.black)
+                    .cornerRadius(20)
+                    .blurredSheet(.init(.ultraThinMaterial), show: $isPresentWebView, onDismiss: {}, content: {
+                        NavigationStack {
+                            // 3
+                            WebView(url: link)
+                                .ignoresSafeArea()
+                        }
+                    })
+                    
                     /* HASPRO
                     if !entitlementManager.hasPro {
                         Button("Hol dir dein Premium Abo!") {
