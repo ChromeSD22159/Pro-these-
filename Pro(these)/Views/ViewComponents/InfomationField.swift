@@ -11,13 +11,19 @@ struct InfomationField: View {
     
     var backgroundStyle: Material
     
-    var text: String?
+    var text: LocalizedStringKey?
     
     var foreground: Color?
     
     var lineSpacing: CGFloat?
     
     var visibility: Bool?
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     var body: some View {
         
@@ -34,13 +40,13 @@ struct InfomationField: View {
                 }
                 
                 HStack{
-                    Text((text ?? AppConfig.shared.placeholder["info"]) ?? "")
+                    Text( text ?? LocalizedStringKey(AppConfig.shared.placeholder["info"]!))
                         .lineSpacing(lineSpacing ?? 3)
                         .truncationMode(.head)
                     Spacer()
                 }
             }
-            .foregroundColor(foreground ?? .white)
+            .foregroundColor(foreground ?? currentTheme.text)
             .font(.caption2)
             .padding()
             .background(backgroundStyle)
@@ -54,7 +60,7 @@ struct InfomationField_Previews: PreviewProvider {
         ZStack {
             Color.black.ignoresSafeArea()
             
-            InfomationField(backgroundStyle: Material.ultraThinMaterial, text: "Die Kontaktdaten beziehen sich auf die Allgemeinen Kontaktinfomationen wie z.B. \"Zentrale\". Sie haben später noch die möglichkeit zusätzliche Ansprechpartner hinzuzufügen.", foreground: .white)
+            InfomationField(backgroundStyle: Material.ultraThinMaterial, text: "The contact details refer to the general contact information such as \"Headquarters\". You can add additional contacts later.", foreground: .white)
                 .environment(\.locale, .init(identifier: "en"))
         }
     }

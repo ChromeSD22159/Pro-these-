@@ -10,7 +10,7 @@ import SwiftUI
 import Foundation
 
 struct TodayWorkoutsProvider: TimelineProvider {
-    let urlEntry = URL(string: "ProProthese://statistic")
+    let urlEntry = URL(string: "ProProthese://statisticWorkout")
     let urlUnlock = URL(string: "ProProthese://unlock")
     
     var unlocked: Bool
@@ -50,6 +50,10 @@ struct TodayWorkoutsSimpleEntry: TimelineEntry {
 struct ProProtheseWidgetTodayWorkoutsEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
     var entry: TodayWorkoutsProvider.Entry
+
+    private var currentTheme: Theme {
+        return ThemeManager().currentTheme()
+    }
     
     @AppStorage("Entry Date") var entryDate: String = ""
     @AppStorage("Entry steps") var entrySteps: Int = -10
@@ -59,7 +63,7 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
         ZStack {
             Link(destination: entry.url!) {
                 
-                LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
+                currentTheme.gradientBackground(nil)
                 
                 switch widgetFamily {
                 case .systemSmall:
@@ -72,20 +76,20 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
                             Gauge(value: Double(entrySteps), in: 0...Double(AppConfig.shared.targetSteps)) {
                                 Text("")
                             } currentValueLabel: {
-                                Image("prothesis")
+                                Image("figure.prothese")
                                     .imageScale(.large)
-                                    .font(.system(size: 30))
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 25))
+                                    .foregroundStyle(currentTheme.text, currentTheme.textGray)
                             }
                             .gaugeStyle(.accessoryCircularCapacity)
-                            .tint(.yellow)
+                            .tint(currentTheme.hightlightColor)
                             
                             Spacer()
                             
                             HStack(alignment: .center){
-                                Text("Prothesenzeit heute")
+                                Text("Prosthesis time today")
                                     .font(.system(size: 10, weight: .medium))
-                                    .foregroundColor(.white)
+                                    .foregroundColor(currentTheme.text)
                             }
                             .frame(alignment: .center)
                             .padding(.trailing, 10)
@@ -93,19 +97,19 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
                             Text("\(entryWorkouts)")
                                 .font(.title.bold())
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
+                                .foregroundColor(currentTheme.hightlightColor)
                             
                             HStack(alignment: .center){
-                                Text("Stand: \(entryDate)")
+                                Text("Time: \(entryDate)")
                                     .font(.system(size: 8, weight: .medium))
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(currentTheme.textGray)
                             }
                             .frame(alignment: .center)
                             .padding(.trailing, 10)
                             
                             Text("")
                                 .font(.system(size: 8, weight: .medium))
-                                .foregroundColor(.gray)
+                                .foregroundColor(currentTheme.textGray)
                                 .padding(.bottom, 5)
    
                         }
@@ -116,18 +120,21 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
                 case .accessoryCircular:
                     ZStack {
                         
-                        ViewThatFits{
-                            VStack {
-                                Gauge(value: Double(entrySteps), in: 0...Double(AppConfig.shared.targetSteps)) {
-                                    
-                                } currentValueLabel: {
-                                    Image("prothesis")
-                                        .imageScale(.large)
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
+                        hasProFeatureOverlay(binding: !entry.hasUnlockedPro) { state in
+                            
+                            ViewThatFits{
+                                VStack {
+                                    Gauge(value: Double(entrySteps), in: 0...Double(AppConfig.shared.targetSteps)) {
+                                        
+                                    } currentValueLabel: {
+                                        Image("figure.prothese")
+                                            .imageScale(.large)
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.white)
+                                    }
+                                    .gaugeStyle(.accessoryCircularCapacity)
+                                    .widgetAccentable()
                                 }
-                                .gaugeStyle(.accessoryCircularCapacity)
-                                .widgetAccentable()
                             }
                         }
                     }.widgetURL(entry.url)
@@ -138,13 +145,12 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
                             ViewThatFits {
                                 HStack {
                                     VStack {
-                                        Image("prothesis")
-                                            .imageScale(.large)
-                                            .font(.system(size: 30))
+                                        Image("figure.prothese")
+                                            .font(.system(size: 25))
                                             .foregroundColor(.white)
                                     }
                                     
-                                    VStack(alignment: .leading) {
+                                    VStack(alignment: .leading, spacing: 5) {
                                         Text("\(entryWorkouts)")
                                             .font(.body.bold())
                                             .multilineTextAlignment(.center)
@@ -166,14 +172,17 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
                     }.widgetURL(entry.url)
                 case .accessoryInline:
                     ZStack {
+                        
+                        hasProFeatureOverlay(binding: !entry.hasUnlockedPro) { state in
                             
-                        ViewThatFits {
-                            HStack{
-                                Image("prothesis")
-                                    .imageScale(.large)
-                                    .font(.system(size: 30))
-                                
-                                Text("\(entryWorkouts) Schritte")
+                            ViewThatFits {
+                                HStack{
+                                    Image("figure.prothese")
+                                        .imageScale(.large)
+                                        .font(.system(size: 30))
+                                    
+                                    Text("\(entryWorkouts) Steps")
+                                }
                             }
                         }
                     }.widgetURL(entry.url)
@@ -224,13 +233,6 @@ struct ProProtheseWidgetTodayWorkoutsEntryView : View {
         })
     }
     
-    func secondsToHoursMinutesSeconds(_ seconds: Int) -> (String, String, String) {
-        let hour = String(format: "%02d", seconds / 3600)
-        let minute = String(format: "%02d", (seconds % 3600) / 60)
-        let second = String(format: "%02d", (seconds % 3600) % 60)
-        return (hour, minute, second)
-    }
-    
 }
 
 class EntryCache {
@@ -240,9 +242,6 @@ class EntryCache {
 struct ProProtheseWidgetTodayWorkouts: Widget {
     
     let kind: String = "ProProtheseWidgetTodayWorkouts"
-    
-    // FIX UNLOCK
-    @AppStorage("unlocked") var unlocked: Bool = true
     
     private var supportedFamilies:[WidgetFamily] = [
         .systemSmall,
@@ -254,14 +253,14 @@ struct ProProtheseWidgetTodayWorkouts: Widget {
     @State var entryError: Error?
     
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: TodayWorkoutsProvider(unlocked: unlocked)) { entry in
+        StaticConfiguration(kind: kind, provider: TodayWorkoutsProvider(unlocked: AppTrailManager.hasProOrFreeTrail)) { entry in
             ProProtheseWidgetTodayWorkoutsEntryView(entry: entry)
                 .background(.clear)
                 .cornerRadius(20)
         }
         .supportedFamilies(supportedFamilies)
-        .configurationDisplayName("Prothesen Tragezeit")
-        .description("Sehe überall dein täglichen Fortschritt")
+        .configurationDisplayName("Prosthesis wearing time")
+        .description("See your daily progress everywhere")
       
     }
 }
@@ -289,7 +288,7 @@ struct ProProtheseWidgetTodayWorkouts_Previews: PreviewProvider {
                     entry: TodayWorkoutsSimpleEntry(
                         date: Date(),
                         nextUpdate: Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!,
-                        url: URL(string: "ProProthese://statistic"),
+                        url: URL(string: "ProProthese://statisticWorkout"),
                         hasUnlockedPro: false
                     )
                 )

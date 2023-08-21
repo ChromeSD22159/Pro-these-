@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct BackBTN: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var size: CGFloat
     var foreground: Color?
     var background: Color?
@@ -16,12 +21,12 @@ struct BackBTN: View {
         ZStack{
             ZStack {
                 Image(systemName: "chevron.left.circle")
-                    .foregroundColor(foreground ?? .white)
+                    .foregroundColor(foreground ?? currentTheme.text)
                     .font(.system(size: size))
                 
             }.background(
-                GlassBackGround(width: size, height: size, color: background ?? .black)
-                    .shadow(color: .black, radius: size, x: 2, y: 2)
+                GlassBackGround(width: size, height: size, color: background ?? currentTheme.textBlack)
+                    .shadow(color: currentTheme.textBlack, radius: size, x: 2, y: 2)
             )
             
             

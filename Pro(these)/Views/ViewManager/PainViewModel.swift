@@ -16,11 +16,11 @@ class PainViewModel: ObservableObject {
     @Published var showDatePicker:  Bool = false
     @Published var addPainDate:     Date = Date()
     @Published var selectedPain:    Int = 0
-    
+    @Published var prothese: Prothese?
     
     // Add New Pain - ReasonStates
     @Published var showPainReasonPicker = false
-    @Published var painReason: String = "Wetter"
+    @Published var painReason: LocalizedStringKey = "weather"
     @Published var selectedReason: PainReason?
     @Published var AddPainReasonText: String = ""
     @Published var isPainReasonValid = false

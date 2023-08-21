@@ -12,9 +12,22 @@ struct WorkOutEntryView: View {
     @EnvironmentObject var workoutStatisticViewModel: WorkoutStatisticViewModel
     @EnvironmentObject var cal: MoodCalendar
     @EnvironmentObject var entitlementManager: EntitlementManager
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
+    @StateObject var healthStore = HealthStoreProvider()
     
     @State var healthTab: WorkoutTab?
     @State var isScreenShotSheet = false
+    
+    @State var stepCount: Double = 0
+    @State var distanceCount: Double = 0
+    @State var workoutSeconds: Double = 0
     
     var body: some View {
         GeometryReader { screen in
@@ -27,29 +40,30 @@ struct WorkOutEntryView: View {
                         VStack(spacing: 2){
                             sayHallo(name: AppConfig.shared.username)
                                 .font(.title2)
-                                .foregroundColor(AppConfig.shared.fontColor)
+                                .foregroundColor(currentTheme.text)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Text("Dein Tagesziel ist für heute \(AppConfig.shared.targetSteps) Schritte")
-                                .font(.callout)
-                                .foregroundColor(AppConfig.shared.fontLight)
+                            Text("Your daily goal for today is \(AppConfig.shared.targetSteps) steps.")
+                                .font(.caption2)
+                                .foregroundColor(currentTheme.textGray)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                         
                         HStack(spacing: 20){
-                            /* HASPRO
+                            
                             if !entitlementManager.hasPro {
                                 Image(systemName: "trophy.fill")
-                                    .foregroundColor(AppConfig.shared.fontColor)
+                                    .foregroundColor(currentTheme.text)
+                                    .font(.title3)
                                     .onTapGesture {
                                         DispatchQueue.main.async {
                                             tabManager.ishasProFeatureSheet.toggle()
                                         }
                                     }
                             }
-                             */
+                             
                             if tabManager.workoutTab == .feelings {
                                 Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
-                                    .foregroundColor(AppConfig.shared.fontColor)
+                                    .foregroundColor(currentTheme.text)
                                     .font(.title3)
                                     .onTapGesture {
                                         withAnimation(.easeInOut(duration: 0.5)){
@@ -59,7 +73,7 @@ struct WorkOutEntryView: View {
                             }
                             if tabManager.workoutTab == .statistic {
                                 Image(systemName: "camera")
-                                    .foregroundColor(AppConfig.shared.fontColor)
+                                    .foregroundColor(currentTheme.text)
                                     .font(.title3)
                                     .onTapGesture {
                                         withAnimation(.easeInOut(duration: 0.5)){
@@ -69,7 +83,7 @@ struct WorkOutEntryView: View {
                             }
                             
                             Image(systemName: "gearshape")
-                                .foregroundColor(AppConfig.shared.fontColor)
+                                .foregroundColor(currentTheme.text)
                                 .font(.title3)
                                 .onTapGesture {
                                     tabManager.isSettingSheet.toggle()
@@ -79,53 +93,42 @@ struct WorkOutEntryView: View {
                     .padding(.top, 20)
                     .padding(.horizontal, 20)
                     .frame(maxWidth: .infinity)
+
                     
-                    
-                    // Content
-                    ScrollView(showsIndicators: false) {
-                        WorkoutStatisticView(isScreenShotSheet: $isScreenShotSheet).environmentObject(workoutStatisticViewModel)
-                    }
-                   
+                    newStepPreview()
                     
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            // MARK: - Delete Reason & Drugs
+            .blurredOverlaySheet(.init(.ultraThinMaterial), show: $isScreenShotSheet, onDismiss: {
+                // Show InterstitialSheet if not Pro
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    if !appConfig.hasPro {
+                           ads.showInterstitial.toggle()
+                    }
+                })
+            }, content: {
+                SnapShotView(sheet: $isScreenShotSheet, steps: stepCount, distance: "\( String(format: "%.1f", distanceCount / 1000 ) )km", date: Date())
+            })
+            .onAppear{
+                healthStore.queryDayCountbyType(date: Date(), type: .stepCount) { steps in
+                    DispatchQueue.main.async {
+                        self.stepCount = steps
+                    }
+                }
+                healthStore.queryDayCountbyType(date: Date(), type: .distanceWalkingRunning) { steps in
+                    DispatchQueue.main.async {
+                        self.distanceCount = steps
+                    }
+                }
+                healthStore.getWorkoutsByDate(date: Date(), workout: .default(), completion: { seconds in
+                    DispatchQueue.main.async {
+                        self.workoutSeconds = seconds
+                    }
+                })
+            }
            
-        }
-    }
-    
-    func sayHallo(name: String) -> some View {
-        let hour = Calendar.current.component(.hour, from: Date())
-        
-        var string = ""
-        
-        var nameString = ""
-        if name != "" {
-            nameString = ", \(name)"
-        }
-
-        switch hour {
-            case 6..<12 : string = "Guten Morgen\(nameString)!"
-            case 12 : string = "Guten Tag\(nameString)!"
-            case 13..<17 :  string = "Hallo\(nameString)!"
-            case 17..<22 : string = "Guten Abend\(nameString)!"
-            default: string = "Hallo\(nameString)!"
-        }
-        
-        return Text(string)
-    }
-}
-
-
-enum WorkoutTab: Codable, CaseIterable, Identifiable {
-    var id: Self { self }
-    case statistic
-    case feelings
-    
-    func title() -> String {
-        switch self {
-        case .statistic: return "Statistik"
-        case .feelings: return "Feelings"
         }
     }
 }

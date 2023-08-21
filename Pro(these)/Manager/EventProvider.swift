@@ -240,7 +240,7 @@ class FK_EventProvider {
     func createNewCalendar(withName name: String, store: EKEventStore) -> EKCalendar {
         let calendar = EKCalendar(for: .event, eventStore: store)
         calendar.title = name
-        calendar.cgColor = AppConfig.shared.background.cgColor
+        calendar.cgColor = Theme.blue.backgroundColor.cgColor
 
         calendar.source = bestPossibleEKSource(store: store)
         

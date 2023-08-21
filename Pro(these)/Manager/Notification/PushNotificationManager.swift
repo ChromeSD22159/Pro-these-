@@ -10,16 +10,13 @@ import UserNotifications
 
 class PushNotificationManager : ObservableObject {
     
-    var PushNotification = PushNotifications()
-    
     var pendingNotification: [String] = []
     
-    init(){
-        if !AppConfig().PushNotificationDisable {
-            setUpDailyNotifications()
-        }
-    }
+    var debugNotification: Bool = true
     
+    var deviceLanguage: String {
+        Bundle.main.preferredLocalizations.first!
+    }
     
     /// Register Push Notification and ask for Authorizarion.
     func registerForPushNotifications(){
@@ -54,84 +51,37 @@ class PushNotificationManager : ObservableObject {
     ///         print("APP changed to Background")
     ///    }
     /// ```
-    func removeNotificationsWhenAppLoads(){
-        removeNotification(identifier: "PROTHESE_COMEBACK_REMINDER1")
-        removeNotification(identifier: "PROTHESE_COMEBACK_REMINDER2")
-    }
-    
-    func setUpDailyNotifications(){
-        if AppConfig().PushNotificationDailyMoodRemembering {
-            PushNotificationByDate(
-                identifier:     PushNotification.MoodReminder["identifier"]!,
-                title:          PushNotification.MoodReminder["titel"]!,
-                body:           PushNotification.MoodReminder["body"]!,
-                triggerHour:    Int(PushNotification.MoodReminder["triggerHour"]!)!,
-                triggerMinute:  Int(PushNotification.MoodReminder["triggerMinute"]!)!,
-                repeater:       Bool(PushNotification.MoodReminder["repeater"]!) ?? false,
-                url:            PushNotification.MoodReminder["url"]!
-            )
+    func removeNotificationsWhenAppLoads(debug: Bool){
+        if debug {
+            removeNotification(identifier: "PROTHESE_COMEBACK_REMINDER1")
+            removeNotification(identifier: "PROTHESE_COMEBACK_REMINDER2")
+            removeNotification(identifier: "PROTHESE_MOOD_GOOD_MORNING")
+            
+            for i in 1...3 {
+                removeNotification(identifier: "PROTHESE_MOOD_GOOD_MORNING_\(i)")
+            }
+            
         }
+    }
 
-        if AppConfig().PushNotificationGoodMorning {
-            PushNotificationByDate(
-                identifier:     PushNotification.GoodMorning["identifier"]!,
-                title:          PushNotification.GoodMorning["titel"]!,
-                body:           PushNotification.GoodMorning["body"]!,
-                triggerHour:    Int(PushNotification.GoodMorning["triggerHour"]!)!,
-                triggerMinute:  Int(PushNotification.GoodMorning["triggerMinute"]!)!,
-                repeater:       Bool(PushNotification.GoodMorning["repeater"]!) ?? false,
-                url:            PushNotification.GoodMorning["url"]!
-            )
-        }
-    }
-    
-    /// Set Notifications new Notifications when the App getting starting or change to foreground.
-    ///
-    /// Important
-    /// The func is fired as soon as the scene is in the foreground and when the app is started.
-    ///
-    func setUpNonPermanentNotifications() {
-        // Random Time between 2-4hours
-        let random = Int.random(in: 7200..<14400)
-        //let random = Int.random(in: 10...20)
-        let randomNotification = Int.random(in: 1...2)
-        if randomNotification == 1 {
-            let comeback = PushNotification.ComeBack1
-            PushNotificationByTimer(
-                identifier: comeback["identifier"]!,
-                title: comeback["titel"]!,
-                body: comeback["body"]!,
-                triggerTimer: random,
-                url: comeback["url"]!
-            )
-        }
-        
-        if randomNotification == 2 {
-            let comeback = PushNotification.ComeBack2
-            PushNotificationByTimer(
-                identifier: comeback["identifier"]!,
-                title: comeback["titel"]!,
-                body: comeback["body"]!,
-                triggerTimer: random,
-                url: comeback["url"]!
-            )
-        }
-        
-        
-    }
-    
     /// Setup a new Notification with an Timer Trigger
     ///
     /// - Parameter identifier:    (String)     - Set Notification Identifier - To search for it or delele
     /// - Parameter title:         (String)     - Set Notification Headline (String)
     /// - Parameter body:          (String)     - Set Notification Body Text (String)
     /// - Parameter triggerTimer:  (String)     - Set Notification Timer (Int) in seconds after trigger/ register the Notification
-    func PushNotificationByTimer(identifier: String, title: String, body: String, triggerTimer: Int, url: String) {
+    func PushNotificationByTimer(identifier: String, title: String, body: String, triggerTimer: Int, url: String, userInfo: [String:String]? = nil, printConsole: Bool? = nil) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = UNNotificationSound.default
         
+        if userInfo != nil {
+            content.userInfo = userInfo!
+        } else {
+            content.userInfo = ["Tab" : Tab.home.rawValue]
+        }
+      
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(triggerTimer), repeats: false)
         // choose a random identifier
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -139,7 +89,31 @@ class PushNotificationManager : ObservableObject {
         // add our notification request
         UNUserNotificationCenter.current().add(request)
         
-        print("Register Notification:  \(identifier)")
+        if printConsole ?? false {
+            print("Register Notification:  \(identifier) - \(title) - \((triggerTimer))")
+        }
+        
+    }
+    
+    
+    func allowReminderByDate(triggerTimer: Int?, notificationStateBinding: String, complition: @escaping(Bool, Int?) -> Void) {
+        @AppStorage(notificationStateBinding) var binding:Bool = true
+        
+        // IF trippertimer set
+        if let tr = triggerTimer {
+            let morning = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
+            let evening = Calendar.current.date(bySettingHour: 21, minute: 0, second: 0, of: Date())!
+            
+            let trigger = Calendar.current.date(byAdding: .second, value: tr, to: Date())
+            
+            if binding {
+                trigger! > morning && trigger! < evening ? complition(true, tr) : complition(false, nil)
+            } else {
+                complition(false, nil)
+            }
+        } else {
+            binding ? complition(true, nil) : complition(false, nil)
+        }
     }
     
     /// Setup a new Notification with an Date Trigger
@@ -148,11 +122,17 @@ class PushNotificationManager : ObservableObject {
     /// - Parameter title:         (String)     - Set Notification Headline (String)
     /// - Parameter body:          (String)     - Set Notification Body Text (String)
     /// - Parameter triggerTimer:  (String)     - Set Notification Timer (Int) in seconds after trigger/ register the Notification
-    func PushNotificationByDate(identifier: String, title: String, body: String, triggerHour: Int, triggerMinute: Int, repeater: Bool, url: String) {
+    func PushNotificationByDate(identifier: String, title: String, body: String, triggerHour: Int, triggerMinute: Int, repeater: Bool, url: String, userInfo: [String:String]? = nil, printConsole: Bool? = nil) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = UNNotificationSound.default
+        
+        if userInfo != nil {
+            content.userInfo = userInfo!
+        } else {
+            content.userInfo = ["Tab" : Tab.home.rawValue]
+        }
         
         var date = DateComponents()
         date.hour = triggerHour
@@ -165,7 +145,10 @@ class PushNotificationManager : ObservableObject {
         // add our notification request
         UNUserNotificationCenter.current().add(request)
         
-        print("Register Notification:  \(identifier)")
+        if printConsole ?? false {
+            print("Register Notification:  \(identifier) - \(title) - Trigger: \(trigger.dateComponents.hour!):\(trigger.dateComponents.minute!)")
+        }
+        
     }
     
     func PushNotificationByAddEvent(identifier: String, title: String, body: String, triggerDate: Date, repeater: Bool) {
@@ -173,6 +156,7 @@ class PushNotificationManager : ObservableObject {
         content.title = title
         content.body = body
         content.sound = UNNotificationSound.default
+        content.userInfo = ["Tab" : Tab.event.rawValue]
         
         //let comps = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
         print("input: \(triggerDate)")
@@ -188,9 +172,8 @@ class PushNotificationManager : ObservableObject {
             // add our notification request
             UNUserNotificationCenter.current().add(request)
             
-            print("Register Notification:  \(identifier) für: \(trigger)")
+            print("Register Notification:  \(identifier)  - \(title) für: \(trigger)")
         }
-       
     }
     
     func PushNotificationByAddEvent2(identifier: String, title: String, body: String, triggerDate: Date, repeater: Bool) {
@@ -198,7 +181,7 @@ class PushNotificationManager : ObservableObject {
         content.title = title
         content.body = body
         content.sound = UNNotificationSound.default
-        
+        content.userInfo = ["Tab" : Tab.event.rawValue]
         //let comps = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
         print("input: \(triggerDate)")
         
@@ -213,8 +196,26 @@ class PushNotificationManager : ObservableObject {
         UNUserNotificationCenter.current().add(request)
     }
     
-    
-    
+    func PushNotificationLiner(identifier: String, title: String, body: String, triggerDate: Date) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = UNNotificationSound.default
+        content.userInfo = ["Tab" : Tab.home.rawValue]
+        //let comps = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
+        print("input: \(triggerDate)")
+        
+        let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+        print("trigger: \(comps)")
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+
+        // choose a random identifier
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+        // add our notification request
+        UNUserNotificationCenter.current().add(request)
+    }
+
     func PushNotificationRepeater(identifier: String, title: String, body: String, interval: Double){
         let content = UNMutableNotificationContent()
         content.title = title
@@ -228,7 +229,7 @@ class PushNotificationManager : ObservableObject {
             (error: Error?) in
         }
         
-        print("Register Notification:  \(identifier) für: \(trigger)")
+        print("Register Notification:  \(identifier) - \(title) - Trigger: \(trigger.timeInterval)")
     }
     
     // MARK: Remove all pending Notifications
@@ -237,97 +238,109 @@ class PushNotificationManager : ObservableObject {
     }
     
     // MARK: Remove an registered Notification by the identifier
-    func removeNotification(identifier: String){
+    func removeNotification(identifier: String, printConsole: Bool? = nil){
         let strIdentifier = identifier
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(strIdentifier)"])
-        print("Removed Notification:  \(identifier)")
+        
+        if printConsole ?? false {
+            print("Removed Notification:  \(identifier)")
+        }
     }
     
     // MARK: Print all Array for all Registered Notifications
-    func getAllNotifications() {
+    func getAllNotifications(debug: Bool) {
         UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
             for notification:UNNotification in notifications {
                 print(notification.request.content)
                 print(notification.request.identifier)
+                if debug == true {
+                    print("Pending Notification: \(notification.request.identifier), Body: \(notification.request.content)")
+                }
             }
         }
     }
     
     // MARK: Returns an Array for all Pending Notifications
-    func getAllPendingNotifications() -> [String] {
+    func getAllPendingNotifications(debug: Bool, completion: @escaping (UNNotificationRequest) -> Void) {
         let center = UNUserNotificationCenter.current()
-        var note: [String] = []
+        var note: [UNNotificationRequest] = []
         
         center.getPendingNotificationRequests(completionHandler: { requests in
-            for request in requests {
-                note.append(request.identifier)
-                print("Pending Notification: \(request.identifier)")
+            DispatchQueue.main.async {
+                for request in requests {
+                    note.append(request)
+                    
+                    completion(request)
+                    
+                    if debug == true {
+                        print("--- --- ---")
+                        print("Pending Notification: \(request.identifier)")
+                        print("Title: \(request.content.title)")
+                        print("Body: \(request.content.body)")
+                        
+                        if let trigger = request.trigger {
+                            print("trigger: \(trigger))")
+                        }
+                        
+                    }
+                }
             }
         })
-        return note
     }
-    
-    
-    
-    
-    
-    
-    
-    // MARK: TEST
-    func schedule(title: String, subtitle: String, body: String, hour: Int, minute: Int, identifier: Int, repeatX: Bool){
+
+    func refreshNotification() async {
         let content = UNMutableNotificationContent()
-        
-        let strIdentifier = "FK_PROTHESE_\(identifier)"
-        
-        content.title = title
-        if subtitle != "" {
-            content.subtitle = subtitle
-        }
-        content.subtitle = body
-        content.sound = UNNotificationSound.default
-
-        var date = DateComponents()
-        date.hour = hour
-        date.minute = minute
-        let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: repeatX)
-
-        // choose a random identifier
-        let request = UNNotificationRequest(identifier: strIdentifier, content: content, trigger: trigger)
-
-        // add our notification request
-        UNUserNotificationCenter.current().add(request)
+        content.title = "BG TASK Refresh Notification"
+        content.subtitle = "Your App Refreshed in Background"
+        try? await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: "test", content: content, trigger: UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)))
     }
     
-    func testSchedule(title: String, subtitle: String, body:String, sec: String, repeatX: Bool){
-        let content = UNMutableNotificationContent()
+    func reachedHalfOfTargetStepsNotification(steps: Int) {
+        let notification = Pro_these_.StepsNotifications.shared.randomHalfNotification(steps: steps)
         
-        let strIdentifier = UUID().uuidString
-        
-        if title != "" {
-            content.title = title
-        }
-        if subtitle != "" {
-            content.subtitle = subtitle
-        }
-        if body != "" {
-            content.body = body
-        }
-        
-       
-        content.sound = UNNotificationSound.default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(Int(sec)!), repeats: repeatX)
-
-
-        // choose a random identifier
-        let request = UNNotificationRequest(identifier: strIdentifier, content: content, trigger: trigger)
-
-        // add our notification request
-        UNUserNotificationCenter.current().add(request)
-      
+        PushNotificationManager().PushNotificationByTimer(
+            identifier: notification.identifier,
+            title: notification.title,
+            body: notification.body,
+            triggerTimer: Int.random(in: 1...20),
+            url: ""
+        )
     }
     
-   
+    func reachedFullOfTargetStepsNotification(steps: Int) {
+        let notification = StepsNotifications.shared.randomFullNotification(steps: steps)
+        
+        PushNotificationManager().PushNotificationByTimer(
+            identifier: notification.identifier,
+            title: notification.title,
+            body: notification.body,
+            triggerTimer: Int.random(in: 20...40),
+            url: ""
+        )
+    }
+    
+    func ReportNotification() async {
+        let notification = Pro_these_.ReportNotification.shared.randomNotification
+        PushNotificationManager().PushNotificationByTimer(
+            identifier: notification.identifier,
+            title: notification.title,
+            body: notification.body,
+            triggerTimer: Int.random(in: 2...10),
+            url: ""
+        )
+    }
+    
+    func MissingNotification() async {
+        let notification = Pro_these_.MissingReminerNotifications.shared.randomNotification
+        PushNotificationManager().PushNotificationByTimer(
+            identifier: notification.identifier,
+            title: notification.title,
+            body: notification.body,
+            triggerTimer: 10,
+            url: ""
+        )
+    }
+    
 }
 
 
@@ -344,3 +357,30 @@ class Random {
 
     
     
+enum notificationView: String, Identifiable {
+    case home, healthCenter, addFeeling
+    
+    var id: String {
+        self.rawValue
+    }
+    
+    var option: String {
+        return "OPEN"
+    }
+    
+    var rawValue: String {
+        switch self {
+            case .home: return ".home"
+            case .healthCenter: return ".healthCenter"
+            case .addFeeling : return ".feeling"
+        }
+    }
+    
+    func view() -> some View {
+        switch self {
+            case .home: return Text("Home")
+            case .healthCenter: return Text("healthCenter")
+            case .addFeeling : return Text("addFeeling")
+        }
+    }
+}

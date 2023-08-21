@@ -34,9 +34,12 @@ struct hasProFeatureOverlay<Content:View>: View {
     
     var binding: Bool
     
-    init(binding: Bool, content: @escaping(Bool) -> Content){
+    var label: Bool?
+    
+    init(binding: Bool, label: Bool? = false, content: @escaping(Bool) -> Content){
         self.binding = binding
         self.content = content
+        self.label = label
     }
     
     var body: some View {
@@ -45,8 +48,14 @@ struct hasProFeatureOverlay<Content:View>: View {
             
             if binding { // AppConfig.shared.hasUnlockedPro
                 ZStack {
-                    Text("Pro Feature")
-                        .font(.caption2.bold())
+                    if (label ?? false) {
+                        Image("ProLabel")
+                            .resizable()
+                            .frame(width: 75, height: 75)
+                    } else {
+                        Text("Pro Feature")
+                            .font(.caption2.bold())
+                    }
                 }
                 .cornerRadius(10)
             }

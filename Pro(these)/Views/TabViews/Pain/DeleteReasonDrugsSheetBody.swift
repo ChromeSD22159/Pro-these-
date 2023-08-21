@@ -13,11 +13,17 @@ struct DeleteReasonDrugsSheetBody: View {
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .reverse)]) private var PainReasons: FetchedResults<PainReason>
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .reverse)]) private var PainDrugs: FetchedResults<PainDrug>
     
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var body: some View {
         GeometryReader { geo in
             ScrollView(.vertical, showsIndicators: false) {
                 // Close Button
-                SheetHeader("Verwalte Parameter", action: {
+                SheetHeader(title: "Manage parameters", action: {
                     vm.isDeleteReasonDrugsSheet.toggle()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                         vm.showDatePicker = false
@@ -27,16 +33,16 @@ struct DeleteReasonDrugsSheetBody: View {
                 // List PainReasons
                 VStack(spacing: 15) {
                     HStack(){
-                        Text("Schmerzgründe:")
+                        Text("Pain reasons:")
                         Spacer()
                     }
                     
                     if PainReasons.count == 0 {
                         HStack{
-                            Text("Keine Gründe Vorhanden")
+                            Text("No reasons available")
                             Spacer()
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(currentTheme.text)
                         .padding()
                         .background(.ultraThinMaterial)
                         .cornerRadius(20)
@@ -53,17 +59,17 @@ struct DeleteReasonDrugsSheetBody: View {
                 // List PainDrugs
                 VStack(spacing: 15) {
                     HStack(){
-                        Text("Schmerzmittel:")
+                        Text("Painkiller:")
                         Spacer()
                     }
                     
                     if PainDrugs.count == 0 {
                         HStack{
-                            Label("Keine Schmerzmittel Vorhanden", systemImage: "pills.fill")
+                            Label("No painkillers available", systemImage: "pills.fill")
                                 .font(.body.bold())
                             Spacer()
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(currentTheme.text)
                         .padding()
                         .background(.ultraThinMaterial)
                         .cornerRadius(20)
@@ -78,7 +84,7 @@ struct DeleteReasonDrugsSheetBody: View {
                     
                     InfomationField( // In-App-ABO
                         backgroundStyle: .ultraThinMaterial,
-                        text: "Die Parameter \"Gründe\" und \"Schmerzmittel\"  können hier gelöscht werden. Eine Bearbeitung setht nicht zur Verfügung. Die Parameter können beim bearbeiten oder erstellen des Schmerz-Eintrages neu erstellt werden.",
+                        text: LocalizedStringKey("The parameters “reasons” and “painkillers” can be deleted here. Editing is not possible. The parameters can be recreated when editing or creating the pain record."),
                         visibility: AppConfig.shared.hasUnlockedPro ? AppConfig.shared.hideInfomations : true
                     )
                 }
@@ -92,7 +98,7 @@ struct DeleteReasonDrugsSheetBody: View {
 struct DeleteReasonDrugsSheetBody_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             DeleteReasonDrugsSheetBody()
                 .environmentObject(PainViewModel())

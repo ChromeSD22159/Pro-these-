@@ -10,7 +10,7 @@ import SwiftUI
 import Foundation
 
 struct TodayStepsProvider: TimelineProvider {
-    let urlEntry = URL(string: "ProProthese://statistic")
+    let urlEntry = URL(string: "ProProthese://statisticSteps")
     
     @AppStorage("Entry steps") var entrySteps: Int = -10
     
@@ -41,7 +41,7 @@ struct TodayStepsProvider: TimelineProvider {
             entryDate = Calendar.current.date(byAdding: .minute, value: 5 , to: Date())!
             
             let s:(min: Int, max: Int, current: Int, error: Error?) = (min: 0, max: AppConfig.shared.targetSteps, current: 0, error: nil)
-            let entrie = TodayStepsSimpleEntry(date: Date(), nextUpdate: entryDate, url: URL(string: "ProProthese://statistic"), steps: s, hasUnlockedPro: unlocked)
+            let entrie = TodayStepsSimpleEntry(date: Date(), nextUpdate: entryDate, url: URL(string: "ProProthese://statisticSteps"), steps: s, hasUnlockedPro: unlocked)
 
             entries.append(entrie)
             
@@ -79,19 +79,24 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
     
     var entry: TodayStepsProvider.Entry
     
+    private var currentTheme: Theme {
+        return ThemeManager().currentTheme()
+    }
+    
     private let debug = true
     
     @AppStorage("Entry Date") var entryDate: String = ""
     @AppStorage("Entry steps") var entrySteps: Int = 123
     
+    @StateObject var handler = HandlerStates()
+    
     @State var entryError: Error?
-
     
     var body: some View {
         ZStack {
             Link(destination: entry.url!) {
                 
-                LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
+                currentTheme.gradientBackground(nil)
                 
                 switch widgetFamily {
                 case .systemSmall:
@@ -104,20 +109,20 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             Gauge(value: Double(entrySteps), in: 0...Double(AppConfig.shared.targetSteps)) {
                                 Text("")
                             } currentValueLabel: {
-                                Image("prothesis")
+                                Image("figure.prothese")
                                     .imageScale(.large)
-                                    .font(.system(size: 30))
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 25))
+                                    .foregroundStyle(currentTheme.text, currentTheme.textGray)
                             }
                             .gaugeStyle(.accessoryCircularCapacity)
-                            .tint(.yellow)
+                            .tint(currentTheme.hightlightColor)
                             
                             Spacer()
                             
                             HStack(alignment: .center){
-                                Text("Schritte heute")
+                                Text("Steps today")
                                     .font(.system(size: 10, weight: .medium))
-                                    .foregroundColor(.white)
+                                    .foregroundColor(currentTheme.text)
                             }
                             .frame(alignment: .center)
                             .padding(.trailing, 10)
@@ -125,19 +130,19 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             Text("\(entrySteps)")
                                 .font(.title.bold())
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
+                                .foregroundColor(currentTheme.hightlightColor)
 
                             HStack(alignment: .center){
-                                Text("Stand: \(entryDate)")
+                                Text("Time: \(entryDate)")
                                     .font(.system(size: 8, weight: .medium))
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(currentTheme.textGray)
                             }
                             .frame(alignment: .center)
                             .padding(.trailing, 10)
                             
                             Text(entry.steps.error?.localizedDescription ?? "")
                                 .font(.system(size: 8, weight: .medium))
-                                .foregroundColor(.gray)
+                                .foregroundColor(currentTheme.textGray)
                                 .padding(.bottom, 5)
    
                         }
@@ -149,18 +154,21 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                 case .accessoryCircular:
                     ZStack {
                         
-                        ViewThatFits{
-                            VStack {
-                                Gauge(value: Double(entrySteps), in: 0...Double(AppConfig.shared.targetSteps)) {
-                                    
-                                } currentValueLabel: {
-                                    Image("prothesis")
-                                        .imageScale(.large)
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
+                        hasProFeatureOverlay(binding: !entry.hasUnlockedPro) { state in
+                            
+                            ViewThatFits{
+                                VStack {
+                                    Gauge(value: Double(entrySteps), in: 0...Double(AppConfig.shared.targetSteps)) {
+                                        
+                                    } currentValueLabel: {
+                                        Image("figure.prothese")
+                                            .imageScale(.large)
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.white)
+                                    }
+                                    .gaugeStyle(.accessoryCircularCapacity)
+                                    .widgetAccentable()
                                 }
-                                .gaugeStyle(.accessoryCircularCapacity)
-                                .widgetAccentable()
                             }
                         }
                     }.widgetURL(entry.url)
@@ -172,9 +180,8 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                             ViewThatFits {
                                 HStack {
                                     VStack {
-                                        Image("prothesis")
-                                            .imageScale(.large)
-                                            .font(.system(size: 30))
+                                        Image("figure.prothese")
+                                            .font(.system(size: 25))
                                             .foregroundColor(.white)
                                     }
                                     
@@ -184,7 +191,7 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                                             .multilineTextAlignment(.center)
                                             .foregroundColor(.white)
                                         
-                                        Text("\(entry.date.convertDateToDayNames()). \(entry.date.dateFormatte(date: "dd.MM", time: "").date)")
+                                        Text("\(entry.date.convertDateToDayNames()) \(entry.date.dateFormatte(date: "dd.MM", time: "").date)")
                                             .font(.caption2.bold())
                                             .multilineTextAlignment(.center)
                                             .foregroundColor(.gray)
@@ -201,14 +208,17 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                     
                 case .accessoryInline:
                     ZStack {
+                        
+                        hasProFeatureOverlay(binding: !entry.hasUnlockedPro) { state in
                             
-                        ViewThatFits {
-                            HStack{
-                                Image("prothesis")
-                                    .imageScale(.large)
-                                    .font(.system(size: 30))
-                                
-                                Text("\(entrySteps) Schritte")
+                            ViewThatFits {
+                                HStack{
+                                    Image("figure.prothese")
+                                        .imageScale(.large)
+                                        .font(.system(size: 30))
+                                    
+                                    Text("\(entrySteps) Steps")
+                                }
                             }
                         }
                     }.widgetURL(entry.url)
@@ -227,10 +237,18 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                     print("SA: \(self.entrySteps)")
                 } else {
                     self.entrySteps = Int(stepCount)
+                    DispatchQueue.main.async {
+                        handler.storedSteps = Int(stepCount)
+                        handler.storedStepsDate = Date()
+                    }
                 }
                 self.entryError = error
                 self.entryDate = Date().dateFormatte(date: "dd.MM.yyyy", time: "HH:mm").date + " " + Date().dateFormatte(date: "dd.MM.yyyy", time: "HH:mm").time
             })
+            
+            print(Date())
+            
+            print("reloaded")
         })
         .onChange(of: entry.date, perform: { newDate in
             HealthStoreProvider().queryWidgetSteps(completion: { stepCount, error in
@@ -239,6 +257,7 @@ struct ProProtheseWidgetTodayStepsEntryView : View {
                     print("SC: \(self.entrySteps)")
                 } else {
                     self.entrySteps = Int(stepCount)
+                    handler.storedStepsDate = Date()
                 }
                 
                 self.entryError = error
@@ -258,18 +277,15 @@ struct ProProtheseWidgetTodaySteps: Widget {
         .accessoryInline
     ]
     
-    // FIX UNLOCK
-    @AppStorage("unlocked") var unlocked: Bool = true
-    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: TodayStepsProvider(unlocked: unlocked)) { entry in
+        StaticConfiguration(kind: kind, provider: TodayStepsProvider(unlocked: AppTrailManager.hasProOrFreeTrail )) { entry in
             ProProtheseWidgetTodayStepsEntryView(entry: entry)
                 .background(.clear)
                 .cornerRadius(20)
         }
         .supportedFamilies(supportedFamilies)
-        .configurationDisplayName("Schritte Heute")
-        .description("Sehe überall dein täglichen Fortschritt")
+        .configurationDisplayName("Steps today")
+        .description("See your daily progress everywhere")
        
     }
 }
@@ -293,7 +309,7 @@ struct ProProtheseWidgetTodaySteps_Previews: PreviewProvider {
                 ProProtheseWidgetTodayStepsEntryView( entry: TodayStepsSimpleEntry(
                         date: Date(),
                         nextUpdate: Calendar.current.date(byAdding: .minute, value: 1 , to: Date())!,
-                        url: URL(string: "ProProthese://statistic"),
+                        url: URL(string: "ProProthese://statisticSteps"),
                         steps: dummySteps,
                         hasUnlockedPro: false
                     )

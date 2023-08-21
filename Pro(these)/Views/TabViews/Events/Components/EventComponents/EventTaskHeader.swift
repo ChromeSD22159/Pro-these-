@@ -10,25 +10,31 @@ import SwiftUI
 struct EventTaskHeader: View {
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var color: Color
     var item: Event
     var body: some View {
         HStack(spacing: 20) {
-            Image(systemName: item.icon ?? "Unbekanntes Icon")
+            Image(systemName: item.icon ?? "Unknown Icon")
                 .font(.title)
                 .foregroundColor(color)
 
             VStack(alignment: .leading, spacing: 5){
-                Text(item.titel ?? "Unbekanntes Titel")
+                Text(item.titel ?? "Unknown Titel")
                     .font(.callout)
                     .fontWeight(.medium)
                     
                 HStack{
                     Text(item.startDate ?? Date(), style: .date)
-                        .foregroundColor(appConfig.fontLight)
+                        .foregroundColor(currentTheme.textGray)
                         .font(.caption2)
                     Text(item.startDate ?? Date(), style: .time)
-                        .foregroundColor(appConfig.fontLight)
+                        .foregroundColor(currentTheme.textGray)
                         .font(.caption2)
                 }
             }
@@ -41,9 +47,9 @@ struct EventTaskHeader: View {
                     eventManager.isAddEventSheet.toggle()
                 }
             }, label: {
-                Label("Bearbeiten", systemImage: "pencil")
+                Label("Edit", systemImage: "pencil")
             })
-            .foregroundColor(.yellow)
+            .foregroundColor(currentTheme.hightlightColor)
         }
     }
 }
@@ -61,7 +67,7 @@ struct EventTaskHeader_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             EventTaskHeader(color: .white, item: testEvent!)
                 .environmentObject(AppConfig())

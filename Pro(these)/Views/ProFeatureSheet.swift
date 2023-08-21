@@ -14,19 +14,24 @@ struct ProFeatureSheet: View {
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject private var purchaseManager: PurchaseManager
     @EnvironmentObject var entitlementManager: EntitlementManager
-
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     @State private var isPresentWebView = false
     
     @State var link: URL = URL(string: "https://prothese.pro/datenschutz/")!
     
-    let testProducts: [String] = ["Kostenlos 7 Tage testen", "1,99€ - Monatlich", "19,99€ - Jährlich"]
-    
+    let testProducts: [LocalizedStringKey] = [LocalizedStringKey("Try it for 7 days for free"), LocalizedStringKey("1,99€ - Monthly"), LocalizedStringKey("19,99€ - Yearly")]
+
     var body: some View {
         ZStack {
     
             VStack {
                 
-                SheetHeader("Hol dir dein Premium Abo!", action: {
+                SheetHeader(title: "Get your premium subscription!", action: {
                     tabManager.ishasProFeatureSheet.toggle()
                 })
                 
@@ -69,34 +74,34 @@ struct ProFeatureSheet: View {
                             
                             VStack(spacing: 30) {
                                 VStack(alignment: .center, spacing: 6){
-                                    Text("ProFeature und ProWidgets")
+                                    Text("ProFeature and ProWidgets")
                                         .font(.title.bold())
-                                        .foregroundColor(.white)
+                                        .foregroundColor(currentTheme.text)
                                     
-                                    Text("Mit einem Upgrade auf die Premium- \n Version wird die App noch besser!")
-                                        .foregroundColor(.white)
+                                    Text("With an upgrade to the premium version, the app gets even better!")
+                                        .foregroundColor(currentTheme.text)
                                         .font(.callout)
                                         .multilineTextAlignment(.center)
                                 }
                                 
                                 // List Content
                                 VStack(alignment: .leading, spacing: 12){
-                                    Label("Unbegrenzt Kontakten Verwalten", systemImage: "checkmark.seal.fill")
-                                    Label("Mehr Premium Widgets", systemImage: "checkmark.seal.fill")
-                                    Label("Premium Statistiken", systemImage: "checkmark.seal.fill")
-                                    Label("Premium Support für Nutzer", systemImage: "checkmark.seal.fill")
-                                    Label("Beteiligung an der Weiterentwicklung", systemImage: "checkmark.seal.fill")
-                                    Label("100% Werbefrei", systemImage: "checkmark.seal.fill")
+                                    Label("Manage unlimited contacts", systemImage: "checkmark.seal.fill")
+                                    Label("More premium widgets", systemImage: "checkmark.seal.fill")
+                                    Label("Premium statistics", systemImage: "checkmark.seal.fill")
+                                    Label("Premium support for users", systemImage: "checkmark.seal.fill")
+                                    Label("Participation in further development", systemImage: "checkmark.seal.fill")
+                                    Label("100% ad-free", systemImage: "checkmark.seal.fill")
                                 }
-                                .foregroundColor(.white)
+                                .foregroundColor(currentTheme.text)
                                 .font(.callout)
                                 
                                 VStack(alignment: .center, spacing: 12){
-                                    Text("Premium Optionen")
+                                    Text("Premium options")
                                         .font(.title3.bold())
-                                        .foregroundColor(.white)
+                                        .foregroundColor(currentTheme.text)
                                     
-                                    ForEach(purchaseManager.products) { (product) in
+                                    ForEach(purchaseManager.products.sorted(by: { $0.price < $1.price })) { (product) in
                                         Button {
                                             Task {
                                                 do {
@@ -106,8 +111,24 @@ struct ProFeatureSheet: View {
                                                 }
                                             }
                                         } label: {
-                                            Text("\(product.displayPrice) - \(product.displayName)")
-                                                .foregroundColor(.white)
+                                            VStack(spacing: 5) {
+                                                HStack {
+                                                    Text("\(product.displayPrice)")
+                                                        .font(.title2.bold())
+                                                        .foregroundColor(currentTheme.text)
+                                                    
+                                                    Spacer()
+                                                    Text("\(product.displayName)")
+                                                        .foregroundColor(currentTheme.text)
+                                                }
+                                                
+                                                HStack {
+                                                    Spacer()
+                                                    Text("\(product.description)")
+                                                        .foregroundColor(currentTheme.textGray)
+                                                        .font(.caption2)
+                                                }
+                                            }
                                         }
                                         .frame(maxWidth: .infinity, alignment: .center)
                                         .padding()
@@ -124,26 +145,32 @@ struct ProFeatureSheet: View {
                                             }
                                         }
                                     } label: {
-                                        Text("Wiederherstellen")
-                                            .foregroundColor(.white)
+                                        Text("Restore")
+                                            .foregroundColor(currentTheme.text)
                                     }
                                     .padding(.top)
                                     
                                     HStack {
-                                        Button("Datenschutz") {
+                                      Text("Auto Renewal. Cancellable at any time.")
+                                            .foregroundColor(currentTheme.text)
+                                            .font(.caption2)
+                                    }
+                                    
+                                    HStack {
+                                        Button("data protection") {
                                             // 2
                                             isPresentWebView = true
                                             link = URL(string: "https://prothese.pro/datenschutz/")!
                                         }
-                                        .foregroundColor(.white)
+                                        .foregroundColor(currentTheme.text)
                                         .font(.caption2)
                                         
-                                        Button("Nutzungsbedingungen") {
+                                        Button("Terms of Use") {
                                             // 2
                                             isPresentWebView = true
                                             link = URL(string: "https://prothese.pro/nutzungsbedingungen/")!
                                         }
-                                        .foregroundColor(.white)
+                                        .foregroundColor(currentTheme.text)
                                         .font(.caption2)
                                     }
                                 }

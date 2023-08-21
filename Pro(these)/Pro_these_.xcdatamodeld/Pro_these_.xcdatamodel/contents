@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BackgroundTaskItem" representedClassName="BackgroundTaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="action" optional="YES" attributeType="String"/>
+        <attribute name="data" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="task" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Contact" representedClassName="Contact" syncable="YES" codeGenerationType="class">
         <attribute name="icon" optional="YES" attributeType="String"/>
         <attribute name="mail" optional="YES" attributeType="String"/>
@@ -38,9 +44,19 @@
     <entity name="Feeling" representedClassName="Feeling" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="prothese" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prothese" inverseName="feelings" inverseEntity="Prothese"/>
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Liner" representedClassName="Liner" syncable="YES" codeGenerationType="class">
+        <attribute name="brand" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="interval" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="linerID" optional="YES" attributeType="String"/>
+        <attribute name="model" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="prothese" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Prothese" inverseName="liner" inverseEntity="Prothese"/>
     </entity>
     <entity name="Locations" representedClassName="Locations" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -55,6 +71,7 @@
         <attribute name="painIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="painDrugs" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PainDrug" inverseName="pain" inverseEntity="PainDrug"/>
         <relationship name="painReasons" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PainReason" inverseName="pains" inverseEntity="PainReason"/>
+        <relationship name="prothese" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prothese" inverseName="pains" inverseEntity="Prothese"/>
     </entity>
     <entity name="PainDrug" representedClassName="PainDrug" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -66,12 +83,28 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="pains" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Pain" inverseName="painReasons" inverseEntity="Pain"/>
     </entity>
+    <entity name="Prothese" representedClassName="Prothese" syncable="YES" codeGenerationType="class">
+        <attribute name="kind" optional="YES" attributeType="String"/>
+        <attribute name="maintage" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maintageInterval" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="protheseID" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="feelings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Feeling" inverseName="prothese" inverseEntity="Feeling"/>
+        <relationship name="liner" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Liner" inverseName="prothese" inverseEntity="Liner"/>
+        <relationship name="pains" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Pain" inverseName="prothese" inverseEntity="Pain"/>
+    </entity>
     <entity name="RecurringEvents" representedClassName="RecurringEvents" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String" defaultValueString="Identifier"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="rhymus" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="recurringEvents" inverseEntity="Contact"/>
+    </entity>
+    <entity name="Report" representedClassName="Report" syncable="YES" codeGenerationType="class">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endOfWeek" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startOfWeek" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="WearingTimes" representedClassName="WearingTimes" syncable="YES" codeGenerationType="class">
         <attribute name="duration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>

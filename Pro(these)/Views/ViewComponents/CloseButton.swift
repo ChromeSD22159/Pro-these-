@@ -11,21 +11,29 @@ struct SheetHeader: View {
     
     var color: Color?
     
-    private var title: String
+    private var title: LocalizedStringKey
     private var action: () -> Void
     
-    init<S>(_ title: S, action: @escaping () -> Void, text: String = "", color: Color = Color.white) where S : StringProtocol {
-        self.title = title as! String
+    init(title: LocalizedStringKey, action: @escaping () -> Void, text: String = "", color: Color = Color.white) {
+        self.title = title
         self.action = action
         self.color = color
     }
+    
     @Environment(\.dismiss) private var dismiss
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var body: some View {
         HStack(alignment: .center) {
             
             Text(title)
+                .foregroundColor(color ?? currentTheme.textBlack)
                 .padding(.leading)
-                .foregroundColor(color ?? .white)
             
             Spacer()
             
@@ -44,19 +52,23 @@ struct SheetHeader: View {
                             Image(systemName: "xmark")
                                 .font(.title2)
                                 .padding()
-                                .foregroundColor(color ?? .white)
+                                .foregroundColor(color ?? currentTheme.textBlack)
                         }
                     }
-                    .padding()
                 })
             }
 
         }
-        .padding()
     }
 }
 
 struct CloseButton: View {
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     var binding: Binding<Bool>
     
@@ -76,7 +88,7 @@ struct CloseButton: View {
                         Image(systemName: "xmark")
                             .font(.title2)
                             .padding()
-                            .foregroundColor(color ?? .white)
+                            .foregroundColor(color ?? currentTheme.textBlack)
                     }
                 }
                 .padding()
@@ -91,13 +103,13 @@ struct CloseButton_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            SheetHeader("Titel", action: {
+            SheetHeader(title: "Titel", action: {
                 print("")
             })
         }
         
         Group {
-            SheetHeader("Titel", action: {
+            SheetHeader(title: "Titel", action: {
                 print("")
             })
         }

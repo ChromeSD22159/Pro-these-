@@ -9,8 +9,14 @@ import SwiftUI
 
 struct EventAddSheetBoby: View {
     @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var themeManager: ThemeManager
     
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var titel: String
     var body: some View {
         ZStack{
@@ -18,7 +24,7 @@ struct EventAddSheetBoby: View {
             if let event = eventManager.editEvent {
                 VStack(){
                     
-                    SheetHeader("\(event.titel!) bearbeiten", action: {
+                    SheetHeader(title: "\(event.titel!) edit", action: {
                         eventManager.isAddEventSheet.toggle()
                     })
                     
@@ -28,7 +34,7 @@ struct EventAddSheetBoby: View {
                            VStack(spacing: 20) {
                                VStack(alignment: .leading){
                                    TextField(
-                                       "z.B. Kontrolle",
+                                       "e.g. control",
                                        text: $eventManager.addEventTitel
                                    )
                                    .padding(.vertical)
@@ -42,81 +48,91 @@ struct EventAddSheetBoby: View {
                                        .multilineTextAlignment(.leading)
                                }
                                
-                               Picker("Kontakt", selection: $eventManager.addEventContact) {
-                                   Text("Bitte wählen").tag(Optional<Contact>(nil))
+                               Picker("Contact", selection: $eventManager.addEventContact) {
+                                   Text("Please choose").tag(Optional<Contact>(nil))
                                    ForEach(eventManager.contacts , id: \.id){ contact in
                                        Text(contact.name!).tag(Optional<Contact>(contact))
                                    }
                                }
                                .pickerStyle(.menu)
-                               .listRowBackground(Color.white.opacity(0.05))
-                               .accentColor(.white)
+                               .listRowBackground(currentTheme.text.opacity(0.05))
+                               .accentColor(currentTheme.text)
                                
                                DatePicker(
-                                  "Beginn",
+                                  "Beginning",
                                   selection: $eventManager.addEventStarDate,
                                   displayedComponents: [.date, .hourAndMinute]
                                )
                                .datePickerStyle(.compact)
-                               .listRowBackground(Color.white.opacity(0.05))
-                               .accentColor(.white)
-                               .tint(.white)
+                               .listRowBackground(currentTheme.text.opacity(0.05))
+                               .accentColor(currentTheme.text)
+                               .tint(currentTheme.text)
                                
                                DatePicker(
-                                   "Ende",
+                                   "End",
                                    selection: $eventManager.addEventEndDate,
                                    displayedComponents: [.date, .hourAndMinute]
                                )
                                .datePickerStyle(.compact)
-                               .listRowBackground(Color.white.opacity(0.05))
-                               .accentColor(.white)
-                               .tint(.white)
+                               .listRowBackground(currentTheme.text.opacity(0.05))
+                               .accentColor(currentTheme.text)
+                               .tint(currentTheme.text)
                            
                                
-                               Toggle("Benachtigung zum Termin senden", isOn: $eventManager.sendEventNotofication)
-                                   .listRowBackground(Color.white.opacity(0.05))
+                               Toggle("Send appointment notification", isOn: $eventManager.sendEventNotofication)
+                                   .listRowBackground(currentTheme.text.opacity(0.05))
                                
                                if eventManager.sendEventNotofication {
-                                   Picker("Benachrichtigen", selection: $eventManager.addEventAlarm) {
+                                   Picker("Notification", selection: $eventManager.addEventAlarm) {
                                        
-                                       ForEach(eventManager.alarms, id: \.text) { alarm in
+                                       ForEach(eventManager.alarms, id: \.type) { alarm in
                                            Text(alarm.text).tag(alarm.ekAlarm)
                                        }
                                    }
                                    .pickerStyle(.menu)
-                                   .listRowBackground(Color.white.opacity(0.05))
-                                   .accentColor(.white)
+                                   .listRowBackground(currentTheme.text.opacity(0.05))
+                                   .accentColor(currentTheme.text)
                                }
                                  
                                InfomationField(
                                     backgroundStyle: .ultraThin,
-                                    text: "Es wird eine Erinnerung zu dem Termin 24 Stunden vor dem Termin gesendet.",
+                                    text: "A reminder about the appointment will be sent 24 hours before the appointment.",
                                     visibility: true
                                )
                            }
-                           .listRowBackground(Color.white.opacity(0.05))
+                           .listRowBackground(currentTheme.text.opacity(0.05))
                            
                            Section {
                                HStack {
-                                   Button("Abbrechen") {
+                                   Button("Cancel") {
                                        eventManager.isAddEventSheet = false
                                        eventManager.editEvent = nil
+                                       
+                                       // Show InterstitialSheet if not Pro
+                                       if !appConfig.hasPro {
+                                          ads.showInterstitial.toggle()
+                                       }
                                    }
                                    .padding()
                                    
                                    Spacer()
                                    
-                                   Button("Speichern") {
+                                   Button("Save") {
                                        eventManager.saveEditEvent(event) { success in
                                            eventManager.isAddEventSheet = false
                                            eventManager.editEvent = nil
+                                           
+                                           // Show InterstitialSheet if not Pro
+                                           if !appConfig.hasPro {
+                                              ads.showInterstitial.toggle()
+                                           }
                                        }
                                    }
                                    .padding()
                                }
                            }
-                           .listRowBackground(Color.white.opacity(0.05))
-                           .foregroundColor(appConfig.fontColor)
+                           .listRowBackground(currentTheme.text.opacity(0.05))
+                           .foregroundColor(currentTheme.text)
                        }
                        Spacer()
                    }
@@ -125,7 +141,7 @@ struct EventAddSheetBoby: View {
                 }
                 .padding(.vertical, 20)
                 .scrollContentBackground(.hidden)
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
                 .onChange(of: eventManager.addEventStarDate){ newDate in
                     eventManager.addEventEndDate = Calendar.current.date(byAdding: .minute, value: 30, to: newDate)!
                 }
@@ -140,7 +156,7 @@ struct EventAddSheetBoby: View {
             } else {
                 VStack(){
                     
-                    SheetHeader("Neuen Termin erstellen", action: {
+                    SheetHeader(title: "Create new appointment", action: {
                         eventManager.isAddEventSheet.toggle()
                     })
                     
@@ -150,7 +166,7 @@ struct EventAddSheetBoby: View {
                            VStack(spacing: 20) {
                                VStack(alignment: .leading){
                                    TextField(
-                                       "z.B. Kontrolle",
+                                       "e.g. control",
                                        text: $eventManager.addEventTitel
                                    )
                                    .padding(.vertical)
@@ -164,78 +180,88 @@ struct EventAddSheetBoby: View {
                                        .multilineTextAlignment(.leading)
                                }
                                
-                               Picker("Kontakt", selection: $eventManager.addEventContact) {
-                                   Text("Bitte wählen").tag(Optional<Contact>(nil))
+                               Picker("Contact", selection: $eventManager.addEventContact) {
+                                   Text("Please choose").tag(Optional<Contact>(nil))
                                    ForEach(eventManager.contacts , id: \.id){ contact in
                                        Text(contact.name!).tag(Optional<Contact>(contact))
                                           
                                    }
                                }
                                .pickerStyle(.menu)
-                               .listRowBackground(Color.white.opacity(0.05))
-                               .accentColor(.white)
+                               .listRowBackground(currentTheme.text.opacity(0.05))
+                               .accentColor(currentTheme.text)
                                
                                DatePicker(
-                                  "Beginn",
+                                  "Beginning",
                                   selection: $eventManager.addEventStarDate,
                                   displayedComponents: [.date, .hourAndMinute]
                                )
                                .datePickerStyle(.compact)
-                               .listRowBackground(Color.white.opacity(0.05))
-                               .accentColor(.white)
-                               .tint(.white)
+                               .listRowBackground(currentTheme.text.opacity(0.05))
+                               .accentColor(currentTheme.text)
+                               .tint(currentTheme.text)
                                
                                DatePicker(
-                                   "Ende",
+                                   "End",
                                    selection: $eventManager.addEventEndDate,
                                    displayedComponents: [.date, .hourAndMinute]
                                )
                                .datePickerStyle(.compact)
-                               .listRowBackground(Color.white.opacity(0.05))
-                               .accentColor(.white)
-                               .tint(.white)
+                               .listRowBackground(currentTheme.text.opacity(0.05))
+                               .accentColor(currentTheme.text)
+                               .tint(currentTheme.text)
                            
                                
-                               Toggle("Benachtigung zum Termin senden", isOn: $eventManager.sendEventNotofication)
-                                   .listRowBackground(Color.white.opacity(0.05))
+                               Toggle("Send appointment notification", isOn: $eventManager.sendEventNotofication)
+                                   .listRowBackground(currentTheme.text.opacity(0.05))
                                
                                if eventManager.sendEventNotofication {
-                                   Picker("Benachrichtigen", selection: $eventManager.addEventAlarm) {
+                                   Picker("notify", selection: $eventManager.addEventAlarm) {
                                        
-                                       ForEach(eventManager.alarms, id: \.text) { alarm in
+                                       ForEach(eventManager.alarms, id: \.type) { alarm in
                                            Text(alarm.text).tag(alarm.ekAlarm)
                                        }
                                    }
                                    .pickerStyle(.menu)
-                                   .listRowBackground(Color.white.opacity(0.05))
-                                   .accentColor(.white)
+                                   .listRowBackground(currentTheme.text.opacity(0.05))
+                                   .accentColor(currentTheme.text)
                                }
                                
                                InfomationField(
                                     backgroundStyle: .ultraThin,
-                                    text: "Es wird eine Erinnerung zu dem Termin 24 Stunden vor dem Termin gesendet.",
+                                    text: "A reminder about the appointment will be sent 24 hours before the appointment.",
                                     visibility: true
                                )
                            }
-                           .listRowBackground(Color.white.opacity(0.05))
+                           .listRowBackground(currentTheme.text.opacity(0.05))
                            
                            Section {
                                HStack {
-                                   Button("Abbrechen") {
+                                   Button("Cancel") {
                                        eventManager.isAddEventSheet = false
+                                       
+                                       // Show InterstitialSheet if not Pro
+                                       if !appConfig.hasPro {
+                                          ads.showInterstitial.toggle()
+                                       }
                                    }
                                    .padding()
                                    
                                    Spacer()
                                    
-                                   Button("Speichern") {
+                                   Button("Save") {
                                        eventManager.addEvent()
+                                       
+                                       // Show InterstitialSheet if not Pro
+                                       if !appConfig.hasPro {
+                                          ads.showInterstitial.toggle()
+                                       }
                                    }
                                    .padding()
                                }
                            }
-                           .listRowBackground(Color.white.opacity(0.05))
-                           .foregroundColor(appConfig.fontColor)
+                           .listRowBackground(currentTheme.text.opacity(0.05))
+                           .foregroundColor(currentTheme.text)
                        }
                        Spacer()
                    }
@@ -244,7 +270,7 @@ struct EventAddSheetBoby: View {
                 }
                 .padding(.vertical, 20)
                 .scrollContentBackground(.hidden)
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
                 .onChange(of: eventManager.addEventStarDate){ newDate in
                     eventManager.addEventEndDate = Calendar.current.date(byAdding: .minute, value: 30, to: newDate)!
                 }
@@ -255,7 +281,12 @@ struct EventAddSheetBoby: View {
     }
     
     func dismissKeyboard() {
-        UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true) // 4
+        
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let _ = windowScene?.windows.filter({ $0.isKeyWindow }).first?.endEditing(true)
+        
+       // UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true) // 4
     }
 }
 
@@ -265,18 +296,17 @@ struct EventAddSheetBoby_Previews: PreviewProvider {
     
     static var testEvent: Event? {
         let newEvent = Event(context: PersistenceController.shared.container.viewContext)
-        newEvent.titel = "Standrort Gespräch"
+        newEvent.titel = "location conversation"
         newEvent.endDate = Date()
         newEvent.startDate = Date()
         
         return newEvent
     }
     
-    static var identifier = "de-DE"
-    
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             VStack{ // de-DE
                 EventAddSheetBoby(titel: "Event erstellen")
@@ -290,7 +320,6 @@ struct EventAddSheetBoby_Previews: PreviewProvider {
                     .environmentObject(PainViewModel())
                     .environmentObject(StateManager())
                     .environmentObject(EntitlementManager())
-                    .environment(\.locale, .init(identifier: "de_DE"))
                     .defaultAppStorage(UserDefaults(suiteName: "group.FK.Pro-these-")!)
                     .colorScheme(.dark)
             }

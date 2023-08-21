@@ -9,7 +9,11 @@ import SwiftUI
 import Foundation
 
 struct DistanceStatistic: View {
+    @EnvironmentObject var themeManager: ThemeManager
     
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var distance: Double
     var avgDistance: Double
     var weekDistanceCount: [ChartData]
@@ -20,7 +24,7 @@ struct DistanceStatistic: View {
         VStack(spacing: 20) {
             HStack(alignment: .center, spacing: 20) {
                 HStack(spacing: 15) {
-                    Image("prothesis")
+                    Image("figure.prothese")
                         .imageScale(.large)
                         .font(.system(size: 60, weight: .semibold))
                     
@@ -98,8 +102,7 @@ struct DistanceStatistic: View {
                     // Foreground ring
                     Circle()
                         .trim(from: 0, to: withAnimation(.easeInOut) { percentSteps / 100 })
-                        .stroke(.yellow,
-                                style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                        .stroke(currentTheme.hightlightColor, style: StrokeStyle(lineWidth: 2, lineCap: .round))
                 }
                 .rotationEffect(.degrees(-90))
             

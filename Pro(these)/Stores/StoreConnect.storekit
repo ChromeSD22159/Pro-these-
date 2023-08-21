@@ -1,21 +1,7 @@
 {
   "identifier" : "E88C92E4",
   "nonRenewingSubscriptions" : [
-    {
-      "displayPrice" : "39.99",
-      "familyShareable" : false,
-      "internalID" : "6450559981",
-      "localizations" : [
-        {
-          "description" : "Lebenslanger unbegrenzter Zugang ",
-          "displayName" : "Lifetime",
-          "locale" : "de"
-        }
-      ],
-      "productID" : "9990",
-      "referenceName" : "Lifetime",
-      "type" : "NonRenewingSubscription"
-    }
+
   ],
   "products" : [
 
@@ -24,15 +10,15 @@
     "_applicationInternalID" : "6450190396",
     "_askToBuyEnabled" : true,
     "_developerTeamID" : "ZD275Y62U7",
-    "_lastSynchronizedDate" : 709262597.02225602
+    "_lastSynchronizedDate" : 711649504.41594899
   },
   "subscriptionGroups" : [
     {
-      "id" : "21353714",
+      "id" : "21355946",
       "localizations" : [
 
       ],
-      "name" : "Pro Abo",
+      "name" : "Pro Feature",
       "subscriptions" : [
         {
           "adHocOffers" : [
@@ -41,22 +27,77 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "17.99",
+          "displayPrice" : "8.99",
           "familyShareable" : true,
           "groupNumber" : 2,
-          "internalID" : "6450482547",
+          "internalID" : "6450684341",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Jährlich  Pro Features (Spare 63%)",
+              "description" : "Support the further development of the app",
+              "displayName" : "Supporter: in ",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Unterstütze die Weiterentwicklung der App",
+              "displayName" : "Unterstützter:in",
+              "locale" : "de"
+            },
+            {
+              "description" : "Unterstütze die Weiterentwicklung der App",
+              "displayName" : "Unterstützer Abo (Jährlich)",
+              "locale" : "de"
+            },
+            {
+              "description" : "Support the further development of the app",
+              "displayName" : "Supported (Annual)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "7777",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Developer",
+          "subscriptionGroupID" : "21355946",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "12.99",
+          "familyShareable" : true,
+          "groupNumber" : 2,
+          "internalID" : "6450684151",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Pro Features in Annual",
+              "displayName" : "Per Features (Annual)",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Pro Features im Jährlichen Abo",
               "displayName" : "Jährlich",
+              "locale" : "de"
+            },
+            {
+              "description" : "Pro Features in Annual Plan",
+              "displayName" : "Yearly ",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Pro Features im Jährlichen Abo",
+              "displayName" : "Pro Features (Jährlich)",
               "locale" : "de"
             }
           ],
-          "productID" : "9999",
+          "productID" : "103",
           "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Jählich",
-          "subscriptionGroupID" : "21353714",
+          "referenceName" : "Jährlich",
+          "subscriptionGroupID" : "21355946",
           "type" : "RecurringSubscription"
         },
         {
@@ -69,44 +110,34 @@
           "displayPrice" : "1.99",
           "familyShareable" : true,
           "groupNumber" : 1,
-          "internalID" : "6450434151",
+          "internalID" : "6450683507",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Monatlich Pro Features",
+              "description" : "Alle Pro Features im Monats Abo",
               "displayName" : "Monatlich",
               "locale" : "de"
+            },
+            {
+              "description" : "All Pro features in a monthly subscription",
+              "displayName" : "Monthly ",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Alle Pro Features im Monatsabo",
+              "displayName" : "Pro Features (Monatlich)",
+              "locale" : "de"
+            },
+            {
+              "description" : "All Pro features in a monthly subscription",
+              "displayName" : "Pro Features (Monthly)",
+              "locale" : "en_US"
             }
           ],
-          "productID" : "1000",
+          "productID" : "102",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monatlich",
-          "subscriptionGroupID" : "21353714",
-          "type" : "RecurringSubscription"
-        },
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "0.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "6450482713",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "Deutschsprachiger Raum",
-              "displayName" : "Deutschsprachiger Raum",
-              "locale" : "de"
-            }
-          ],
-          "productID" : "0000",
-          "recurringSubscriptionPeriod" : "P1W",
-          "referenceName" : "Probe Abo",
-          "subscriptionGroupID" : "21353714",
+          "subscriptionGroupID" : "21355946",
           "type" : "RecurringSubscription"
         }
       ]

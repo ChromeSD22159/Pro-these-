@@ -10,18 +10,26 @@ import SwiftUI
 struct EventDetailView: View {
     @EnvironmentObject var eventManager: EventManager
     @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var iconColor: Color
+    
     var item: Event
+    
     var body: some View {
         ZStack {
-            appConfig.backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
                 VStack{
                     HStack{
                         Text(item.titel ?? "Unbekannter Titel")
-                            .foregroundColor(appConfig.fontColor)
+                            .foregroundColor(currentTheme.text)
                     }
                     .padding(.top, 25)
                     
@@ -50,7 +58,7 @@ struct EventDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             EventDetailView(iconColor: .white, item: testFeeling!)
                 .environmentObject(AppConfig())

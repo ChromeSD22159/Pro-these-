@@ -9,12 +9,14 @@ import WidgetKit
 import SwiftUI
 
 struct FeelingProvider: TimelineProvider {
+    var unlocked: Bool
+    
     func placeholder(in context: Context) -> FeelingSimpleEntry {
-        FeelingSimpleEntry(date: Date())
+        FeelingSimpleEntry(date: Date(), hasUnlockedPro: unlocked)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (FeelingSimpleEntry) -> ()) {
-        let entry = FeelingSimpleEntry(date: Date())
+        let entry = FeelingSimpleEntry(date: Date(), hasUnlockedPro: unlocked)
         completion(entry)
     }
 
@@ -25,7 +27,7 @@ struct FeelingProvider: TimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = FeelingSimpleEntry(date: entryDate)
+            let entry = FeelingSimpleEntry(date: entryDate, hasUnlockedPro: unlocked)
             entries.append(entry)
         }
 
@@ -36,56 +38,68 @@ struct FeelingProvider: TimelineProvider {
 
 struct FeelingSimpleEntry: TimelineEntry {
     let date: Date
+    let hasUnlockedPro: Bool
 }
 
 struct ProProtheseWidgetFeelingEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
+
     var entry: FeelingProvider.Entry
 
+    private var currentTheme: Theme {
+        return ThemeManager().currentTheme()
+    }
+    
     var body: some View {
-        Link(destination: URL(string: "ProProthese://addFeeling")!) {
-            ZStack {
-                
-                LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
-                
-                switch widgetFamily {
-                case .systemSmall:
-                    GeometryReader { screen in
-                        
-                        let width = screen.size.width / 2
-                        
-                        VStack {
+        
+        ZStack {
+            hasProFeatureOverlay(binding: !entry.hasUnlockedPro, label: true) { state in
+            
+                Link(destination: URL(string: !entry.hasUnlockedPro ? "ProProthese://getPro" : "ProProthese://addFeeling")!) {
+                    currentTheme.gradientBackground(nil)
+                    
+                    switch widgetFamily {
+                    case .systemSmall:
+                        GeometryReader { screen in
                             
-                            Text("Hey, Wie fühlst du dich heute?")
-                                .font(.caption.bold())
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
+                            let width = screen.size.width / 2
                             
-                            ZStack{
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .frame(width: width, height: width)
+                            VStack {
                                 
-                                Image(systemName: "plus")
-                                    .font(.title.bold())
-                                    .foregroundColor(.yellow)
+                                Text("Hey, how are you feeling today?")
+                                    .font(.caption.bold())
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(currentTheme.hightlightColor)
+                                
+                                ZStack{
+                                    Circle()
+                                        .fill(currentTheme.text.opacity(0.1))
+                                        .frame(width: width, height: width)
+                                    
+                                    Image(systemName: "plus")
+                                        .font(.title.bold())
+                                        .foregroundColor(currentTheme.hightlightColor)
+                                }
                             }
+                            .frame(width: screen.size.width, height: screen.size.height)
+                            
                         }
-                        .frame(width: screen.size.width, height: screen.size.height)
-                        
-                    }
-                case .systemLarge:
-                    VStack {
-                        Text(entry.date, style: .time)
-                        Text("Large Widget")
-                    }
-                default:
-                    VStack {
-                        Text(entry.date, style: .time)
-                        Text("Default")
+                        .hasProBlurry(state)
+                    case .systemLarge:
+                        VStack {
+                            Text(entry.date, style: .time)
+                            Text("Large Widget")
+                        }
+                    default:
+                        VStack {
+                            Text(entry.date, style: .time)
+                            Text("Default")
+                        }
                     }
                 }
-            }.widgetURL(URL(string: "ProProthese://addFeeling"))
+               
+            }.widgetURL(URL(string:  !entry.hasUnlockedPro ? "ProProthese://getPro" : "ProProthese://addFeeling"))
+            
         }
        
     }
@@ -95,18 +109,18 @@ struct ProProtheseWidgetFeeling: Widget {
     let kind: String = "ProProtheseWidgetFeeling"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: FeelingProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: FeelingProvider(unlocked: AppTrailManager.hasProOrFreeTrail)) { entry in
             ProProtheseWidgetFeelingEntryView(entry: entry)
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("Wie geht es dir?")
-        .description("Trage es schnell ein wie es mit der Prothese heute geht.")
+        .configurationDisplayName("How are you doing?")
+        .description("Enter it quickly how the prosthesis is doing today.")
     }
 }
 
 struct ProProtheseWidgetFeeling_Previews: PreviewProvider {
     static var previews: some View {
-        ProProtheseWidgetFeelingEntryView(entry: FeelingSimpleEntry(date: Date()))
+        ProProtheseWidgetFeelingEntryView(entry: FeelingSimpleEntry(date: Date(), hasUnlockedPro: true))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

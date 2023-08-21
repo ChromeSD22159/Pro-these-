@@ -42,7 +42,7 @@ struct FeelingListDailyMoods: View {
 struct FeelingListDailyMoods_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             FeelingListDailyMoods()
                 .environmentObject(AppConfig())

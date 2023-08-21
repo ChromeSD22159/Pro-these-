@@ -11,45 +11,53 @@ import SwiftUI
 struct SnapShotView: View {
     @Environment(\.displayScale) var displayScale
     @State private var renderedImageV1 = Image("SnapShotV1")
+    @State private var renderedImageV1ui: UIImage?
     @State private var renderedImageV2 = Image("SnapShotV2")
+    @State private var renderedImageV2ui: UIImage?
     @State private var renderedImageV3 = Image("SnapShotV3")
+    @State private var renderedImageV3ui: UIImage?
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     @Binding var sheet: Bool
     
-    var steps: String
+    var steps: Double
     var distance: String
     var date: Date
     
     @State var saved = false
     @State var visible1 = false
     @State var visible2 = false
-    
+    @State var screen:CGSize = .zero
     var body: some View {
         GeometryReader { proxy in
-            let width = proxy.size.width - 40
             VStack {
                 
-                SheetHeader("Teile deinen Fortschritt", action: {
+                SheetHeader(title: "Share your progress", action: {
                     sheet.toggle()
                 })
                 
                 Spacer()
                 
                 TabView {
-                    PreViewShot(image: renderedImageV1, width: width, tag: "V1").padding(.horizontal)
+                    PreViewShot(image: renderedImageV1, uiImage: renderedImageV1ui, width: proxy.size.width - 40, tag: "V1").padding(.horizontal)
                     
-                    PreViewShot(image: renderedImageV2, width: width, tag: "V2").padding(.horizontal)
+                    PreViewShot(image: renderedImageV2, uiImage: renderedImageV2ui, width: proxy.size.width - 40, tag: "V2").padding(.horizontal)
                     
-                    PreViewShot(image: renderedImageV3, width: width, tag: "V3").padding(.horizontal)
+                    PreViewShot(image: renderedImageV3, uiImage: renderedImageV3ui, width: proxy.size.width - 40, tag: "V3").padding(.horizontal)
                 }
                 .tabViewStyle(.page)
                 
                 Spacer()
             }
             .background(.ultraThinMaterial)
+            .saveSize(in: $screen)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             .onAppear {
-                render(width: width, steps: steps, distance: distance, date: date)
+                render(width: 500, steps: steps, distance: distance, date: date)
                 
                 withAnimation(.easeOut(duration: 0.4)){
                     visible1 = true
@@ -63,18 +71,23 @@ struct SnapShotView: View {
     }
     
     @ViewBuilder
-    func PreViewShot(image: Image, width: CGFloat, tag: String) -> some View {
+    func PreViewShot(image: Image, uiImage: UIImage?, width: CGFloat, tag: String) -> some View {
         ZStack{
             
-            VStack {
-                HStack {
+            VStack(spacing: 10) {
+                HStack(spacing: 20) {
                     Spacer()
+                    if let ui = uiImage {
+                        InstagramShareView(imageToShare: ui)
+                            .foregroundColor(currentTheme.text)
+                    }
                     
-                    ShareLink(item: image, preview: SharePreview("Mein Fortschritt mit der Pro Prothese App. \nhttps://www.prothese.pro/store", image: image), label: {
-                        Label("Teilen", systemImage: "square.and.arrow.up")
-                            
+                    
+                    ShareLink(item: image, preview: SharePreview("My progress with the Pro Prosthesis App. https://www.prothese.pro/store", image: image), label: {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                            .padding(.trailing)
                     })
-                    .foregroundColor(.white)
+                    .foregroundColor(currentTheme.text)
                     .opacity(visible2 ? 1 : 0)
                 }
                 
@@ -82,11 +95,10 @@ struct SnapShotView: View {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: width, height: width)
                     .cornerRadius(20)
                     .opacity(visible1 ? 1 : 0)
                     .opacity(saved ? 0 : 1)
-                    .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/.opacity(0.5), radius: 10, x: 0, y: 10)
+                    .shadow(color: currentTheme.textBlack.opacity(0.5), radius: 10, x: 0, y: 10)
             }
             
             // button
@@ -97,7 +109,7 @@ struct SnapShotView: View {
             
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 50))
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
                 .opacity(saved ? 1 : 0)
                 .modifier(Shake(animatableData: CGFloat(saved ? 1 : 0 )))
             
@@ -111,11 +123,11 @@ struct SnapShotView: View {
             VStack(alignment: .leading){
                 HStack(alignment:.top) {
                     Image(systemName: "camera.fill")
-                        .foregroundColor(.black)
+                        .foregroundColor(currentTheme.textBlack)
                         .font(.system(size: screen / 12, design: .default))
                         .background(
                             Circle()
-                                .fill(.white.shadow(.inner(color: .black.opacity(0.25), radius: 5)).shadow(.drop(color: .black.opacity(0.25), radius: 5)))
+                                .fill(currentTheme.text.shadow(.inner(color: currentTheme.textBlack.opacity(0.25), radius: 5)).shadow(.drop(color: currentTheme.textBlack.opacity(0.25), radius: 5)))
                                 .frame(width:screen / 6, height: screen / 6)
                         )
                         .onTapGesture {
@@ -150,26 +162,27 @@ struct SnapShotView: View {
     
     
     // Reander View to an Image when the App Appear
-    @MainActor func render(width: CGFloat, steps: String, distance: String, date: Date) {
-        let rendererV1 = ImageRenderer(content: renderViewV1(width: width, steps: steps,distance: distance, date: date))
+    @MainActor func render(width: CGFloat, steps: Double, distance: String, date: Date) {
+        let rendererV1 = ImageRenderer(content: renderViewV1(width: width, steps: steps, distance: distance, date: date))
         rendererV1.scale = displayScale
         if let uiImageV1 = rendererV1.uiImage {
            renderedImageV1 = Image(uiImage: uiImageV1)
+           renderedImageV1ui = uiImageV1
         }
         
         
         let rendererV2 = ImageRenderer(content: renderViewV2(width: width, steps: steps,distance: distance, date: date))
         rendererV2.scale = displayScale
-        
         if let uiImageV2 = rendererV2.uiImage {
             renderedImageV2 = Image(uiImage: uiImageV2)
+            renderedImageV2ui = uiImageV2
         }
         
         let rendererV3 = ImageRenderer(content: renderViewV3(width: width, steps: steps,distance: distance, date: date))
         rendererV3.scale = displayScale
-        
         if let uiImageV3 = rendererV3.uiImage {
             renderedImageV3 = Image(uiImage: uiImageV3)
+            renderedImageV3ui = uiImageV3
         }
    }
 }
@@ -178,7 +191,7 @@ struct SnapShotView: View {
 // Generate the Image for the Screenshot 
 struct renderViewV1: View {
     var width: CGFloat
-    var steps: String
+    var steps: Double
     var distance: String
     var date: Date
     var body: some View {
@@ -192,11 +205,13 @@ struct renderViewV1: View {
             
             VStack{
                 HStack{
-                    Text("\(steps) Schritte")
+                    Text(String(format: NSLocalizedString("%lld Steps", comment: ""), Int(steps)))
+                        .padding(10)
                     
                     Spacer()
                     
                     Text("\(distance)")
+                        .padding(10)
                 }
                 .foregroundColor(.white)
                 .font(.title2.bold())
@@ -211,7 +226,7 @@ struct renderViewV1: View {
 
 struct renderViewV2: View {
     var width: CGFloat
-    var steps: String
+    var steps: Double
     var distance: String
     var date: Date
     var body: some View {
@@ -225,11 +240,13 @@ struct renderViewV2: View {
             
             VStack{
                 HStack{
-                    Text("\(steps) Schritte")
+                    Text(String(format: NSLocalizedString("%lld Steps", comment: ""), Int(steps)))
+                        .padding(10)
                     
                     Spacer()
                     
                     Text("\(distance)")
+                        .padding(10)
                 }
                 .foregroundColor(.white)
                 .font(.title2.bold())
@@ -244,7 +261,7 @@ struct renderViewV2: View {
 
 struct renderViewV3: View {
     var width: CGFloat
-    var steps: String
+    var steps: Double
     var distance: String
     var date: Date
     var body: some View {
@@ -258,11 +275,13 @@ struct renderViewV3: View {
             
             VStack{
                 HStack{
-                    Text("\(steps) Schritte")
+                    Text(String(format: NSLocalizedString("%lld Steps", comment: ""), Int(steps)))
+                        .padding(10)
                     
                     Spacer()
                     
                     Text("\(distance)")
+                        .padding(10)
                 }
                 .foregroundColor(.white)
                 .font(.title2.bold())

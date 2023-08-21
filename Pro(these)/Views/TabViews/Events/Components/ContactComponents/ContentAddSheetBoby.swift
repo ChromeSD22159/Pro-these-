@@ -11,6 +11,13 @@ struct ContentAddSheetBoby: View {
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var eventManager: EventManager
     @EnvironmentObject var contactManager: ContactManager
+    @EnvironmentObject var ads: AdsViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var titel: String
     var body: some View {
         ZStack{
@@ -26,8 +33,13 @@ struct ContentAddSheetBoby: View {
     func editContact(_ contact: Contact) -> some View {
         VStack(spacing: 10){
             
-            SheetHeader("Bearbeiten", action: {
+            SheetHeader(title: "Edit", action: {
                 eventManager.isAddContactSheet.toggle()
+                
+                // Show InterstitialSheet if not Pro
+                if !appConfig.hasPro {
+                   ads.showInterstitial.toggle()
+                }
             })
             
             Form {
@@ -44,12 +56,12 @@ struct ContentAddSheetBoby: View {
                     
                     
                     HStack{
-                        Text("Telefon:")
+                        Text("Phone:")
                         
                         Spacer()
                         
-                        TextField( text: $eventManager.addContactPhone, prompt: Text("Telefon")) {
-                               Text("Telfon:")
+                        TextField( text: $eventManager.addContactPhone, prompt: Text("Phone")) {
+                               Text("Phone:")
                            }
                         .disableAutocorrection(true)
                     }
@@ -69,44 +81,54 @@ struct ContentAddSheetBoby: View {
                     
                     Picker("Titel", selection: $eventManager.addContactTitel) {
                         ForEach(eventManager.contactTypes, id: \.type) { contact in
-                            Text(contact.type).tag("\(contact.type)")
+                            Text(contact.name).tag("\(contact.type)")
                         }
                     }
                 }
                 .padding(.horizontal, 10)
-                .listRowBackground(Color.white.opacity(0.05))
-                .foregroundColor(appConfig.fontColor)
+                .listRowBackground(currentTheme.text.opacity(0.05))
+                .foregroundColor(currentTheme.text)
                 
                 Section {
                     HStack {
-                        Button("Abbrechen") {}
-                            .listRowBackground(Color.white.opacity(0.05))
+                        Button("Cancel") {
+                            // Show InterstitialSheet if not Pro
+                            if !appConfig.hasPro {
+                               ads.showInterstitial.toggle()
+                            }
+                        }
+                            .listRowBackground(currentTheme.text.opacity(0.05))
                         Spacer()
-                        Button("Speichern") {
+                        Button("Save") {
                             eventManager.editContact(contact) { success in
                                 if success {
                                     eventManager.editContact = nil
                                     eventManager.isAddContactSheet = false
                                 }
                             }
-                        }.listRowBackground(Color.white.opacity(0.05))
+                            
+                            // Show InterstitialSheet if not Pro
+                            if !appConfig.hasPro {
+                               ads.showInterstitial.toggle()
+                            }
+                        }.listRowBackground(currentTheme.text.opacity(0.05))
                     }
                     .padding(10)
-                    .listRowBackground(Color.white.opacity(0.05))
+                    .listRowBackground(currentTheme.text.opacity(0.05))
                 }
-                .listRowBackground(Color.white.opacity(0.05))
-                .foregroundColor(appConfig.fontColor)
+                .listRowBackground(currentTheme.text.opacity(0.05))
+                .foregroundColor(currentTheme.text)
                 
                 
                 
                 // In-App-ABO
                 InfomationField( // In-App-ABO
                     backgroundStyle: .ultraThinMaterial,
-                    text: "Die Kontaktdaten beziehen sich auf die Allgemeinen Kontaktinfomationen wie z.B. \"Zentrale\". Sie haben später noch die möglichkeit zusätzliche Ansprechpartner hinzuzufügen.",
-                    foreground: .white,
+                    text: "The contact details refer to the general contact information such as \"Headquarters\". You can add additional contacts later.",
+                    foreground: currentTheme.text,
                     visibility: AppConfig.shared.hasUnlockedPro ? appConfig.hideInfomations : true
                 )
-                .listRowBackground(Color.white.opacity(0))
+                .listRowBackground(currentTheme.text.opacity(0))
                 .listRowInsets(EdgeInsets())
             }
             
@@ -114,12 +136,13 @@ struct ContentAddSheetBoby: View {
         }
         .padding(.vertical, 10)
         .scrollContentBackground(.hidden)
-        .foregroundColor(.white)
+        .foregroundColor(currentTheme.text)
         .onAppear {
             eventManager.addContactName = contact.name ?? ""
             eventManager.addContactPhone = contact.phone ?? ""
             eventManager.addContactEmail = contact.mail ?? ""
-            eventManager.addContactTitel = contact.titel ?? ""
+            eventManager.addContactTitel = contact.titel ?? "Others"
+            eventManager.addEventIcon = contact.icon ?? ""
         }
     }
     
@@ -127,7 +150,7 @@ struct ContentAddSheetBoby: View {
     func createContact() -> some View {
         VStack(spacing: 10){
             
-            SheetHeader(titel, action: {
+            SheetHeader(title: "New Contact", action: {
                 eventManager.isAddContactSheet.toggle()
             })
             
@@ -145,12 +168,12 @@ struct ContentAddSheetBoby: View {
                     
                     
                     HStack{
-                        Text("Telefon:")
+                        Text("Phone:")
                         
                         Spacer()
                         
-                        TextField( text: $eventManager.addContactPhone, prompt: Text("Telefon")) {
-                               Text("Telfon:")
+                        TextField( text: $eventManager.addContactPhone, prompt: Text("Phone")) {
+                               Text("Phone:")
                            }
                         .disableAutocorrection(true)
                     }
@@ -170,39 +193,49 @@ struct ContentAddSheetBoby: View {
                     
                     Picker("Titel", selection: $eventManager.addContactTitel) {
                         ForEach(eventManager.contactTypes, id: \.type) { contact in
-                            Text(contact.type).tag("\(contact.type)")
+                            Text(contact.name).tag("\(contact.type)")
                         }
                     }
                 }
                 .padding(.horizontal, 10)
-                .listRowBackground(Color.white.opacity(0.05))
-                .foregroundColor(appConfig.fontColor)
+                .listRowBackground(currentTheme.text.opacity(0.05))
+                .foregroundColor(currentTheme.text)
                 
                 Section {
                     HStack {
-                        Button("Abbrechen") {}
-                            .listRowBackground(Color.white.opacity(0.05))
+                        Button("Cancel") {
+                            // Show InterstitialSheet if not Pro
+                            if !appConfig.hasPro {
+                               ads.showInterstitial.toggle()
+                            }
+                        }
+                            .listRowBackground(currentTheme.text.opacity(0.05))
                         Spacer()
-                        Button("Speichern") {
+                        Button("Save") {
                             eventManager.addContact()
-                        }.listRowBackground(Color.white.opacity(0.05))
+                            
+                            // Show InterstitialSheet if not Pro
+                            if !appConfig.hasPro {
+                               ads.showInterstitial.toggle()
+                            }
+                        }.listRowBackground(currentTheme.text.opacity(0.05))
                     }
                     .padding(10)
-                    .listRowBackground(Color.white.opacity(0.05))
+                    .listRowBackground(currentTheme.text.opacity(0.05))
                 }
-                .listRowBackground(Color.white.opacity(0.05))
-                .foregroundColor(appConfig.fontColor)
+                .listRowBackground(currentTheme.text.opacity(0.05))
+                .foregroundColor(currentTheme.text)
                 
                 
                 
                 // In-App-ABO
                 InfomationField( // In-App-ABO
                     backgroundStyle: .ultraThinMaterial,
-                    text: "Die Kontaktdaten beziehen sich auf die Allgemeinen Kontaktinfomationen wie z.B. \"Zentrale\". Sie haben später noch die möglichkeit zusätzliche Ansprechpartner hinzuzufügen.",
-                    foreground: .white,
+                    text: "The contact details refer to the general contact information such as \"Headquarters\". You can add additional contacts later.",
+                    foreground: currentTheme.text,
                     visibility: AppConfig.shared.hasUnlockedPro ? appConfig.hideInfomations : true
                 )
-                .listRowBackground(Color.white.opacity(0))
+                .listRowBackground(currentTheme.text.opacity(0))
                 .listRowInsets(EdgeInsets())
             }
             
@@ -210,16 +243,16 @@ struct ContentAddSheetBoby: View {
         }
         .padding(.vertical, 10)
         .scrollContentBackground(.hidden)
-        .foregroundColor(.white)
+        .foregroundColor(currentTheme.text)
     }
 }
 
 struct ContentAddSheetBoby_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
-            ContentAddSheetBoby(titel: "Bearbeite <ContactName>")
+            ContentAddSheetBoby(titel: "Edit <ContactName>")
                 .environmentObject(AppConfig())
                 .environmentObject(EventManager())
                 .environmentObject(ContactManager())

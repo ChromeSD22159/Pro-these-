@@ -11,12 +11,15 @@ import CoreData
 struct EventCalendar: View {
     @EnvironmentObject var cal: MoodCalendar
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     @Environment(\.managedObjectContext) var managedObjectContext
     
     private let persistenceController = PersistenceController.shared
-    
-    private let days: [String] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
     
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
@@ -29,43 +32,18 @@ struct EventCalendar: View {
     var body: some View {
        GeometryReader { screen in
            VStack(spacing: 20) {
+               CalendarControl()
                
-               // prev / next Month
-               HStack{
-                   Button(action: {
-                       cal.currentMonth -= 1
-                   }, label: {
-                       Image(systemName: "chevron.left")
-                           .font(.title2)
-                           .foregroundColor(.white)
-                   })
-                   
-                   Spacer()
-                   
-                   Text(cal.currentDate.dateFormatte(date: "MMMM YYYY", time: "HH:mm").date)
-                       .foregroundColor(.white)
-                   
-                   Spacer()
-                   
-                   Button(action: {
-                       cal.currentMonth += 1
-                   }, label: {
-                       Image(systemName: "chevron.right")
-                           .font(.title2)
-                           .foregroundColor(.white)
-                   })
-               }
-               .padding(.horizontal, 20)
                
                /// Header Days
                HStack(spacing: 0) {
                   
-                   ForEach(days, id: \.self) { day in
-                       Text("\(day)")
+                   ForEach(Date().extractWeekByDate, id: \.weekday) { day in
+                       Text("\(day.weekday)")
                            .font(.callout)
                            .fontWeight(.semibold)
                            .frame(maxWidth: .infinity)
-                           .foregroundColor(.white)
+                           .foregroundColor(currentTheme.text)
                    }
                    
                }
@@ -88,22 +66,60 @@ struct EventCalendar: View {
                          let width = proxy.translation.width
                          
                          if width <= -150 && height > -30 && height < 30  {
-                             cal.currentMonth += 1
+                             cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: +1, to: cal.selectedCalendarDate)!
                          }
                          
                          if width >= 150 && height > -30 && height < 30  {
-                             cal.currentMonth -= 1
+                             cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: -1, to: cal.selectedCalendarDate)!
                          }
                      }
              ) // gesture
-               
-               
+
                /// List Events
                ListSelectedEvents()
            }
            
        }
         
+    }
+
+    @ViewBuilder
+    func CalendarControl() -> some View {
+        HStack{
+               if !cal.showCalendarPicker {
+                   Button(action: {
+                       cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: -1, to: cal.selectedCalendarDate)!
+                         
+                     }, label: {
+                         Image(systemName: "chevron.left")
+                             .font(.title2)
+                             .foregroundColor(currentTheme.text)
+                     })
+                     
+                     Spacer()
+                     
+                     Button(action: {
+                         withAnimation(.easeInOut){
+                             cal.showCalendarPicker = true
+                         }
+                     }, label: {
+                         Text(cal.currentDate.dateFormatte(date: "MMM yyyy", time: "").date)
+                         
+                     })
+                     .frame(maxWidth: .infinity)
+                     
+                     Spacer()
+                     
+                     Button(action: {
+                         cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: +1, to: cal.selectedCalendarDate)!
+                     }, label: {
+                         Image(systemName: "chevron.right")
+                             .font(.title2)
+                             .foregroundColor(currentTheme.text)
+                     })
+               }
+           }
+           .padding(.horizontal, 20)
     }
     
     @ViewBuilder
@@ -117,18 +133,18 @@ struct EventCalendar: View {
                     NavigateTo({
                         EventPreview(item: item)
                     }, {
-                        EventDetailView( iconColor: .yellow, item: item)
+                        EventDetailView( iconColor: currentTheme.hightlightColor, item: item)
                     })
                 }
             } else {
                 HStack {
-                    Text("Kein Termin")
+                    Text("No appointment")
                 }
                 .padding()
             }
         })
-        .tint(AppConfig.shared.fontColor)
-        .listRowBackground(Color.white.opacity(0.05))
+        .tint(currentTheme.text)
+        .listRowBackground(currentTheme.text.opacity(0.05))
         .padding(.bottom, 50)
 
     }
@@ -148,14 +164,16 @@ struct EventCalendar: View {
                        // Found feeling
                        VStack(spacing: 5){
                            Circle()
-                               .strokeBorder(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? Color.white.opacity(1) : value.date > Date() ? .white.opacity(0.05) : .white.opacity(0.5), lineWidth: 1)
+                               .strokeBorder(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? currentTheme.text.opacity(1) : value.date > Date() ? currentTheme.text.opacity(0.05) : currentTheme.text.opacity(0.5), lineWidth: 1)
                                .background{
                                    ZStack{
-                                       Circle().foregroundColor( value.date > Date() ? Color.white.opacity(0.05) : Color.white.opacity(0.1))
+                                       Circle().foregroundColor( value.date > Date() ? currentTheme.text.opacity(0.05) : currentTheme.text.opacity(0.1))
+                                       
+                                       //let _ = print(eventManager.getIcon(event.contact?.titel ?? ""))
                                        
                                        Image(systemName: eventManager.getIcon(event.contact?.titel ?? "") )
                                            .font(.callout)
-                                           .foregroundColor( cal.isSameDay(d1: event.startDate ?? Date() , d2: value.date) ? Color.yellow : Color.white.opacity(0))
+                                           .foregroundColor( cal.isSameDay(d1: event.startDate ?? Date() , d2: value.date) ? currentTheme.hightlightColor : currentTheme.text.opacity(0))
                                            .clipShape(Circle())
                                    }
                                }
@@ -173,14 +191,14 @@ struct EventCalendar: View {
                    // none Event
                    VStack(spacing: 5){
                        Circle()
-                           .strokeBorder(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? Color.white.opacity(1) : value.date > Date() ? .white.opacity(0.05) : .white.opacity(0.5), lineWidth: 1)
+                           .strokeBorder(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? currentTheme.text.opacity(1) : value.date > Date() ? currentTheme.text.opacity(0.05) : currentTheme.text.opacity(0.5), lineWidth: 1)
                            .background(
                                ZStack{
-                                   Circle().foregroundColor( value.date > Date() ? Color.white.opacity(0.05) : Color.white.opacity(0.1))
+                                   Circle().foregroundColor( value.date > Date() ? currentTheme.text.opacity(0.05) : currentTheme.text.opacity(0.1))
                                    
                                    Text("\(value.day)")
                                       .font(.footnote)
-                                      .foregroundColor(.white.opacity(0.3))
+                                      .foregroundColor(currentTheme.text.opacity(0.3))
                                }
                            )
                            .frame(width: itemWidth, height: itemWidth )
@@ -188,7 +206,8 @@ struct EventCalendar: View {
                                cal.currentDate = value.date
                                
                                if value.date >= Date() || cal.isSameDay(d1: value.date , d2: Date()) {
-                                   eventManager.openAddEventSheet(date: value.date)
+                                   // openAddEventSheet set date + 1
+                                   eventManager.openAddEventSheet(date: Calendar.current.date(byAdding: .day, value: -1, to: value.date)!)
                                }
                                
                            })

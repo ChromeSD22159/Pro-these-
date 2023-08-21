@@ -13,6 +13,12 @@ struct NavigateTo<Link: View, DetailView: View>: View {
     let link:           Link
     let detailView:     DetailView
     
+    @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var appConfig: AppConfig
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     init(
         @ViewBuilder _ link:            () -> Link,
         @ViewBuilder _ detailView:      () -> DetailView
@@ -39,9 +45,10 @@ struct NavigateTo<Link: View, DetailView: View>: View {
             
             VStack{
                 HStack(){
-                    BackBTN(size: 30, foreground: .white, background: .black)
+                    BackBTN(size: 30, foreground: currentTheme.text, background: currentTheme.textBlack)
                         .onTapGesture {
                             isShowingNavigation = false
+                            appConfig.dismissNavigationLink = true
                         }
                     Spacer()
                 }

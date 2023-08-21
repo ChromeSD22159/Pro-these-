@@ -10,10 +10,15 @@ import SwiftUI
 struct FeelingCalendarView: View {
     @EnvironmentObject var cal: MoodCalendar
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     private let persistenceController = PersistenceController.shared
-    
-    private let days: [String] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
     
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
@@ -25,87 +30,124 @@ struct FeelingCalendarView: View {
     
     var body: some View {
        GeometryReader { screen in
-           VStack(spacing: 20) {
-               
-               // prev / next Month
-               HStack{
-                   Button(action: {
-                       cal.currentMonth -= 1
-                   }, label: {
-                       Image(systemName: "chevron.left")
-                           .font(.title2)
-                           .foregroundColor(.white)
-                   })
+           
+           ScrollView(showsIndicators: false, content: {
+               VStack(spacing: 20) {
+
+                   CalendarControl()
                    
-                   Spacer()
-                   
-                   Text(cal.currentDate.dateFormatte(date: "MMMM YYYY", time: "HH:mm").date)
-                       .foregroundColor(.white)
-                   
-                   Spacer()
-                   
-                   Button(action: {
-                       cal.currentMonth += 1
-                   }, label: {
-                       Image(systemName: "chevron.right")
-                           .font(.title2)
-                           .foregroundColor(.white)
-                   })
-               }
-               .padding(.horizontal, 20)
-               
-               /// Header Days
-               HStack(spacing: 0) {
-                  
-                   ForEach(days, id: \.self) { day in
-                       Text("\(day)")
-                           .font(.callout)
-                           .fontWeight(.semibold)
-                           .frame(maxWidth: .infinity)
-                           .foregroundColor(.white)
+                   /// Header Days
+                   HStack(spacing: 0) {
+                      
+                       ForEach(Date().extractWeekByDate, id: \.weekday) { day in
+                           Text("\(day.weekday)")
+                               .font(.callout)
+                               .fontWeight(.semibold)
+                               .frame(maxWidth: .infinity)
+                               .foregroundColor(currentTheme.text)
+                       }
+                       
                    }
+                   .padding(.horizontal, 20)
                    
-               }
-               .padding(.horizontal, 20)
-               
-               /// Calendar View
-               LazyVGrid(columns: columns, spacing: 10) {
-                   ForEach(cal.currentDates) { value in
-                       DayButton(value: value, screenSize: screen.size)
+                   /// Calendar View
+                   LazyVGrid(columns: columns, spacing: 10) {
+                       ForEach(cal.currentDates) { value in
+                           DayButton(value: value, screenSize: screen.size)
+                       }
                    }
+                   .padding(.horizontal, 20)
+                   .gesture(
+                       DragGesture()
+                         .onChanged() { value in
+                             viewState = value.translation
+                         }
+                         .onEnded { proxy in
+                             let height = proxy.translation.height
+                             let width = proxy.translation.width
+                             
+                             if width <= -150 && height > -30 && height < 30  {
+                                 cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: +1, to: cal.selectedCalendarDate)!
+                             }
+                             
+                             if width >= 150 && height > -30 && height < 30  {
+                                 cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: -1, to: cal.selectedCalendarDate)!
+                             }
+                         }
+                 ) // gesture
+                   
+                ListSelectedDateMoods(screenSize: screen.size)
                }
-               .padding(.horizontal, 20)
-               .gesture(
-                   DragGesture()
-                     .onChanged() { value in
-                         viewState = value.translation
-                     }
-                     .onEnded { proxy in
-                         let height = proxy.translation.height
-                         let width = proxy.translation.width
-                         
-                         if width <= -150 && height > -30 && height < 30  {
-                             cal.currentMonth += 1
-                         }
-                         
-                         if width >= 150 && height > -30 && height < 30  {
-                             cal.currentMonth -= 1
-                         }
-                     }
-             ) // gesture
-               
-               ListSelectedDateMoods(screenSize: screen.size)
-               
-           }
-           // MARK: - Sheet
-           .blurredOverlaySheet(.init(.ultraThinMaterial), show: $cal.isFeelingSheet, onDismiss: {}, content: {
-               AddFeelingSheetBody()
+               // MARK: - Sheet
+               .blurredOverlaySheet(.init(.ultraThinMaterial), show: $cal.isFeelingSheet, onDismiss: {
+                   // Show InterstitialSheet if not Pro
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                       if !appConfig.hasPro {
+                              ads.showInterstitial.toggle()
+                       }
+                   })
+               }, content: {
+                   AddFeelingSheetBody()
+               })
            })
            
        }
         
     }
     
+    @ViewBuilder
+    func CalendarControl() -> some View {
+        HStack{
+          if !cal.showCalendarPicker {
+              Button(action: {
+                  cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: -1, to: cal.selectedCalendarDate)!
+              }, label: {
+                  Image(systemName: "chevron.left")
+                      .font(.title2)
+                      .foregroundColor(currentTheme.text)
+              })
+              
+              Spacer()
+              
+              Button(action: {
+                  withAnimation(.easeInOut){
+                      cal.showCalendarPicker = true
+                  }
+              }, label: {
+                  Text(cal.currentDate.dateFormatte(date: "MMM yyyy", time: "").date)
+                      .foregroundColor(currentTheme.text)
+              })
+              .frame(maxWidth: .infinity)
+              
+              Spacer()
+              
+              Button(action: {
+                  cal.selectedCalendarDate = Calendar.current.date(byAdding: .month, value: +1, to: cal.selectedCalendarDate)!
+              }, label: {
+                  Image(systemName: "chevron.right")
+                      .font(.title2)
+                      .foregroundColor(currentTheme.text)
+              })
+          }
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    func groupingAndCountingProtheses(date: Date) -> [Dictionary<Prothese, Int>.Element] {
+        
+        let fe = feelings.filter({ return cal.isSameDay(d1: $0.date ?? Date(), d2: date) })
+        
+        let proth = fe.compactMap({
+            return $0.prothese
+        })
+        
+        let groupedProtheses = Dictionary(grouping: proth, by: { $0 }).mapValues({ items in items.count }).sorted(by: {
+            $0.value > $1.value
+        })
+
+        return groupedProtheses
+    }
+
     @ViewBuilder // MARK: - Calendar Day Circle
     func DayButton(value: DateValue, screenSize: CGSize) -> some View {
        VStack(spacing: 10) {
@@ -113,39 +155,80 @@ struct FeelingCalendarView: View {
 
                if let feeling = feelings.first(where: { return cal.isSameDay(d1: $0.date ?? Date(), d2: value.date) }) {
                    let fe = feelings.map( { return  cal.isSameDay(d1: $0.date ?? Date(), d2: value.date) ? Int(($0.name?.trimFeelings()) ?? "") : nil } )
+                   
                    if fe.count > 0 {
 
                        let avg:Int = fe.compactMap{ $0 }.reduce(0, +) / fe.compactMap{ $0 }.count
 
-                    
                        // Found feeling
                        VStack(spacing: 5){
                            Circle()
                                .strokeBorder(.clear, lineWidth: 1)
                                .background{
                                    ZStack{
-                                       Circle().foregroundColor( cal.isSameDay(d1: feeling.date ?? Date() , d2: value.date) ? feelingBackgroundColor(feeling.name!) : Color.white.opacity(0))
-                                            .frame(width: screenSize.width / 9, height: screenSize.width / 9 )
+                                       let size = screenSize.width / 9
+                                       
+                                       Circle().foregroundColor( cal.isSameDay(d1: feeling.date ?? Date() , d2: value.date) ? feelingBackgroundColor(feeling.name!) : currentTheme.textGray.opacity(0))
+                                            .frame(width: size, height: size )
                                        Image("chart_feeling_" + String(avg) ) //  + String(feeling.name?.trimFeelings() ?? "")
                                            .resizable()
                                            .scaledToFit()
-                                           .foregroundColor( cal.isSameDay(d1: feeling.date ?? Date() , d2: value.date) ? Color.gray : Color.white.opacity(0))
+                                           .foregroundColor( cal.isSameDay(d1: feeling.date ?? Date() , d2: value.date) ? currentTheme.textGray : currentTheme.text.opacity(0))
                                            //.font(.system(size: screenSize.width / 8, weight: .semibold))
                                            .imageScale(.large)
                                            .clipShape(Circle())
+                                       
+                                      // if let icon = feeling.prothese?.prosthesisIcon {
+                                       if let icon = groupingAndCountingProtheses(date: value.date).first?.key.prosthesisIcon {
+                                           Image(icon)
+                                               .font(.body.bold())
+                                               .foregroundStyle(currentTheme.hightlightColor, currentTheme.textGray)
+                                               .background {
+                                                   ZStack {
+                                                       Circle()
+                                                           .fill(.ultraThickMaterial)
+                                                           .frame(width: screenSize.width / 16, height: screenSize.width / 16 )
+                                                           .shadow(color: .black, radius: 5)
+                                                       
+                                                       Circle()
+                                                           .stroke(currentTheme.text, lineWidth: 1)
+                                                           .frame(width: screenSize.width / 16, height: screenSize.width / 16 )
+                                                   }
+                                               }
+                                               .offset(x: size / 2.5, y: -size / 2.5)
+                                       }
+                                       
+                                       
                                    }
                                }
+                               .onTapGesture(perform: {
+                                   cal.isFeelingSheet.toggle()
+                                   cal.editFeeling = nil
+                                   print("none feeling")
+                                   let calendar = Calendar.current
+                                   var dateComponents = DateComponents()
+                                   dateComponents.year = calendar.component(.year, from: value.date)
+                                   dateComponents.month = calendar.component(.month, from: value.date)
+                                   dateComponents.day = calendar.component(.day, from: value.date)
+                                   dateComponents.hour = calendar.component(.hour, from: Date())
+                                   dateComponents.minute = calendar.component(.minute, from: Date())
+                                   
+                                   cal.addFeelingDate = Calendar.current.date(from: dateComponents)!
+                               })
                                .frame(width: screenSize.width / 9, height: screenSize.width / 9 )
                            
                            VStack{
                                Text("\(value.day)")
                                    .font(.system(size: 10))
-                                   .foregroundColor(.white)
+                                   .foregroundColor(currentTheme.text)
                            }
                            .frame(maxWidth: .infinity)
                            .padding(.vertical, 5)
                            .padding(.horizontal, 10)
-                           .background(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? Color.white.opacity(0.1) : Color.white.opacity(0))
+                           .background(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? currentTheme.textGray.opacity(0.1) : currentTheme.textGray.opacity(0))
+                           .onTapGesture(perform: {
+                               cal.currentDate = value.date
+                           })
                            .cornerRadius(20)
                        }
                        .padding(5)
@@ -157,19 +240,18 @@ struct FeelingCalendarView: View {
                    // none feeling
                    VStack(spacing: 5){
                        Circle()
-                           .strokeBorder(value.date > Date() ? .white.opacity(0.05) : .white.opacity(0.5), lineWidth: 1)
+                           .strokeBorder(value.date > Date() ? currentTheme.textGray.opacity(0.05) : currentTheme.textGray.opacity(0.5), lineWidth: 1)
                            .background(
                                ZStack{
-                                   Circle().foregroundColor( value.date > Date() ? Color.white.opacity(0.05) : Color.white.opacity(0.1))
+                                   Circle().foregroundColor( value.date > Date() ? currentTheme.textGray.opacity(0.05) : currentTheme.textGray.opacity(0.1))
                                    if value.date > Date() {
                                        Text("\(value.day)")
                                           .font(.footnote)
-                                          .foregroundColor(.white.opacity(0.3))
+                                          .foregroundColor(currentTheme.textGray.opacity(0.3))
                                    } else {
-                                       Image("prothesis")
-                                           .imageScale(.large)
+                                       Image("figure.prothese")
                                            .font(.title)
-                                           .foregroundColor(.white.opacity(0.1))
+                                           .foregroundColor(currentTheme.textGray.opacity(0.1))
                                    }
                                }
                            )
@@ -194,12 +276,12 @@ struct FeelingCalendarView: View {
                        VStack{
                            Text(value.date > Date() ? "" : "\(value.day)")
                                .font(.system(size: 10))
-                               .foregroundColor(.white)
+                               .foregroundColor(currentTheme.text)
                        }
                        .frame(maxWidth: .infinity)
                        .padding(.vertical, 5)
                        .padding(.horizontal, 10)
-                       .background(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? Color.white.opacity(0.1) : Color.white.opacity(0))
+                       .background(cal.isSameDay(d1: value.date , d2: cal.currentDate) ? currentTheme.textGray.opacity(0.1) : currentTheme.textGray.opacity(0))
                        .cornerRadius(20)
                        .onTapGesture(perform: {
                            cal.currentDate = value.date
@@ -225,11 +307,11 @@ struct FeelingCalendarView: View {
                 let current = cal.currentDate.dateFormatte(date: "dd.MM.yy", time: "HH:mm")
                 
                 HStack{
-                    Text("Eintragungen vom: ")
-                        .foregroundColor(.white)
+                    Text("Entries from: ")
+                        .foregroundColor(currentTheme.text)
                     Text("\(current.date)")
                         .font(.callout.weight(.semibold))
-                        .foregroundColor(.yellow)
+                        .foregroundColor(currentTheme.hightlightColor)
                     
                     Spacer()
                 }
@@ -252,15 +334,35 @@ struct FeelingCalendarView: View {
                                             .scaledToFit()
                                             .clipShape(Circle())
                                             .frame(width: screenSize.width / 8, height: screenSize.width / 8 )
+
+                                        if let icon = feeling.prothese?.prosthesisIcon {
+                                            Image(icon)
+                                                .font(.body.bold())
+                                                .foregroundStyle(currentTheme.hightlightColor, currentTheme.textGray)
+                                                .background {
+                                                    ZStack {
+                                                        Circle()
+                                                            .fill(.ultraThickMaterial)
+                                                            .frame(width: screenSize.width / 16, height: screenSize.width / 16 )
+                                                            .shadow(color: .black, radius: 5)
+                                                        
+                                                        Circle()
+                                                            .stroke(currentTheme.text, lineWidth: 1)
+                                                            .frame(width: screenSize.width / 16, height: screenSize.width / 16 )
+                                                    }
+                                                }
+                                                .offset(x: (screenSize.width / 8) / 2.5, y: -(screenSize.width / 8) / 2.5)
+                                        }
                                     }
                                     
                                     VStack{
                                         let feel = feeling.date!.dateFormatte(date: "dd.MM.yy", time: "HH:mm")
                                         Text("\(feel.time)")
                                             .font(.caption2)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(currentTheme.text)
                                     }
                                 }
+                                .padding(.top)
                                 .padding(5)
                                 .onTapGesture {
                                     cal.isCalendar = false
@@ -302,7 +404,7 @@ struct FeelingCalendarView: View {
         case "feeling_3": return .yellow
         case "feeling_4": return .orange
         case "feeling_5": return .red
-        default: return Color.white.opacity(0.1)
+        default: return currentTheme.textGray.opacity(0.1)
         }
     }
 }
@@ -311,7 +413,7 @@ struct FeelingCalendarView: View {
 struct FeelingCalendarView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             AddFeelingSheetBody()
                 .environmentObject(AppConfig())
@@ -329,8 +431,6 @@ struct FeelingCalendarView_Previews: PreviewProvider {
         }
     }
 }
-
-
 
 struct ScrollingHStackModifier: ViewModifier {
     

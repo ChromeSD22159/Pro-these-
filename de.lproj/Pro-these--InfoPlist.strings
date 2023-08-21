@@ -1,0 +1,27 @@
+/* Privacy - Calendars Usage Description */
+"NSCalendarsUsageDescription" = "Die Prothesen-App möchte auf Ihren Kalender zugreifen und Einträge erstellen oder löschen.";
+
+/* Privacy - Face ID Usage Description */
+"NSFaceIDUsageDescription" = "Die Prothesen App möchte die App per FaceID entsperren";
+
+/* Privacy - Health Records Usage Description */
+"NSHealthClinicalHealthRecordsShareUsageDescription" = "Die Prothesen App möchte auf Ihre aktiven Messwerte zugreifen";
+
+/* Privacy - Health Share Usage Description */
+"NSHealthShareUsageDescription" = "Die Prothesen App möchte auf Ihre aktiven Messwerte zugreifen";
+
+/* Privacy - Health Update Usage Description */
+"NSHealthUpdateUsageDescription" = "Die Prothesen App möchte auf Ihre aktiven Messwerte zugreifen";
+
+/* Privacy - Location Always and When In Use Usage Description */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+
+/* Privacy - Location Always Usage Description */
+"NSLocationAlwaysUsageDescription" = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+
+/* Privacy - Location When In Use Usage Description */
+"NSLocationWhenInUseUsageDescription" = "Prothesen App benötigt Zugriff auf ihren Standort, um ihre Workouts nachzuverfolgen";
+
+/* Privacy - Photo Library Additions Usage Description */
+"NSPhotoLibraryAddUsageDescription" = "Prothesen App  möchte Schnappschüsse in Ihrer Foto-App speichern";
+

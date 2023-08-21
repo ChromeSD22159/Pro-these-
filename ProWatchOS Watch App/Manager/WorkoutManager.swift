@@ -461,23 +461,6 @@ extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
 }
 
 
-struct ChartDataPacked: Identifiable {
-    var id = UUID()
-    var avg: Int
-    var avgName: String
-    var weekNr: Int
-    var data: [ChartData]
-    
-}
-
-struct ChartData: Identifiable, Hashable {
-    var id = UUID()
-    var date: Date
-    var value: Double
-}
-
-
-
 enum WatchTab: String {
     case steps = "Steps"
     case stopWatch = "StopWatch"
@@ -493,3 +476,23 @@ enum WatchTab: String {
         }
     }
 }
+
+/*
+ 
+ 
+ struct ChartDataPacked: Identifiable {
+     var id = UUID()
+     var avg: Int
+     var avgName: String
+     var weekNr: Int
+     var data: [ChartData]
+     
+ }
+
+
+ struct ChartData: Identifiable, Hashable {
+     var id = UUID()
+     var date: Date
+     var value: Double
+ }
+ */

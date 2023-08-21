@@ -12,12 +12,19 @@ class MoodCalendar: ObservableObject {
     @Published var currentMonth:Int = 0
     @Published var currentDate: Date = Date()
     @Published var currentDates: [DateValue] = []
-   
     
+    // Calendar Control
+    @Published var selectedCalendarDate = Date()
+    @Published var showCalendarPicker = false
+    
+    // Feeling Control
+    @Published var selectedFeelingDate = Date()
+    @Published var showFeelingPicker = false
     
     // MARK: - Add Feeling State for the Sheet
     @Published var isFeelingSheet = false
     @Published var selectedFeeling = ""
+    @Published var prothese: Prothese?
     @Published var addFeelingDate: Date = Date()
     @Published var showDatePicker = false
     
@@ -80,9 +87,63 @@ class MoodCalendar: ObservableObject {
         
         /// Get the first day of the Month
         let firstWeekDay = calendar.component(.weekday, from: days.first?.date ?? Date())
+       
         
-        for _ in 0..<(firstWeekDay - 1) - 1 {
-            days.insert(DateValue(day: -1, date: Date()), at: 0)
+        if firstWeekDay == 1 {
+            for _ in 1...6 {
+                days.insert(DateValue(day: -1, date: Date()), at: 0)
+            }
+        } else {
+            for _ in 1..<(firstWeekDay) - 1 {
+                days.insert(DateValue(day: -1, date: Date()), at: 0)
+            }
+        }
+        
+        return days
+    }
+    
+    // MARK: - Get the Current Month by the Date
+    func getCurrentMonthByDate() -> Date {
+        let calendar = Calendar.current
+        
+        let firstDayOfMonth = calendar.date(from: Calendar.current.dateComponents([.year, .month], from: self.selectedCalendarDate))
+        
+        if calendar.isDateInThisMonth(firstDayOfMonth!) {
+            self.currentDate = Date()
+            
+            return Date()
+        } else {
+            self.currentDate = firstDayOfMonth!
+            return firstDayOfMonth!
+        }
+        
+    }
+    
+    // MARK: - Extract the month
+    func extractMonthByDate() -> [DateValue] {
+       
+        let calendar = Calendar.current
+        
+        /// get current month
+        let currentMonth = getCurrentMonthByDate()
+        
+        /// get only the daynumber and save it as Model Array
+        var days = currentMonth.getAllDatesdeomMonth().compactMap{ date -> DateValue in
+            let day = calendar.component(.day, from: date)
+            return DateValue(day: day, date: date)
+        }
+        
+        /// Get the first day of the Month
+        let firstWeekDay = calendar.component(.weekday, from: days.first?.date ?? Date())
+
+        if firstWeekDay == 1 {
+            for _ in 1...6 {
+                days.insert(DateValue(day: -1, date: Date()), at: 0)
+            }
+        } else {
+            for _ in 1..<(firstWeekDay) - 1 {
+                days.insert(DateValue(day: -1, date: Date()), at: 0)
+            }
         }
         
         return days
@@ -91,33 +152,5 @@ class MoodCalendar: ObservableObject {
     // MARK: - check if two dates are the same day
     func isSameDay(d1: Date, d2: Date) -> Bool {
        return Calendar.current.isDate(d1, inSameDayAs: d2)
-    }
-    
-    // MARK: - check for reminder notification is already registerd, remove all reminders and set a new random reminder
-    func checkNotificationExistAndRegister(identifier: String) {
-        let center = UNUserNotificationCenter.current()
-        var note: [String] = []
-        
-        center.getPendingNotificationRequests(completionHandler: { requests in
-            for request in requests {
-                note.append(request.identifier)
-            }
-        })
-        
-        PushNotificationManager().removeNotification(identifier: "PROTHESE_MOOD_REMINDER_DAILY_1")
-        PushNotificationManager().removeNotification(identifier: "PROTHESE_MOOD_REMINDER_DAILY_2")
-        
-        if (note.first(where: { request in return request == identifier }) != nil) {
-            let randomNotification = Int.random(in: 1...2)
-            
-            if randomNotification == 1 {
-                let reminder1 = PushNotifications().MoodReminderDaily1
-                PushNotificationManager().PushNotificationByDate(identifier: reminder1["identifier"]!, title: reminder1["titel"]!, body: reminder1["body"]!, triggerHour: 19, triggerMinute: 30, repeater: true, url: reminder1["url"]!)
-            }
-            if randomNotification == 2 {
-                let reminder2 = PushNotifications().MoodReminderDaily2
-                PushNotificationManager().PushNotificationByDate(identifier: reminder2["identifier"]!, title: reminder2["titel"]!, body: reminder2["body"]!, triggerHour: 19, triggerMinute: 30, repeater: true, url: reminder2["url"]!)
-            }
-        }
     }
 }

@@ -8,12 +8,13 @@
 import Foundation
 import StoreKit
 import SwiftUI
+import WidgetKit
 
 @MainActor
 class PurchaseManager: NSObject, ObservableObject {
     private let entitlementManager: EntitlementManager
     
-    private let productIds = ["0000", "1000", "9999", "9990"]
+    private let productIds = ["102", "103", "7777"]//["0000", "1000", "9999", "9990"]
 
     private var updates: Task<Void, Never>? = nil
     
@@ -32,7 +33,7 @@ class PurchaseManager: NSObject, ObservableObject {
     @Published
     private(set) var products: [Product] = []
     private var productsLoaded = false
-
+    
     func loadProducts() async throws {
         guard !self.productsLoaded else { return }
         self.products = try await Product.products(for: productIds)
@@ -46,7 +47,7 @@ class PurchaseManager: NSObject, ObservableObject {
         case let .success(.verified(transaction)):
             await transaction.finish()
             await self.updatePurchasedProducts()
-        case let .success(.unverified(_, error)):
+        case .success(.unverified(_, _)):
             break
         case .pending:
             break
@@ -59,7 +60,7 @@ class PurchaseManager: NSObject, ObservableObject {
     
     private func observeTransactionUpdates() -> Task<Void, Never> {
         Task(priority: .background) { [unowned self] in
-            for await verificationResult in Transaction.updates {
+            for await _ in Transaction.updates {
                 // Using verificationResult directly would be better
                 // but this way works for this tutorial
                 await self.updatePurchasedProducts()
@@ -73,7 +74,9 @@ class PurchaseManager: NSObject, ObservableObject {
     ///
     ///
     @Published private(set) var purchasedProductIDs = Set<String>()
-
+    
+    @AppStorage("hasProduct", store: UserDefaults(suiteName: "group.FK.Pro-these-")) var hasProduct: String = ""
+    
     var hasUnlockedPro: Bool {
        return !self.purchasedProductIDs.isEmpty
     }
@@ -85,16 +88,19 @@ class PurchaseManager: NSObject, ObservableObject {
             }
 
             if transaction.revocationDate == nil {
+                hasProduct = transaction.productID
                 self.purchasedProductIDs.insert(transaction.productID)
+                WidgetCenter.shared.reloadAllTimelines()
             } else {
+                hasProduct = ""
                 self.purchasedProductIDs.remove(transaction.productID)
+                WidgetCenter.shared.reloadAllTimelines()
             }
         }
         
+        WidgetCenter.shared.reloadAllTimelines()
+        
         self.entitlementManager.hasPro = !self.purchasedProductIDs.isEmpty
-        
-        
-        print("has PRo: \(self.entitlementManager.hasPro)")
     }
 }
 

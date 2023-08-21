@@ -55,36 +55,36 @@ class EventManager: ObservableObject {
     @Published var addContactEmail = ""
     @Published var addContactEventTitel = ""
     @Published var addContactIcon: String = "person.crop.circle.badge.xmark"
-    @Published var addContactTitel: String = "Klinikum"
+    @Published var addContactTitel: String = "Others"
     
     @Published var isthisWeekExpand = true
     @Published var isthisMonthExpand = true
     @Published var isPastExpand = false
     @Published var isContactExpand = true
     
-    @Published var error = ""
+    @Published var error: LocalizedStringKey = ""
     
     @Published var contactTypes = [
-        ( type: "Klinikum", icon: "bandage.fill" , image: "Hospital"),
-        ( type: "Fachklinik", icon: "bandage.fill" , image: "Hospital"),
-        ( type: "Hausarzt", icon: "bandage.fill" , image: "Doctor"),
-        ( type: "Orthopäde", icon: "bandage.fill" , image: "Doctor"),
-        ( type: "Krankenkasse", icon: "bolt.heart.fill" , image: "Illustration"),
-        ( type: "Sanitätshaus", icon: "figure.roll" , image: "Physio"),
-        ( type: "Physioterapeut", icon: "figure.run" , image: "Physio"),
-        ( type: "Psychiater", icon: "brain.head.profile" , image: "Doctor"),
-        ( type: "Psychologe", icon: "brain.head.profile" , image: "Doctor"),
-        ( type: "Sonstiges", icon: "questionmark.app.dashed" , image: "Illustration"),
+        ( type: "Hospital", name: LocalizedStringKey("Hospital"), icon: "bandage.fill" , image: "Hospital"),
+        ( type: "Specialist Clinic", name: LocalizedStringKey("Specialist Clinic"), icon: "bandage.fill" , image: "Hospital"),
+        ( type: "family doctor", name: LocalizedStringKey("family doctor"), icon: "bandage.fill" , image: "Doctor"),
+        ( type: "orthopedist", name: LocalizedStringKey("orthopedist"), icon: "bandage.fill" , image: "Doctor"),
+        ( type: "Health insurance", name: LocalizedStringKey("Health insurance"), icon: "bolt.heart.fill" , image: "Illustration"),
+        ( type: "Medical supply store", name: LocalizedStringKey("Medical supply store"), icon: "figure.roll" , image: "Physio"),
+        ( type: "Physiotherapist", name: LocalizedStringKey("Physiotherapist"), icon: "figure.run" , image: "Physio"),
+        ( type: "Psychiatrist", name: LocalizedStringKey("Psychiatrist"), icon: "brain.head.profile" , image: "Doctor"),
+        ( type: "Psychologist", name: LocalizedStringKey("Psychologist"), icon: "brain.head.profile" , image: "Doctor"),
+        ( type: "Others", name: LocalizedStringKey("Others"), icon: "questionmark.app.dashed" , image: "Illustration"),
     ]
     
     @Published var alarms = [ 
-        ( text: "10 Minuten vorher", notification: -86400, ekAlarm: -600 ),     // N: 1t    K: 10min
-        ( text: "30 Minuten vorher", notification: -86400, ekAlarm: -1800 ),    // N: 1t    K: 30min
-        ( text: "1 Stunde vorher", notification: -86400, ekAlarm: -3600 ),      // N: 1t    K: 1h
-        ( text: "2 Stunden vorher", notification: -86400, ekAlarm: -7200 ),     // N: 1t    K: 2h
-        ( text: "1 Tag vorher", notification: -172800, ekAlarm: -86400 ),       // N: 2t    K: 1t
-        ( text: "2 Tage vorher", notification: -259200, ekAlarm: -172800 ),     // N: 3t    K: 2t
-        ( text: "3 Tage vorher", notification: -345600, ekAlarm: -259200 )      // N: 4t    K: 3t
+        (type: "10 minutes before", text: LocalizedStringKey("10 minutes before"), notification: -86400, ekAlarm: -600 ),     // N: 1t    K: 10min
+        (type: "30 minutes before", text: LocalizedStringKey("30 minutes before"), notification: -86400, ekAlarm: -1800 ),    // N: 1t    K: 30min
+        (type: "1 hours before", text: LocalizedStringKey("1 hours before"), notification: -86400, ekAlarm: -3600 ),      // N: 1t    K: 1h
+        (type: "2 hours before", text: LocalizedStringKey("2 hours before"), notification: -86400, ekAlarm: -7200 ),     // N: 1t    K: 2h
+        (type: "1 day before", text: LocalizedStringKey("1 day before"), notification: -172800, ekAlarm: -86400 ),       // N: 2t    K: 1t
+        (type: "2 days before", text: LocalizedStringKey("2 days before"), notification: -259200, ekAlarm: -172800 ),     // N: 3t    K: 2t
+        (type: "3 days before", text: LocalizedStringKey("3 days before"), notification: -345600, ekAlarm: -259200 )      // N: 4t    K: 3t
     ]
     
     func addContact(){
@@ -100,7 +100,6 @@ class EventManager: ObservableObject {
             try PersistenceController.shared.container.viewContext.save()
             self.isAddContactSheet = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.addContactIcon = ""
                 self.addContactIcon = ""
                 self.addContactName = ""
                 self.addContactPhone = ""
@@ -118,12 +117,19 @@ class EventManager: ObservableObject {
         contact.name = self.addContactName
         contact.phone = self.addContactPhone
         contact.mail = self.addContactEmail
+        contact.icon = self.addContactIcon
         contact.titel = self.addContactTitel
         
         do {
             try PersistenceController.shared.container.viewContext.save()
             
             completion(true)
+            
+            self.addContactIcon = ""
+            self.addContactName = ""
+            self.addContactPhone = ""
+            self.addContactEmail = ""
+            self.addContactTitel = ""
         } catch {
             let nsError = error as NSError
             completion(false)
@@ -147,13 +153,13 @@ class EventManager: ObservableObject {
     
     func addEvent(){
         guard addEventTitel != "" else {
-            return error = "Bitte gebe eine Terminbeschreibung ein!"
+            return error = LocalizedStringKey("Please enter an appointment description!")
         }
         
         guard addEventContact != nil else {
-            return error = "Bitte gebe einen Kontakt an!"
+            return error = LocalizedStringKey("Please provide a contact!")
         }
- 
+        
         let newEvent = Event(context: viewContext)
         newEvent.eventID = UUID().uuidString
         newEvent.titel = addEventTitel
@@ -177,24 +183,15 @@ class EventManager: ObservableObject {
             })
             try PersistenceController.shared.container.viewContext.save()
             if let unwrapped = addEventContact?.name! {
-                guard !sendEventNotofication else {
-                    let bodyText = "Du hast am \(convertDateToNotoficationString(addEventStarDate))Uhr einen Termin bei \(String(describing: unwrapped)) ✌️. Komm vorbei und sehe dir deine Notizen an. 😉"
+                guard !sendEventNotofication else {                    
+                    let loc = NSLocalizedString("You have an appointment at %@ on %@ at %@ ✌️. Come by and have a look at your notes. 😉", comment: "")
 
                     PushNotificationManager().PushNotificationByAddEvent2(
                         identifier: newEvent.eventID!,
                         title: AppConfig().AppName,
-                        body: bodyText,
+                        body: String(format: loc, String(describing: unwrapped), convertDateToNotoficationString(addEventStarDate).date, convertDateToNotoficationString(addEventStarDate).time ),
                         triggerDate: Calendar.current.date(byAdding: .second, value: alarms.first(where: { $0.ekAlarm == self.addEventAlarm })!.notification, to: addEventStarDate)!,
                         repeater: false)
-                    
-                   // print(alarms.first(where: { $0.ekAlarm == self.addEventAlarm })!)
-                    
-                    /*PushNotificationManager().PushNotificationByAddEvent(
-                        identifier: newEvent.eventID!,
-                        title: AppConfig().AppName,
-                        body: bodyText,
-                        triggerDate: addEventStarDate,
-                        repeater: false)*/
                     
                     return
                 }
@@ -287,14 +284,17 @@ class EventManager: ObservableObject {
             // Search Relations in this Contact and delete all Notifications
             for event in contact.events?.allObjects as? [Event] ?? [] {
                 PushNotificationManager().removeNotification(identifier: event.eventID ?? "Identifier")
+                self.deleteEvent(event)
             }
             
             // Search Relations in this Contact and delete all Notifications
             for recurringEvent in contact.recurringEvents?.allObjects as? [RecurringEvents] ?? [] {
                 PushNotificationManager().removeNotification(identifier: recurringEvent.identifier ?? "Identifier")
+                self.deleteRecurringEvents(recurringEvent)
             }
             
             viewContext.delete(contact)
+            
             do {
                 try viewContext.save()
                 fetchContacts()
@@ -355,19 +355,10 @@ class EventManager: ObservableObject {
         }
     }
 
-    func convertDateToNotoficationString(_ d: Date) -> String {
-        let dFormatter = DateFormatter()
-        dFormatter.locale = Locale(identifier: "de_DE")
-        dFormatter.dateFormat = "dd.MMM.yyyy"
-        let newDate = dFormatter.date(from: dFormatter.string(from: d))!
+    func convertDateToNotoficationString(_ d: Date) -> (date: String, time: String) {
+        let formattedDate = d.dateFormatte(date: "dd. MMM yyyy", time: "HH:mm")
         
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "de_DE")
-        formatter.dateFormat =  "HH:mm"
-        let newTime = formatter.date(from: formatter.string(from: d))!
-        
-        print("\(dFormatter.string(from: newDate)) um \(formatter.string(from: newTime))")
-        return "\(dFormatter.string(from: newDate)) um \(formatter.string(from: newTime))"
+        return (date: formattedDate.date, time: formattedDate.time)
     }
     
     func getImage(_ img: String) -> String {
@@ -376,7 +367,7 @@ class EventManager: ObservableObject {
     
     func getIcon(_ input: String) -> String {
         if input == "other" {
-            return self.contactTypes.first(where: { $0.type == "Sonstiges" })?.icon ?? "person.crop.circle.badge.xmark"
+            return self.contactTypes.first(where: { $0.type == "Others" })?.icon ?? "person.crop.circle.badge.xmark"
         } else {
             return self.contactTypes.first(where: { $0.type == input })?.icon ?? "person.crop.circle.badge.xmark"
         }

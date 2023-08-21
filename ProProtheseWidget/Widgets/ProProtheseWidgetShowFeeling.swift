@@ -52,6 +52,11 @@ struct ShowFeelingSimpleEntry: TimelineEntry {
 }
 
 struct ProProtheseWidgetShowFeelingEntryView : View {
+
+    private var currentTheme: Theme {
+        return ThemeManager().currentTheme()
+    }
+    
     @Environment(\.widgetFamily) var widgetFamily
     var entry: ShowFeelingProvider.Entry
 
@@ -59,21 +64,32 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
     
     @State var week: [(weekday: String, date: Date)] = []
     
+    var isFeelingToday: Bool {
+        
+        let today = Date()
+        
+        let entry = self.entry.feelings.first(where: { return isSameDay(d1: $0.date ?? Date(), d2: today) })
+        
+        return (entry != nil) ? true : false
+    }
+    
     var body: some View {
         ZStack {
-            Link(destination: entry.url!) {
+            Link(destination: URL(string: isFeelingToday ? "ProProthese://showFeeling" : "ProProthese://addFeeling")!) {
                 
-                LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
+                //LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
+                
+                currentTheme.gradientBackground(nil)
                 
                 switch widgetFamily {
                 case .systemSmall:
                     ViewThatFits {
                         
                         VStack(alignment: .center, spacing: 5){
-                            Text("Hey, Wie fühlst du dich heute?")
+                            Text("Hey, how are you feeling today?")
                                 .font(.caption.bold())
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
+                                .foregroundColor(currentTheme.hightlightColor)
                             
                             Spacer()
                             
@@ -83,6 +99,7 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
                         
                     }
                     .padding()
+                    .widgetURL(URL(string: isFeelingToday ? "ProProthese://showFeeling" : "addFeeling"))
                     
                 case .systemMedium:
                     ViewThatFits {
@@ -94,18 +111,20 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
                             
                             HStack {
                                 Text("Pro Prothese")
+                                    .foregroundColor(currentTheme.hightlightColor)
                                     .font(.caption.bold())
                                 
                                 Spacer()
                                 
                                 Text("\(weekday), \(date)")
                                     .font(.caption.bold())
+                                    .foregroundColor(currentTheme.hightlightColor)
                             }
                             
                             HStack{
-                                Text("So fühlst du dich heute mit deiner Prothese.")
+                                Text("This is how you feel today with your prosthesis.")
                                     .font(.caption2)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(currentTheme.textGray)
                                 
                                 Spacer()
                             }
@@ -121,7 +140,7 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
                         
                     }
                     .padding()
-                    .widgetURL(entry.url)
+                    .widgetURL(URL(string: isFeelingToday ? "ProProthese://showFeeling" : "addFeeling"))
                 default:
                     VStack {
                         Text(entry.date, style: .time)
@@ -139,7 +158,7 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
     @ViewBuilder // MARK: - Calendar Day Circle
     func DayButton(_ weekday: String, _ date: Date, _ feelings: [Feeling]) -> some View {
         VStack(alignment: .center, spacing: 2) {
-            Text("\(weekday).")
+            Text("\(weekday)")
                 .font(.caption2)
                 .foregroundColor(.gray)
             
@@ -158,17 +177,17 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
                             .foregroundColor(Color.gray)
                             .imageScale(.large)
                             .clipShape(Circle())
-                            .widgetURL(URL(string: "ProProthese://showFeeling"))
+                            
                     }
                     
                 } else {
                     Circle()
-                        .fill(.white.opacity(0.1))
+                        .fill(currentTheme.text.opacity(0.1))
                         .scaledToFit()
                         .clipShape(Circle())
                     
                     Image(systemName: "plus")
-                        .foregroundColor(.white)
+                        .foregroundColor(currentTheme.hightlightColor)
                         .widgetURL(URL(string: "ProProthese://addFeeling"))
                 }
                 
@@ -179,7 +198,7 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
             
             Text(date.dateFormatte(date: "dd", time: "").date)
                 .font(.caption2)
-                .foregroundColor(.gray)
+                .foregroundColor(currentTheme.textGray)
         }
     }
     
@@ -197,22 +216,9 @@ struct ProProtheseWidgetShowFeelingEntryView : View {
         
         return ArrWeek
     }
-    
+
     func convertDateToDayNames(_ date: Date) -> String {
-        
-        let day = date.dateFormatte(date: "EEEE", time: "HH:mm").date
-        
-        switch day {
-        case "Monday": return "Mo"
-        case "Tuesday": return "Di"
-        case "Wednesday": return "Mi"
-        case "Thursday": return "Do"
-        case "Friday": return "Fr"
-        case "Saturday": return "Sa"
-        case "Sunday": return "So"
-        default:
-            return ""
-        }
+       return date.dateFormatte(date: "EE", time: "HH:mm").date
     }
     
     func isSameDay(d1: Date, d2: Date) -> Bool {
@@ -234,8 +240,8 @@ struct ProProtheseWidgetShowFeeling: Widget {
             ProProtheseWidgetShowFeelingEntryView(entry: entry)
         }
         .supportedFamilies(supportedFamilies)
-        .configurationDisplayName("Feelings im Überblick")
-        .description("Sehe deine Feelings.")
+        .configurationDisplayName("Feelings at a glance")
+        .description("See your feelings")
       
     }
 }

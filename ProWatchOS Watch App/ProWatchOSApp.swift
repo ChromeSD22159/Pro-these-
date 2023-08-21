@@ -29,6 +29,7 @@ struct ProWatchOS_Watch_AppApp: App {
                 .environmentObject(extensionDelegate)
                 .environment(\.locale, Locale(identifier: "de"))
                 .onOpenURL { url in
+                    print(url)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                         if url.scheme == "ProProthese" {
                             deepLink = url

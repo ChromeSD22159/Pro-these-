@@ -11,23 +11,35 @@ import LocalAuthentication
 struct LoginScreen: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var vm: LoginViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     private var pinLimit: Int = 4
+    
     @State var numbersFirst:[String] = []
+    
     @State var numbersSecond:[String] = []
+    
     var pinFirst: String {
         return numbersFirst.joined()
     }
+    
     var pinSecond: String {
         return numbersSecond.joined()
     }
+    
     @State var message: String = ""
+    
     @State var titel = ""
    
     @State var attempts: Int = 0
     
     var body: some View {
         ZStack {
-            AppConfig.shared.backgroundRadial.ignoresSafeArea()
+            currentTheme.radialBackground(unitPoint: nil, radius: nil).ignoresSafeArea()
             
             if vm.pin {
                 EntryPin()
@@ -40,6 +52,7 @@ struct LoginScreen: View {
             }
         }
     }
+    
     @ViewBuilder
     func EntryPin() -> some View{
         VStack(alignment: .center){
@@ -54,7 +67,7 @@ struct LoginScreen: View {
                     CodeEntry()
                 }
                 
-                Text("Code eingeben")
+                Text("Enter the code")
                 .onTapGesture{
                     withAnimation{
                         vm.codeBlock.toggle()
@@ -74,10 +87,11 @@ struct LoginScreen: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
+    
     @ViewBuilder
     func CodeEntry() -> some View {
         if !vm.pin {
-            Text("Pin erstellen")
+            Text("Create Pin Code")
         }
        
         VStack{
@@ -105,7 +119,7 @@ struct LoginScreen: View {
                 ZStack {
 
                     Circle()
-                        .strokeBorder(.white, lineWidth: 2)
+                        .strokeBorder(currentTheme.text, lineWidth: 2)
                         .frame(width: 50, height: 50)
                     
                     Text("Del")
@@ -123,7 +137,7 @@ struct LoginScreen: View {
                 ZStack {
 
                     Circle()
-                        .strokeBorder(.white, lineWidth: 2)
+                        .strokeBorder(currentTheme.text, lineWidth: 2)
                         .frame(width: 50, height: 50)
                     
                     Text("Reset")
@@ -150,7 +164,7 @@ struct LoginScreen: View {
         ZStack {
 
             Circle()
-                .strokeBorder(.white, lineWidth: 2)
+                .strokeBorder(currentTheme.text, lineWidth: 2)
                 .frame(width: size, height: size)
             
             Text("\(int)")
@@ -239,6 +253,11 @@ struct Shake: GeometryEffect {
 struct FaceIDLoginView: View {
     @Binding var appUnlocked: Bool
     @EnvironmentObject var vm: LoginViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var body: some View {
         VStack(spacing: 24) {
            
@@ -251,12 +270,12 @@ struct FaceIDLoginView: View {
                         .resizable()
                         .frame(width: 50, height: 50)
                     
-                    Text("Login mit FaceID")
+                    Text("Login with Face ID")
                         .fontWeight(.semibold)
                 }
                 .padding()
                 .background(Material.ultraThinMaterial)
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             })
         }

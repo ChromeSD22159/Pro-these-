@@ -74,7 +74,7 @@ struct ProProtheseWatchComplicationEntryView : View {
             case .accessoryCircular:
                 VStack(spacing: 1) {
                     
-                    let gradient = Gradient(colors: [.white.opacity(0.5), AppConfig.shared.background])
+                    let gradient = Gradient(colors: [.white.opacity(0.5), Theme.blue.backgroundColor])
                     
                     Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                         Text("\(entry.steps.current)")
@@ -112,7 +112,7 @@ struct ProProtheseWatchComplicationEntryView : View {
                     VStack(alignment: .leading, spacing: 5) {
                         
                         HStack {
-                            Image("prothesis")
+                            Image("figure.prothese")
                                 .imageScale(.large)
                                 .font(.system(size: 30))
                                 .foregroundColor(.white)
@@ -156,7 +156,7 @@ struct ProProtheseWatchComplicationEntryView : View {
                         Text("\(entry.steps.current)")
                             .font(.system(size: 10).bold())
                             .widgetLabel{
-                                Image("prothesis")
+                                Image("figure.prothese")
                                     .imageScale(.large)
                                     .font(.system(size: 30))
                             }
@@ -220,7 +220,7 @@ struct ProProtheseWatchComplication: Widget {
                 }
         }
         .supportedFamilies(supportedFamilies)
-        .configurationDisplayName("Schritte heute")
+        .configurationDisplayName("Steps today")
         .description("This is an example widget.")
     }
 }

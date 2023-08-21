@@ -1,21 +1,30 @@
 /* No comment provided by engineer. */
-"Kein Kontakt vorhanden!" = "Kein Kontakt vorhanden!";
+"blue" = "Blue";
 
 /* No comment provided by engineer. */
-"Kontakt" = "Kontakt";
+"green" = "Green";
+
+/* No comment provided by engineer. */
+"Kein Kontakt vorhanden!" = "No contact available!";
+
+/* No comment provided by engineer. */
+"Kontakt" = "Contact";
 
 /* No comment provided by engineer. */
 "Kontakt \n hinzufügen" = "Kontakt \n hinzufügen";
 
 /* No comment provided by engineer. */
-"Kontakt hinzufügen" = "Kontakt hinzufügen";
+"Kontakt hinzufügen" = "Add Contact";
 
 /* No comment provided by engineer. */
-"Unbegrenzt Kontakten Verwalten" = "Unbegrenzt Kontakten Verwalten";
+"orange" = "Orange";
 
 /* No comment provided by engineer. */
-"Wöchentlich" = "Wöchentlich";
+"Unbegrenzt Kontakten Verwalten" = "Manage unlimited contacts";
 
 /* No comment provided by engineer. */
-"Zeit:" = "Zeit:";
+"Wöchentlich" = "Weekly";
+
+/* No comment provided by engineer. */
+"Zeit:" = "Time:";
 

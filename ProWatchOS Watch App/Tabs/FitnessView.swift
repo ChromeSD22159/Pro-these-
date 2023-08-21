@@ -29,13 +29,13 @@ struct FitnessView: View {
                     
                 }, label: {
                     HStack {
-                        Image("prothesis")
+                        Image("figure.prothese")
                             .imageScale(.large)
                             .font(.system(size: 30))
                             .foregroundColor(.yellow)
                             .padding(.trailing, 10)
                         
-                        Text("Beende den Timer auf deinem iPhone.")
+                        Text("Stop the timer on your iPhone.")
                             .font(.caption2)
                     }
                 })
@@ -52,7 +52,7 @@ struct FitnessView: View {
                 } else {
                     // no timer runs
                     HStack {
-                        Toggle("GPS Aufzeichnung:", isOn: $workoutManager.trackGPS)
+                        Toggle("GPS recording:", isOn: $workoutManager.trackGPS)
                     }
                     
                     Spacer()
@@ -61,7 +61,7 @@ struct FitnessView: View {
                         workoutManager.selectedWorkout = .walking
                     }, label: {
                         HStack {
-                            Image("prothesis")
+                            Image("figure.prothese")
                                 .imageScale(.large)
                                 .font(.system(size: 30))
                                 .foregroundColor(.yellow)

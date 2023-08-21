@@ -9,28 +9,33 @@ import SwiftUI
 import WidgetKit
 
 struct SettingsDeteilsView: View {
-    var titel: String
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    var titel: LocalizedStringKey
     var Options:[Options]
     var body: some View {
         ZStack {
-            AppConfig().backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 20){
+                VStack(spacing: 10){
                     HStack{
                         Text(titel)
-                            .foregroundColor(.white)
+                            .foregroundColor(currentTheme.text)
                     }
+                    .padding(.bottom)
                     
                     ForEach(Options, id: \.id){ s in
-                        
-                        SettingToggleButton(image: s.icon, toggleDescrition: s.desc, info: s.info, inVisible: s.inVisible, storeBinding: s.binding)
+                        SettingToggleButton(image: s.icon, toggleDescrition: s.desc, info: s.info, proFeature: s.proFeature, storeBinding: s.binding)
                     }
                     
                     Spacer()
                     
-                    copyright()
+                    copyright(isAuthenticating: .constant(false), showDebugField: .constant(false), password: .constant(""))
                     
                 }
                 .padding(.top, 80)
@@ -50,7 +55,7 @@ struct SettingsDeteilsView_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             VStack{
                 SettingsDeteilsView(titel: "Page Header", Options: settings)

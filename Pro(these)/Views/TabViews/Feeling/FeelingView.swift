@@ -7,14 +7,22 @@
 
 import SwiftUI
 import CoreData
+import WidgetKit
 
 struct FeelingView: View {
-    
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+
+    @EnvironmentObject var pushNotificationManager: PushNotificationManager
     @EnvironmentObject var cal: MoodCalendar
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var entitlementManager: EntitlementManager
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject var themeManager: ThemeManager
     
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     @FetchRequest(sortDescriptors: [ SortDescriptor(\.date) ]) var listFeelings: FetchedResults<Feeling>
     
     @Namespace var bottomID
@@ -23,40 +31,153 @@ struct FeelingView: View {
    
     @State var attempts: Int = 0
     @State var isScreenShotSheet = false
+    
+    private var dateClosedRange: ClosedRange<Date> {
+       let min = Calendar.current.date(byAdding: .year, value: -5, to: Date())!
+       let max = Calendar.current.date(byAdding: .hour, value: 1, to: Date())!
+       return min...max
+    }
+    
+    @State var showTimePicker = false
     var body: some View {
-        VStack(spacing: 20){
-            
-            header()
-            
-            if cal.isCalendar {
-                ScrollView(showsIndicators: false, content: {
-                    
-                    FeelingCalendarView(feelings: listFeelings)
-                    
-                })
+        
+        ZStack {
+            VStack(spacing: 20){
                 
-                Spacer()
-            } else {
-                FeelingListView(listFeelings: listFeelings)
+                header()
+                
+                GlockRow()
+                
+                if cal.isCalendar {
+                    FeelingCalendarView(feelings: listFeelings)
+                } else {
+                    FeelingListView(listFeelings: listFeelings)
+                }
+                
             }
-
+            .blur( radius: cal.showCalendarPicker ? 4 : 0)
+            
+            if cal.showCalendarPicker {
+               VStack {
+                   ZStack {
+                       currentTheme.textBlack.opacity(0.5).ignoresSafeArea()
+                       
+                       VStack(spacing: 20) {
+                           Spacer()
+                           
+                           HStack {
+                               Spacer()
+                               
+                               Button(action: {
+                                   withAnimation(.easeInOut) {
+                                       cal.showCalendarPicker = false
+                                   }
+                               }, label: {
+                                   Image(systemName: "xmark")
+                                       .foregroundColor(currentTheme.text)
+                               })
+                           }
+                           .padding(.horizontal, 50)
+                           
+                           DatePicker(
+                               "",
+                               selection: $cal.selectedCalendarDate,
+                               in: dateClosedRange,
+                               displayedComponents: .date
+                           )
+                           .labelsHidden()
+                           .datePickerStyle(.wheel)
+                           .background(.ultraThinMaterial)
+                           .cornerRadius(20)
+                           .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                           
+                           Spacer()
+                       }
+                   }
+                   
+                   Spacer()
+               }
+               
+           }
         }
-        .onAppear{
-            cal.checkNotificationExistAndRegister(identifier: "PROTHESE_MOOD_REMINDER_DAILY_1")
+        .onAppear {
+            cal.selectedCalendarDate = Date()
             cal.currentDate = Date()
             cal.currentDates = cal.extractMonth()
-        }
-        // MARK: - Set Current Month to the selected Date and Extract the current Month
-        .onChange(of: cal.currentMonth, perform: { value in
-            cal.currentDate = cal.getCurrentMonth()
-            cal.currentDates = cal.extractMonth()
-            
-        })
+       }
+        .onChange(of: cal.selectedCalendarDate, perform: { (value) in
+           cal.selectedCalendarDate = value
+           cal.currentDate = value
+           cal.currentDates = cal.extractMonthByDate()
+           withAnimation(.easeInOut){
+               cal.showCalendarPicker = false
+           }
+       })
+        
         // MARK: - Sheet
-        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $cal.isFeelingSheet, onDismiss: {}, content: {
+        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $cal.isFeelingSheet, onDismiss: {
+            // Show InterstitialSheet if not Pro
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                if !appConfig.hasPro {
+                       ads.showInterstitial.toggle()
+                }
+            })
+        }, content: {
             AddFeelingSheetBody()
         })
         
+    }
+    
+    @ViewBuilder
+    func GlockRow() -> some View {
+        HStack(spacing: 10) {
+            Spacer()
+            
+            
+            HStack(spacing: 10) {
+                Button(action: {
+                    withAnimation(.easeInOut) {
+                        if appConfig.hasPro {
+                            appConfig.PushNotificationDailyMoodRemembering.toggle()
+                        } else {
+                            appConfig.PushNotificationDailyMoodRemembering = true
+                        }
+                    }
+                }, label: {
+                    Image(systemName: appConfig.PushNotificationDailyMoodRemembering ? "bell" : "bell.slash")
+                        .padding(.vertical, 5)
+                        .font(.title3)
+                        .foregroundColor( appConfig.hasPro ? appConfig.PushNotificationDailyMoodRemembering ? currentTheme.hightlightColor : currentTheme.textGray : currentTheme.textGray)
+                })
+                .disabled(!appConfig.hasPro)
+               
+                
+                if appConfig.PushNotificationDailyMoodRemembering {
+                    Button {
+                        withAnimation {
+                            showTimePicker.toggle()
+                        }
+                    }  label: {
+                        Text(appConfig.PushNotificationDailyMoodRememberingDate.dateFormatte(date: "", time: "HH:mm").time)
+                            .padding(.vertical, 5)
+                            .foregroundColor(currentTheme.text)
+                    }
+                    .offset(x: appConfig.PushNotificationDailyMoodRemembering ? 0 : 150)
+                    .background(
+                        DatePicker("", selection: $appConfig.PushNotificationDailyMoodRememberingDate, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .frame(width: 200, height: 100)
+                            .clipped()
+                            .background(currentTheme.textGray.cornerRadius(10))
+                            .opacity(showTimePicker ? 1 : 0 )
+                            .offset(x: -65, y: 90)
+                    )
+                }
+
+            }
+        }
+        .padding(.horizontal)
+        .zIndex(1)
     }
     
     @ViewBuilder
@@ -65,28 +186,28 @@ struct FeelingView: View {
             VStack(spacing: 2){
                 sayHallo(name: AppConfig.shared.username)
                     .font(.title2)
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Dein Tagesziel ist für heute \(AppConfig.shared.targetSteps) Schritte")
-                    .font(.callout)
-                    .foregroundColor(AppConfig.shared.fontLight)
+                Text("Keep track of your mood with the prosthesis.")
+                    .font(.caption2)
+                    .foregroundColor(currentTheme.textGray)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             HStack(spacing: 20){
-                /* HASPRO
+                
                 if !entitlementManager.hasPro {
                     Image(systemName: "trophy.fill")
-                        .foregroundColor(AppConfig.shared.fontColor)
+                        .foregroundColor(currentTheme.text)
                         .onTapGesture {
                             DispatchQueue.main.async {
                                 tabManager.ishasProFeatureSheet.toggle()
                             }
                         }
                 }
-                */
+                
                 Image(systemName: cal.isCalendar ? "calendar" : "list.bullet.below.rectangle")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)){
@@ -95,7 +216,7 @@ struct FeelingView: View {
                     }
                 
                 Image(systemName: "gearshape")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .onTapGesture {
                         tabManager.isSettingSheet.toggle()
@@ -157,7 +278,14 @@ struct FeelingView: View {
                 
             }
             // AddNewFeeling
-            .blurredOverlaySheet(.init(.ultraThinMaterial), show: $cal.isFeelingSheet, onDismiss: {}, content: {
+            .blurredOverlaySheet(.init(.ultraThinMaterial), show: $cal.isFeelingSheet, onDismiss: {
+                // Show InterstitialSheet if not Pro
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    if !appConfig.hasPro {
+                           ads.showInterstitial.toggle()
+                    }
+                })
+            }, content: {
                 AddFeelingSheetBody()
             })
             
@@ -172,27 +300,6 @@ struct FeelingView: View {
             feelingDayRow(feelings: feelings, screenSize: screenSize, date: date, attempts: $attempts, bottomID: bottomID, dateID: dateID, noneID: noneID )
         }
     }
-    
-    func sayHallo(name: String) -> some View {
-        let hour = Calendar.current.component(.hour, from: Date())
-        
-        var string = ""
-        
-        var nameString = ""
-        if name != "" {
-            nameString = ", \(name)"
-        }
-
-        switch hour {
-            case 6..<12 : string = "Guten Morgen\(nameString)!"
-            case 12 : string = "Guten Tag\(nameString)!"
-            case 13..<17 :  string = "Hallo\(nameString)!"
-            case 17..<22 : string = "Guten Abend\(nameString)!"
-            default: string = "Hallo\(nameString)!"
-        }
-        
-        return Text(string)
-    }
 }
 
 struct feelingRowItem: View {
@@ -201,7 +308,11 @@ struct feelingRowItem: View {
     
     @State var confirm = false
     @EnvironmentObject var cal: MoodCalendar
+    @EnvironmentObject var themeManager: ThemeManager
     
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     private let persistenceController = PersistenceController.shared.container.viewContext
     
     private var feelingDate: (date: String, time: String) {
@@ -211,42 +322,65 @@ struct feelingRowItem: View {
     var body: some View {
         VStack(spacing: 5){
             ZStack{
+                let size = screenSize.width / 8
+                
                 Image("chart_" + (feeling.name ?? "feeling_1") )
                     .resizable()
                     .scaledToFit()
                     .clipShape(Circle())
-                    .frame(width: screenSize.width / 8, height: screenSize.width / 8 )
+                    .frame(width: size, height: size )
+                
+                if let icon = feeling.prothese?.prosthesisIcon {
+                    Image(icon)
+                        .font(.body.bold())
+                        .foregroundStyle(currentTheme.hightlightColor, currentTheme.textGray)
+                        .background {
+                            ZStack {
+                                Circle()
+                                    .fill(.ultraThickMaterial)
+                                    .frame(width: screenSize.width / 16, height: screenSize.width / 16 )
+                                    .shadow(color: .black, radius: 5)
+                                
+                                Circle()
+                                    .stroke(currentTheme.text, lineWidth: 1)
+                                    .frame(width: screenSize.width / 16, height: screenSize.width / 16 )
+                            }
+                        }
+                        .offset(x: (size) / 2.5, y: -(size) / 2.5)
+                }
             }
             
             VStack{
                 Text("\(feelingDate.time)")
                     .font(.caption2)
-                    .foregroundColor(.white)
+                    .foregroundColor(currentTheme.text)
             }
         }
+        .padding(.top, feeling.prothese?.prosthesisIcon != nil ? 5 : 0)
         .padding(5)
         .onTapGesture {
             confirm = true
             cal.editFeeling = feeling
         }
-        .confirmationDialog("Lösche Eintrag vom \(feelingDate.date) ", isPresented: $confirm) {
+        .confirmationDialog("Delete entry from \(feelingDate.date) ", isPresented: $confirm) {
            
-            Button("Eintrag bearbeiten?", role: .destructive) {
+            Button("To edit this entry??", role: .destructive) {
                 cal.isFeelingSheet.toggle()
                 print(feeling)
                 cal.editFeeling = feeling
             }
             .font(.callout)
             
-            Button("Eintrag löschen?", role: .destructive) {
+            Button("Delete Entry?", role: .destructive) {
                 withAnimation{
                     persistenceController.delete(feeling)
                 }
                 
                 do {
                     try persistenceController.save()
+                    WidgetCenter.shared.reloadAllTimelines()
                 } catch {
-                    print("Eintrag vom \(feelingDate.date) \(feelingDate.time) gelöscht! ")
+                    print("Entry from \(feelingDate.date) \(feelingDate.time) deleted! ")
                 }
             }
             .font(.callout)
@@ -270,6 +404,11 @@ struct feelingDayRow: View {
     var noneID: Namespace.ID
     
     @EnvironmentObject var cal: MoodCalendar
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     @State private var confirm = false
     
@@ -289,12 +428,12 @@ struct feelingDayRow: View {
             HStack{
                 Text("\(current.date)")
                     .font(.body.weight(.semibold))
-                    .foregroundColor(.yellow)
+                    .foregroundColor(currentTheme.hightlightColor)
                 
                 Spacer()
                 
                 Image(systemName: "ellipsis")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .rotationEffect(Angle(degrees: -90))
                     .onTapGesture {
@@ -337,8 +476,8 @@ struct feelingDayRow: View {
                     }
                 }
             }
-            .confirmationDialog("Alle Einträge vom \(current.date)", isPresented: $confirm) {
-                Button("Alle Einträge Löschen", role: .destructive) {
+            .confirmationDialog("All entries from \(current.date)", isPresented: $confirm) {
+                Button("Delete all entries", role: .destructive) {
                     for feel in sortedFeelings {
                         let d = feel.date?.dateFormatte(date: "dd.MM.yy", time: "HH:mm")
                         
@@ -348,13 +487,12 @@ struct feelingDayRow: View {
                         
                         do {
                             try viewContext.save()
+                            WidgetCenter.shared.reloadAllTimelines()
                         } catch {
-                            print("Eintrag vom \(String(describing: d?.date)) \(String(describing: d?.time)) gelöscht! ")
+                            print("Entry from \(String(describing: d?.date)) \(String(describing: d?.time)) deleted!")
                         }
                     }
-                } // FIXME: Add Share
-                // Button("Teilen", role: .destructive) {} // FIXME: Add Share
-                // Button("Bearbeiten", role: .destructive) {} // FIXME: Add Edit
+                } 
             }
             
         }
@@ -368,9 +506,15 @@ struct feelingDayRow: View {
 }
 
 struct FeelingView_Previews: PreviewProvider {
+    var themeManager = ThemeManager()
+    
+    static var currentTheme: Theme {
+        return ThemeManager().currentTheme()
+    }
+    
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            currentTheme.backgroundColor.ignoresSafeArea()
             
             AddFeelingSheetBody()
                 .environmentObject(MoodCalendar())

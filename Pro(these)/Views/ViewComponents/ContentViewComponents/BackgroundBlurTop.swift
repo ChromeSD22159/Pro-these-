@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct HeaderBackgroundBlurTop: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var body: some View {
         // MARK: - Background Header blur
         VStack {
@@ -15,7 +20,7 @@ struct HeaderBackgroundBlurTop: View {
                 Spacer()
             }
             .frame(height: 50)
-            .background(Color(red: 5/255, green: 5/255, blue: 15/255))
+            //.background(currentTheme.backgroundHeaderBlur)
             .blur(radius: 5, opaque: false)
             .offset(y: -60)
             Spacer()

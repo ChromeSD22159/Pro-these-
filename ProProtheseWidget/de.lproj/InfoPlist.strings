@@ -1,0 +1,9 @@
+/* Privacy - Health Records Usage Description */
+"NSHealthClinicalHealthRecordsShareUsageDescription" = "ProProthese möchte Ihre aktiven Messwerte speichern";
+
+/* Privacy - Health Share Usage Description */
+"NSHealthShareUsageDescription" = "ProProthese möchte auf Ihre aktiven Messwerte zugreifen";
+
+/* Privacy - Health Update Usage Description */
+"NSHealthUpdateUsageDescription" = "ProProthese möchte Ihre aktiven Messwerte ändern";
+

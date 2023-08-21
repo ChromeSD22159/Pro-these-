@@ -17,12 +17,16 @@ struct ContactDetailView: View {
     @StateObject var contactManager = ContactManager()
     @State var SelectedContact: Contact?
     @FocusState private var focusedContactPerson: ContactPerson?
+    @EnvironmentObject var themeManager: ThemeManager
     
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var contact: Contact
     var iconColor: Color
     var body: some View {
         ZStack {
-            appConfig.backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
 
             ScrollView(showsIndicators: false) {
@@ -31,8 +35,8 @@ struct ContactDetailView: View {
                     HStack{
                         Spacer()
                         
-                        Text(contact.name ?? "Unbekannter Name")
-                            .foregroundColor(appConfig.fontColor)
+                        Text(contact.name ?? "Unknown Name")
+                            .foregroundColor(currentTheme.text)
                         
                         Spacer()
                         
@@ -41,17 +45,18 @@ struct ContactDetailView: View {
                             eventManager.isAddContactSheet.toggle()
                         }, label: {
                             Image(systemName: "pencil")
-                                .foregroundColor(.white)
+                                .foregroundColor(currentTheme.text)
                                 .font(.title3)
                         })
                         
                     }
                     .padding(.top, 25)
+                    .padding(.horizontal)
                     
                     // MARK: - Foreach ContactPerson
                     VStack{
                         HStack(spacing: 10){
-                            Text("Ansprachspartner")
+                            Text("Contact Person")
                                 .font(.callout)
                             
                             Spacer()
@@ -66,16 +71,16 @@ struct ContactDetailView: View {
                                 }
                             }
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(currentTheme.text)
                         .padding(.horizontal)
                         
                         if (contact.contactPersons?.allObjects as? [ContactPerson] ?? []).count == 0 {
                             HStack(spacing: 10){
-                                Text("Kein Ansprechpartner vorhanden.")
+                                Text("No contact available.")
                                 Spacer()
                             }
                             .padding(20)
-                            .background(Color.white.opacity(0.05))
+                            .background(currentTheme.text.opacity(0.05))
                             .cornerRadius(20)
                         } else {
                             ForEach(contact.contactPersons?.allObjects as? [ContactPerson] ?? [] , id: \.self) { person in //
@@ -88,19 +93,20 @@ struct ContactDetailView: View {
                                     ContactPersonRow(person: person, focusedTask: $focusedContactPerson)
                                 }
                                 .padding(20)
-                                .background(Color.white.opacity(0.05))
+                                .background(currentTheme.text.opacity(0.05))
                                 .cornerRadius(20)
                             }
                         }
                        
                     }
                     .padding(.top, 50)
+                    .padding(.horizontal)
                     
                     // MARK: - Foreach Recurring Events
                     VStack{
                         VStack{
                             HStack(spacing: 20){
-                                Text("Wiederholende Benachrichtigungen")
+                                Text("Repeating notifications")
                                     .font(.callout)
                                 Spacer()
                                 
@@ -113,7 +119,7 @@ struct ContactDetailView: View {
                                             .font(.body)
                                     }
                                 }
-                                .foregroundColor(appConfig.fontColor)
+                                .foregroundColor(currentTheme.text)
                                 
                                 if AppConfig().debug {
                                     Button {
@@ -124,17 +130,16 @@ struct ContactDetailView: View {
                                     }
                                 }
                             }
-                          
-                            .foregroundColor(.white)
+                            .foregroundColor(currentTheme.text)
                             .padding(.horizontal)
                             
                             if (contact.recurringEvents?.allObjects as? [RecurringEvents] ?? []).count == 0 {
                                 HStack(spacing: 10){
-                                    Text("Keine Benachrichtigungen vorhanden.")
+                                    Text("No notifications available.")
                                     Spacer()
                                 }
                                 .padding(20)
-                                .background(Color.white.opacity(0.05))
+                                .background(currentTheme.text.opacity(0.05))
                                 .cornerRadius(20)
                             } else {
                                 ForEach(contact.recurringEvents?.allObjects as? [RecurringEvents] ?? [] , id: \.self) { reEvent in //
@@ -162,21 +167,21 @@ struct ContactDetailView: View {
                                             .foregroundColor(.gray)
                                         }
                                         .font(.title2)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(currentTheme.text)
                                         
                                         Spacer()
                                         
-                                        Confirm(message: "'\( reEvent.name ?? "" )' löschen?", buttonText: "", buttonIcon: "trash", content: {
-                                            Button("Löschen") {
+                                        Confirm(message: "delete '\( reEvent.name ?? "" )'?", buttonText: "", buttonIcon: "trash", content: {
+                                            Button("Delete") {
                                                // eventManager.deleteRecurringEvents(reEvent)
                                                 eventManager.deleteRecurringAllEvents(reEvent)
                                             }
-                                            .foregroundColor(.white)
+                                            .foregroundColor(currentTheme.text)
                                         })
-                                        .foregroundColor(.white)
+                                        .foregroundColor(currentTheme.text)
                                     }
                                     .padding(20)
-                                    .background(Color.white.opacity(0.05))
+                                    .background(currentTheme.text.opacity(0.05))
                                     .cornerRadius(20)
                                     
                                 }
@@ -185,13 +190,26 @@ struct ContactDetailView: View {
                         }
                     }
                     .padding(.top, 50)
+                    .padding(.horizontal)
                     
-                    ContactCardComponent(color: iconColor, contact: contact)
-                        .padding(.top, 50)
+                    VStack{
+                        VStack{
+                            HStack(spacing: 20){
+                                Text("Events")
+                                    .font(.callout)
+                                Spacer()
+                            }
+                            .foregroundColor(currentTheme.text)
+                            .padding(.horizontal)
+                            .padding(.horizontal)
+                            
+                            ContactCardComponent(color: iconColor, contact: contact)
+                        }
+                    }
+                    .padding(.top, 50)
                     
                 }
             }
-            .padding(.horizontal)
             .fullSizeTop()
             .sheet(isPresented: $contactManager.isShowAddContactPersonSheet, content: {
                 AddContactPersonSheet()
@@ -208,26 +226,26 @@ struct ContactDetailView: View {
     @ViewBuilder
     func AddContactPersonSheet() -> some View {
         ZStack{
-            appConfig.backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
             
             VStack(){
-                Text("Ansprechspartner hinzufügen!")
+                Text("Add Contact person!")
                     .padding(.top)
                 
                 Form {
                     Section {
-                        Picker("Anrede", selection: $contactManager.title) {
+                        Picker("Salutation", selection: $contactManager.title) {
                             Text("---").tag("---")
-                            Text("Herr").tag("Herr")
-                            Text("Frau").tag("Frau")
+                            Text("Mister").tag("Herr")
+                            Text("Woman").tag("Frau")
                         }
                         
                         HStack{
-                            Text("Vorname:")
+                            Text("First name:")
                             
                             TextField( text: $contactManager.firstname, prompt: Text("Max")) {
-                                   Text("Vorname")
+                                   Text("First name")
                                }
                             .disableAutocorrection(true)
                         }
@@ -235,19 +253,19 @@ struct ContactDetailView: View {
                         
                         
                         HStack{
-                            Text("Nachname:")
+                            Text("Last name:")
                             
                             Spacer()
                             
                             TextField( text: $contactManager.lastname, prompt: Text("Musterman")) {
-                                   Text("Nachname")
+                                   Text("Last name")
                                }
                             .disableAutocorrection(true)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
                         HStack{
-                            Text("Telefon:")
+                            Text("Phone:")
                             
                             Picker("", selection: $contactManager.countryPhonePrefix) {
                                 ForEach(contactManager.counntrys, id: \.identifier) { c in
@@ -255,7 +273,7 @@ struct ContactDetailView: View {
                                 }
                             }
                             
-                            TextField( text: $contactManager.phone, prompt: Text("Telefon Nr.")) {
+                            TextField( text: $contactManager.phone, prompt: Text("Phone Nr.")) {
                                 Text("040 / 1234")
                             }
                             .disableAutocorrection(true)
@@ -265,7 +283,7 @@ struct ContactDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
                         HStack{
-                            Text("Mobil:")
+                            Text("Mobilphone:")
                             
                             Picker("", selection: $contactManager.countryMobilPrefix) {
                                 ForEach(contactManager.counntrys, id: \.identifier) { c in
@@ -273,7 +291,7 @@ struct ContactDetailView: View {
                                 }
                             }
                             
-                            TextField( text: $contactManager.mobil, prompt: Text("Mobil Nr.")) {
+                            TextField( text: $contactManager.mobil, prompt: Text("Mobilphone Nr.")) {
                                 Text("0174 / 123 456")
                             }
                             .disableAutocorrection(true)
@@ -296,22 +314,15 @@ struct ContactDetailView: View {
                     
                     }
                     .padding(10)
-                    .listRowBackground(Color.white.opacity(0.05))
-                    .foregroundColor(appConfig.fontColor)
+                    .listRowBackground(currentTheme.text.opacity(0.05))
+                    .foregroundColor(currentTheme.text)
 
                     Section {
                         HStack {
-                            /*
-                            Button("Abbrechen") {
-                                contactManager.isShowAddContactPersonSheet = false
-                                contactManager.resetStates()
-                            }
-                            .listRowBackground(Color.white.opacity(0.1))
-                            */
                             
                             Spacer()
                             
-                            Button("Speichern") {
+                            Button("Save") {
                                 contactManager.contactPersonErrors.removeAll(keepingCapacity: true)
                                 
                                 let newContactPerson = ContactPerson(context: PersistenceController.shared.container.viewContext)
@@ -348,10 +359,10 @@ struct ContactDetailView: View {
                             
                         }
                         .padding(10)
-                        .listRowBackground(Color.white.opacity(0.05))
+                        .listRowBackground(currentTheme.text.opacity(0.05))
                     }
-                    .listRowBackground(Color.white.opacity(0.05))
-                    .foregroundColor(appConfig.fontColor)
+                    .listRowBackground(currentTheme.text.opacity(0.05))
+                    .foregroundColor(currentTheme.text)
                     .onAppear{
                         contactManager.countryPhonePrefix = Locale.current.language.region!.identifier
                         contactManager.countryMobilPrefix = Locale.current.language.region!.identifier
@@ -384,7 +395,7 @@ struct ContactDetailView: View {
             }
             .padding(.vertical, 10)
             .scrollContentBackground(.hidden)
-            .foregroundColor(.white)
+            .foregroundColor(currentTheme.text)
             
         }
         .fullSizeTop()
@@ -394,11 +405,11 @@ struct ContactDetailView: View {
     @ViewBuilder
     func AddContactRecurringEvents() -> some View {
         ZStack{
-            appConfig.backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
             
             VStack(){
-                Text("Wiederholende Erreignisse hinzufügen")
+                Text("Add repeating events")
                     .padding(.top)
                 
                 Form {
@@ -414,7 +425,7 @@ struct ContactDetailView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            Text("Bitte Name angeben!")
+                            Text("Please enter a name!")
                                 .foregroundColor(.red)
                                 .font(.caption)
                                 .opacity( contactManager.RecurringEventName == "" ? 1 : 0)
@@ -422,11 +433,11 @@ struct ContactDetailView: View {
                         
                         VStack(alignment: .leading){
                             HStack{
-                                Picker("Rhytmus", selection: $contactManager.RecurringEventRhytmus) {
-                                    Text("Wöchentlich").tag(604800.0).font(.caption2)
-                                    Text("Monatlich").tag(1209600.0).font(.caption2)
-                                    Text("Quatal").tag(2630000.0).font(.caption2)
-                                    Text("Halbjährlich").tag(7890000.0).font(.caption2)
+                                Picker("Rhythm", selection: $contactManager.RecurringEventRhytmus) {
+                                    Text("Weekly").tag(604800.0).font(.caption2)
+                                    Text("Monthly").tag(1209600.0).font(.caption2)
+                                    Text("Quarterly").tag(2630000.0).font(.caption2)
+                                    Text("Half-yearly").tag(7890000.0).font(.caption2)
                                 }
                                 .pickerStyle(SegmentedPickerStyle())
                             }
@@ -434,7 +445,7 @@ struct ContactDetailView: View {
                         
                         VStack(alignment: .leading) {
                             HStack{
-                                Text("Datum:")
+                                Text("Date:")
                                 
                                 Spacer()
                                 
@@ -507,27 +518,27 @@ struct ContactDetailView: View {
                         .padding(.bottom, 250)
                     }
                     .padding(10)
-                    .listRowBackground(Color.white.opacity(0.05))
-                    .foregroundColor(appConfig.fontColor)
+                    .listRowBackground(currentTheme.text.opacity(0.05))
+                    .foregroundColor(currentTheme.text)
                     
                     Section {
                         HStack {
-                            Button("Abbrechen") {}
+                            Button("Cancel") {}
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(Color.white.opacity(0.1))
+                                .background(currentTheme.text.opacity(0.1))
                                 .cornerRadius(10)
                                 
                             Spacer()
                             
-                            Button("Speichern") {
+                            Button("Save") {
                                 guard contactManager.RecurringEventName != "" else {
-                                    contactManager.errors.append("Bitte gebe eine RecurringEventName ein!")
-                                    return print( "Bitte gebe eine RecurringEventName ein!")
+                                    contactManager.errors.append("Please enter a RecurringEventName!")
+                                    return print( "Please enter a RecurringEventName!")
                                 }
                                 guard contactManager.RecurringEventRhytmus != 0.0 else {
-                                    contactManager.errors.append("Bitte gebe eine RecurringEventRhytmus ein!")
-                                    return print( "Bitte gebe eine RecurringEventRhytmus ein!")
+                                    contactManager.errors.append("Please enter a RecurringEventRhytmus!")
+                                    return print( "Please enter a RecurringEventRhytmus!")
                                 }
                                 let ident = contactManager.generateIdentifier()
                                 let newRecurringEvents = RecurringEvents(context: PersistenceController.shared.container.viewContext)
@@ -540,7 +551,7 @@ struct ContactDetailView: View {
                                 if contactManager.RecurringEventRhytmus != 0 {
                                     let id:String = ident
                                     let titel:String = "Pro Prothese - Reminder"
-                                    let body:String = "Erinnerung: \(newRecurringEvents.name ?? "Unknown Name")"
+                                    let body:String = "Reminder: \(newRecurringEvents.name ?? "Unknown Name")"
                                     let rhytmus:Double = newRecurringEvents.rhymus
                                     pushNotificationManager.PushNotificationRepeater(identifier: id, title: titel, body: body, interval: rhytmus)
                                 }
@@ -570,22 +581,22 @@ struct ContactDetailView: View {
                                 .padding()
                                 .frame(maxWidth: .infinity)
                                 .background(withAnimation{
-                                    contactManager.RecurringEventSubmit ? Color.white.opacity(0.05) : Color.white.opacity(0.1)
+                                    contactManager.RecurringEventSubmit ? currentTheme.text.opacity(0.05) : currentTheme.text.opacity(0.1)
                                 })
                                 .cornerRadius(10)
                                 .disabled(contactManager.RecurringEventSubmit)
                         }
                        
                     }
-                    .listRowBackground(Color.white.opacity(0.025))
-                    .foregroundColor(appConfig.fontColor)
+                    .listRowBackground(currentTheme.text.opacity(0.025))
+                    .foregroundColor(currentTheme.text)
                 }
                 
                 Spacer()
             }
             .padding(.vertical, 10)
             .scrollContentBackground(.hidden)
-            .foregroundColor(.white)
+            .foregroundColor(currentTheme.text)
             .onAppear{
                 contactManager.addRecurringEventDate = Date()
                 contactManager.showDatePicker = false
@@ -615,7 +626,7 @@ struct ContactDetailView: View {
                 }
             }
         }
-        .listRowBackground(Color.white.opacity(0.05))
+        .listRowBackground(currentTheme.text.opacity(0.05))
         .padding()
     }
     
@@ -703,17 +714,17 @@ struct ContactDetailView: View {
     }
 
     func ValidateForm(newContactPerson : ContactPerson) -> Bool {
-        if newContactPerson.title == "---" { contactManager.contactPersonErrors.append((type: "title", error: "Bitte wähle eine Anrede")) }
+        if newContactPerson.title == "---" { contactManager.contactPersonErrors.append((type: "title", error: "Please choose a salutation")) }
 
-        if newContactPerson.firstname!.count < 3 { contactManager.contactPersonErrors.append((type: "firstname", error: "Der Vorname sollte mindestens 3 Buchstaben haben.")) }
+        if newContactPerson.firstname!.count < 3 { contactManager.contactPersonErrors.append((type: "firstname", error: "First name should have at least 3 letters.")) }
         
-        if newContactPerson.lastname!.count < 3 { contactManager.contactPersonErrors.append((type: "lastname", error: "Der Nachname sollte mindestens 3 Buchstaben haben.")) }
+        if newContactPerson.lastname!.count < 3 { contactManager.contactPersonErrors.append((type: "lastname", error: "Last name should have at least 3 letters.")) }
         
-        if newContactPerson.phone!.count < 5 { contactManager.contactPersonErrors.append((type: "phone", error: "Die Telefon Nr. ist nicht Korrekt.")) }
+        if newContactPerson.phone!.count < 5 { contactManager.contactPersonErrors.append((type: "phone", error: "The phone number is not correct.")) }
         
-        if newContactPerson.mobil!.count > 0 && newContactPerson.mobil!.count < 5 { contactManager.contactPersonErrors.append((type: "mobil", error: "Die Mobil Nr. ist nicht Korrekt.")) }
+        if newContactPerson.mobil!.count > 0 && newContactPerson.mobil!.count < 5 { contactManager.contactPersonErrors.append((type: "mobil", error: "The mobile number is not correct.")) }
         
-        if isValidEmail(value: newContactPerson.mail!) != true { contactManager.contactPersonErrors.append((type: "mail", error: "Die E-Mail ist nicht Korrekt.")) }
+        if isValidEmail(value: newContactPerson.mail!) != true { contactManager.contactPersonErrors.append((type: "mail", error: "The email is not correct.")) }
         
         return contactManager.contactPersonErrors.count == 0 ? true : false
     }

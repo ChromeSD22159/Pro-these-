@@ -11,6 +11,7 @@ import Charts
 
 struct Events: View {
     @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
     @EnvironmentObject var eventManager: EventManager
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var cal: MoodCalendar
@@ -20,26 +21,42 @@ struct Events: View {
     @FocusState var focusedTask: EventTasks?
     @FetchRequest(sortDescriptors: [ SortDescriptor(\.startDate) ]) var events: FetchedResults<Event>
     
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
+    private var dateClosedRange: ClosedRange<Date> {
+        let min = Calendar.current.date(byAdding: .year, value: -5, to: Date())!
+        let max = Calendar.current.date(byAdding: .hour, value: 1, to: Date())!
+        return min...max
+    }
+    
+    var SortedContacts: [Contact] {
+        return eventManager.contacts.sorted(by: { $0.name ?? "" < $1.name ?? "" })
+    }
+    
     var body: some View {
         GeometryReader { g in
-            VStack{
-                header()
-                    .padding(.top, 20)
-                
-                ScrollView(showsIndicators: false, content: {
+            ZStack {
+                VStack{
+                    header()
+                        .padding(.top, 20)
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(alignment: .center, spacing: 5) {
-                            let SortedContacts = eventManager.contacts.sorted(by: { $0.titel ?? "" < $1.titel ?? "" })
+                            
                             ForEach(Array(SortedContacts.enumerated()), id: \.1) { (index, contact) in
                                 GeometryReader { geo in
                                     NavigateTo({
                                         ImageView(image: eventManager.getImage(contact.titel ?? "noImage") , name: contact.name ?? "Unbekannter Name", titel: contact.titel ?? "Unbekannter Titel" != "other" ? contact.titel ?? "Unbekannter Titel" : "Sonstiges"  )
                                             .rotation3DEffect(.degrees(-geo.frame(in: .global).minX) / 20, axis: (x: 0, y: 1, z: 0))
                                             .frame(width: 160, height: 200)
-                                            .shadow(color: .black.opacity(0.5), radius: 10, x: 5, y: 5)
+                                            .shadow(color: currentTheme.textBlack.opacity(0.5), radius: 10, x: 5, y: 5)
                                             .offset(y: -18)
                                     }, {
-                                        ContactDetailView(contact: contact, iconColor: .yellow)
+                                        ContactDetailView(contact: contact, iconColor: currentTheme.hightlightColor)
                                     })
                                 }
                                 .padding(.vertical, 40)
@@ -48,67 +65,131 @@ struct Events: View {
                             
                             AddContact()
                                 .frame(width: 160, height: 230)
-                                .shadow(color: .black.opacity(0.5), radius: 10, x: 5, y: 5)
+                                .shadow(color: currentTheme.textBlack.opacity(0.5), radius: 10, x: 5, y: 5)
                                
                                 
                         }
                         .padding(10)
                     }
-                    .listRowBackground(Color.white.opacity(0.001))
+                    .listRowBackground(currentTheme.text.opacity(0.001))
                     
                     if appConfig.EventShowCalendar {
-                        EventCalendar(events: events)
+                        ScrollView(showsIndicators: false, content: {
+                            EventCalendar(events: events)
+                        })
                     } else {
                         List {
-                            EventSection(titel: "Nächste 7 Tage", data: eventManager.eventsNextWeek)
-                                .listRowInsets(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
+                            EventSection(type: .thisWeek)
                             
-                            EventSection(titel: "Diesen Monat", data: eventManager.eventsnextmonth)
-                                .listRowInsets(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
+                            EventSection(type: .nextWeek)
                             
-                            if appConfig.showAllEvents {
-                                EventSection(titel: "Alle Termine", data: eventManager.eventsAll)
-                                    .listRowInsets(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
-                            }
+                            EventSection(type: .thisMonth)
+                            
+                            EventSection(type: .nextMonth)
 
-                            if appConfig.showPastEvents {
-                                EventSection(titel: "Vergangene Woche", data: eventManager.eventsPast)
-                                    .listRowInsets(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
-                            }
+                            EventSection(type: .lastWeek, viewType: .diclosure, isExtended: appConfig.showAllPastEventsIsExtended)
+                                .show(appConfig.showAllPastEvents)
+                            
+                            EventSection(type: .past, viewType: .diclosure, isExtended: appConfig.showPastWeekEventsIsExtended)
+                                .listRowInsets(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
+                                .show(appConfig.showPastWeekEvents)
                         }
-                        .frame(width: g.size.width - 5, height: g.size.height - 50, alignment: .center)
+                        //.frame(width: g.size.width - 5, height: g.size.height - 50, alignment: .center)
                         .scrollContentBackground(.hidden)
-                        .foregroundColor(.white)
+                        .foregroundColor(currentTheme.text)
                         .refreshable {
                             eventManager.fetchContacts()
                         }
                     }
-                    
+                }
+                .foregroundColor(currentTheme.text)
+                .fullSizeTop()
+                .blur( radius: cal.showCalendarPicker ? 4 : 0)
+                
+                if cal.showCalendarPicker {
+                   VStack {
+                       ZStack {
+                           currentTheme.textBlack.opacity(0.5).ignoresSafeArea()
+                           
+                           VStack(spacing: 20) {
+                               Spacer()
+                               
+                               HStack {
+                                   Spacer()
+                                   
+                                   Button(action: {
+                                       withAnimation(.easeInOut) {
+                                           cal.showCalendarPicker = false
+                                       }
+                                   }, label: {
+                                       Image(systemName: "xmark")
+                                           .foregroundColor(currentTheme.text)
+                                   })
+                               }
+                               .padding(.horizontal, 50)
+                               
+                               DatePicker(
+                                   "",
+                                   selection: $cal.selectedCalendarDate,
+                                   //in: dateClosedRange,
+                                   displayedComponents: .date
+                               )
+                               .labelsHidden()
+                               .datePickerStyle(.wheel)
+                               .background(.ultraThinMaterial)
+                               .cornerRadius(20)
+                               .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                               
+                               Spacer()
+                           }
+                       }
                        
+                       
+                       Spacer()
+                   }
+                   
+               }
+            }
+            .blurredOverlaySheet(.init(Material.ultraThinMaterial), show: $eventManager.isAddContactSheet, onDismiss: {
+                // Show InterstitialSheet if not Pro
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    if !appConfig.hasPro {
+                           ads.showInterstitial.toggle()
+                    }
                 })
-            }
-            .foregroundColor(appConfig.fontColor)
-            .fullSizeTop()
-            .blurredOverlaySheet(.init(Material.ultraThinMaterial), show: $eventManager.isAddContactSheet, onDismiss: {}, content: {
-                ContentAddSheetBoby(titel: "Neuer Kontakt")
+            }, content: {
+                ContentAddSheetBoby(titel: "New contact")
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             })
-            .blurredOverlaySheet(.init(Material.ultraThinMaterial), show: $eventManager.isAddEventSheet, onDismiss: {}, content: {
-                EventAddSheetBoby(titel: "Erstelle einen Termin")
+            .blurredOverlaySheet(.init(Material.ultraThinMaterial), show: $eventManager.isAddEventSheet, onDismiss: {
+                // Show InterstitialSheet if not Pro
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    if !appConfig.hasPro {
+                           ads.showInterstitial.toggle()
+                    }
+                })
+            }, content: {
+                EventAddSheetBoby(titel: "Create an appointment")
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             })
-            .onAppear{
-                eventManager.fetchContacts()
-                cal.currentDate = Date()
-                cal.currentDates = cal.extractMonth()
-            }
-            // MARK: - Set Current Month to the selected Date and Extract the current Month
-            .onChange(of: cal.currentMonth, perform: { value in
-                cal.currentDate = cal.getCurrentMonth()
-                cal.currentDates = cal.extractMonth()
-            })
+             .onAppear {
+                 eventManager.fetchContacts()
+                 
+                 cal.selectedCalendarDate = Date()
+                 cal.currentDate = Date()
+                 cal.currentDates = cal.extractMonth()
+              }
+              .onChange(of: cal.selectedCalendarDate, perform: { (value) in
+                  cal.selectedCalendarDate = value
+                  cal.currentDate = value
+                  cal.currentDates = cal.extractMonthByDate()
+                  withAnimation(.easeInOut){
+                      cal.showCalendarPicker = false
+                  }
+              })
+             
         }
         
     }
@@ -122,28 +203,28 @@ extension Events {
             VStack(spacing: 2){
                 sayHallo(name: appConfig.username)
                     .font(.title2)
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Deine Termine und Notizen im Überblick.")
-                    .font(.callout)
-                    .foregroundColor(AppConfig.shared.fontLight)
+                Text("Your appointments and notes at a glance.")
+                    .font(.caption2)
+                    .foregroundColor(currentTheme.textGray)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             HStack(spacing: 20){
-                /* HASPRO
+                
                 if !entitlementManager.hasPro {
                     Image(systemName: "trophy.fill")
-                        .foregroundColor(AppConfig.shared.fontColor)
+                        .foregroundColor(currentTheme.text)
                         .onTapGesture {
                             DispatchQueue.main.async {
                                 tabManager.ishasProFeatureSheet.toggle()
                             }
                         }
                 }
-                */
-                Image(systemName: eventManager.showCal ? "calendar" : "list.bullet.below.rectangle")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                
+                Image(systemName: appConfig.EventShowCalendar ? "calendar" : "list.bullet.below.rectangle")
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)){
@@ -152,7 +233,7 @@ extension Events {
                     }
                 
                 Image(systemName: "gearshape")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .onTapGesture {
                         tabManager.isSettingSheet.toggle()
@@ -172,14 +253,14 @@ extension Events {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(subline)
                     .font(.callout)
-                    .foregroundColor(appConfig.fontLight)
+                    .foregroundColor(currentTheme.text)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             Spacer()
             VStack(){
                 Image(systemName: "gearshape")
                     .font(.title3)
-                    .foregroundColor(appConfig.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .onTapGesture {
                         tabManager.isSettingSheet.toggle()
                     }
@@ -188,56 +269,45 @@ extension Events {
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity)
     }
-
-    func sayHallo(name: String) -> some View {
-        let hour = Calendar.current.component(.hour, from: Date())
-        
-        var string = ""
-        
-        var nameString = ""
-        if name != "" {
-            nameString = ", \(name)"
-        }
-
-        switch hour {
-            case 6..<12 : string = "Guten Morgen\(nameString)!"
-            case 12 : string = "Guten Tag\(nameString)!"
-            case 13..<17 :  string = "Hallo\(nameString)!"
-            case 17..<22 : string = "Guten Abend\(nameString)!"
-            default: string = "Hallo\(nameString)!"
-        }
-        
-        return Text(string)
-    }
-
 }
 
 
 struct AddContact: View {
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var body: some View {
         VStack(spacing: 10){
             Image(systemName: "plus")
                 .multilineTextAlignment(.center)
-            Text("Kontakt \n hinzufügen")
+            Text("Add \n Contact")
                 .multilineTextAlignment(.center)
         }
-        .foregroundColor(appConfig.foreground)
+        .foregroundColor(currentTheme.text)
         .frame(width: 160, height: 210)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(appConfig.foreground, lineWidth: 2)
+                .stroke(currentTheme.text, lineWidth: 2)
         )
         .onTapGesture {
             eventManager.isAddContactSheet.toggle()
         }
     }
 }
+
 struct ImageView: View {
     var image: String
     var name: String
     var titel: String
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var body: some View {
         
         VStack(alignment: .center) {
@@ -247,9 +317,9 @@ struct ImageView: View {
             
             VStack{
                 Text(name)
-                Text(titel)
+                Text(LocalizedStringKey(titel))
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(currentTheme.textGray)
             }
             .padding()
         }

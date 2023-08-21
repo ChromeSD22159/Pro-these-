@@ -122,7 +122,7 @@ struct StopWatchComplicationEntryView : View {
     func Circular(steps: (min: Int, max: Int, current: Int, error: (any Error)?)) -> some View{
         VStack(spacing: 1) {
             
-            let gradient = Gradient(colors: [.white.opacity(0.5), AppConfig.shared.background])
+            let gradient = Gradient(colors: [.white.opacity(0.5), Theme.blue.backgroundColor])
             
             Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                 Image( systemName: entry.isRunning ? "stop.fill" : "record.circle" )
@@ -202,7 +202,7 @@ struct StopWatchComplicationEntryView : View {
                     
                     VStack {
                         
-                        let gradient = Gradient(colors: [.white.opacity(0.5), AppConfig.shared.background])
+                        let gradient = Gradient(colors: [.white.opacity(0.5), Theme.blue.backgroundColor])
                         
                         Gauge(value: Double(entry.steps.current), in: 0...Double(AppConfig.shared.targetSteps)) {
                         } currentValueLabel: {
@@ -212,13 +212,13 @@ struct StopWatchComplicationEntryView : View {
                         .tint(gradient)
                        
                         HStack {
-                            Text("\(Int(steps.current)) Schritte")
+                            Text("\(Int(steps.current)) Steps")
                                 .font(.system(size: 10).bold())
                                 .padding(.leading, 5)
                             
                             Spacer()
                             
-                            Text("Update: " + entry.nextUpdate.formatteTime(time: "HH:mm")).font(.system(size: 10).bold())
+                            Text("time: " + entry.nextUpdate.formatteTime(time: "HH:mm")).font(.system(size: 10).bold())
                                 .padding(.trailing, 5)
                         }
                         
@@ -241,7 +241,7 @@ struct StopWatchComplicationEntryView : View {
                 Text(String(format: "%.0f", steps.current))
                     .font(.system(size: 10).bold())
                     .widgetLabel{
-                        Image("prothesis")
+                        Image("figure.prothese")
                             .imageScale(.large)
                             .font(.system(size: 30))
                     }
@@ -312,9 +312,9 @@ struct StopWatchComplication: Widget {
                 })
             
         }
-        .configurationDisplayName("Prothesen Timer")
+        .configurationDisplayName("prosthesis timer")
         .supportedFamilies(supportedFamilies)
-        .description("Starte und Beende deine Prothesenzeiten schnell.")
+        .description("Start and end your prosthetic times quickly.")
     }
 }
 

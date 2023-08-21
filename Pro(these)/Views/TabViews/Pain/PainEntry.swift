@@ -14,12 +14,20 @@ struct PainEntry: View {
     @EnvironmentObject var vm: PainViewModel
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var entitlementManager: EntitlementManager
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
     
     let persistenceController = PersistenceController.shared
     
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) private var Pains: FetchedResults<Pain>
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) private var PainReasons: FetchedResults<PainReason>
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) private var PainDrugs: FetchedResults<PainDrug>
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     private var avg: Int {
         if Pains.count != 0 {
@@ -53,21 +61,37 @@ struct PainEntry: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         // MARK: - AddNewPainSheet
-        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $vm.isPainAddSheet, onDismiss: {}, content: {
+        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $vm.isPainAddSheet, onDismiss: {
+            // Show InterstitialSheet if not Pro
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                if !appConfig.hasPro {
+                       ads.showInterstitial.toggle()
+                }
+            })
+        }, content: {
             PainAddSheet()
         })
         
         // MARK: - Delete Reason & Drugs
-        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $vm.isDeleteReasonDrugsSheet, onDismiss: {}, content: {
+        .blurredOverlaySheet(.init(.ultraThinMaterial), show: $vm.isDeleteReasonDrugsSheet, onDismiss: {
+            // Show InterstitialSheet if not Pro
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                if !appConfig.hasPro {
+                       ads.showInterstitial.toggle()
+                }
+            })
+        }, content: {
             DeleteReasonDrugsSheetBody()
         })
         
         // MARK: - Init PainDrugs & Reason
         .onAppear{
             if PainReasons.count == 0 {
-                vm.addDefaultPainReason(["Wetter", "Kälte", "Wärme"])
+                //vm.addDefaultPainReason([LocalizedStringKey("weather").stringKey!, LocalizedStringKey("cold").stringKey!, LocalizedStringKey("warmth").stringKey!])
+                vm.addDefaultPainReason([translateReasons("weather"), translateReasons("cold"), translateReasons("warmth")])
             } else if PainDrugs.count == 0 {
-                vm.addDefaultPainDrugs(["Kein Schmerzmittel"]) // "Ibuprofen", "Tillidin", "Novalgin"
+                //vm.addDefaultPainDrugs([LocalizedStringKey("No Painkiller").stringKey!]) // "Ibuprofen", "Tillidin", "Novalgin"
+                vm.addDefaultPainDrugs([translateReasons("No Painkiller")])
             }
         }
     }
@@ -78,28 +102,28 @@ struct PainEntry: View {
             VStack(spacing: 2){
                 sayHallo(name: AppConfig.shared.username)
                     .font(.title2)
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Dein Tagesziel ist für heute \(AppConfig.shared.targetSteps) Schritte")
-                    .font(.callout)
-                    .foregroundColor(AppConfig.shared.fontLight)
+                Text("Keep track of your phantom limb pain.")
+                    .font(.caption2)
+                    .foregroundColor(currentTheme.textGray)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             HStack(spacing: 20){
-                /* HASPRO
+                
                 if !entitlementManager.hasPro {
                     Image(systemName: "trophy.fill")
-                        .foregroundColor(AppConfig.shared.fontColor)
+                        .foregroundColor(currentTheme.text)
                         .onTapGesture {
                             DispatchQueue.main.async {
                                 tabManager.ishasProFeatureSheet.toggle()
                             }
                         }
                 }
-                 */
+                
                 Image(systemName: vm.showList ? "chart.pie" : "list.bullet.below.rectangle")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)){
@@ -108,7 +132,7 @@ struct PainEntry: View {
                     }
                 
                 Image(systemName: "gearshape")
-                    .foregroundColor(AppConfig.shared.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .font(.title3)
                     .onTapGesture {
                         tabManager.isSettingSheet.toggle()
@@ -123,7 +147,7 @@ struct PainEntry: View {
     func StatisticCard(avg: Int, items: Int) -> some View {
         VStack(alignment: .leading, spacing: 8){
             HStack(spacing: 8) {
-                Text("Statistik")
+                Text("statistics")
                     .padding(.leading)
                 Spacer()
             }
@@ -133,12 +157,12 @@ struct PainEntry: View {
                 VStack(alignment: .leading){
                     Text("\(avg)")
                         .font(.title.bold())
-                    Text("⌀ Schmerz")
+                    Text("⌀ Pain value")
                         .font(.caption2)
-                        .foregroundColor(.gray)
+                        .foregroundColor(currentTheme.textGray)
                     
                     Rectangle()
-                        .fill(.yellow)
+                        .fill(currentTheme.hightlightColor)
                         .frame(maxWidth: .infinity, maxHeight: 5)
                 }
                 Spacer()
@@ -146,18 +170,18 @@ struct PainEntry: View {
                     Text("\(items)")
                         .font(.title.bold())
                     
-                    Text("Anzahl der Einträge")
+                    Text("Number of entries")
                         .font(.caption2)
-                        .foregroundColor(.gray)
+                        .foregroundColor(currentTheme.textGray)
                     
                     Rectangle()
-                        .fill(AppConfig.shared.background)
+                        .fill(currentTheme.primary)
                         .frame(maxWidth: .infinity, maxHeight: 5)
                 }
                 Spacer()
             }
         }
-        .foregroundColor(.white)
+        .foregroundColor(currentTheme.text)
         .padding()
         .background(.ultraThinMaterial)
         .cornerRadius(20)
@@ -168,34 +192,34 @@ struct PainEntry: View {
     @ViewBuilder
     func ListPainEntrys() -> some View {
         HStack(spacing: 20){
-            Text("Einträge:")
+            Text("entries:")
                 .font(.body.bold())
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
             Spacer()
             
-            Label("Schmerzen Eintragen", systemImage: "plus")
-                .foregroundColor(AppConfig.shared.fontColor)
+            Label("Add", systemImage: "plus")
+                .foregroundColor(currentTheme.text)
                 .font(.body.bold())
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: 0.5)){
                         vm.isPainAddSheet.toggle()
                         
                         if PainReasons.count != 0 {
-                            vm.selectedReason = PainReasons.first(where: { $0.name == "Wetter" })
+                            vm.selectedReason = PainReasons.first(where: { LocalizedStringKey($0.name!) == LocalizedStringKey("weather") })
                         } else {
                             vm.selectedReason = nil
                         }
                         
                         if PainDrugs.count != 0 {
-                            vm.selectedDrug = PainDrugs.first(where: { $0.name == "Kein Schmerzmittel" })
+                            vm.selectedDrug = PainDrugs.first(where: { LocalizedStringKey($0.name!) == LocalizedStringKey("No Painkiller") })
                         } else {
                             vm.selectedDrug = nil
                         }
                     }
                 }
             
-            Label("Verwalten", systemImage: "slider.vertical.3")
-                .foregroundColor(AppConfig.shared.fontColor)
+            Label("Administer", systemImage: "slider.vertical.3")
+                .foregroundColor(currentTheme.text)
                 .font(.body.bold())
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: 0.5)){
@@ -209,10 +233,10 @@ struct PainEntry: View {
             
             if Pains.count == 0 {
                 HStack{
-                    Label("Keine Schmerzen eingetragen!", systemImage: "chart.bar.xaxis")
+                    Label("No pain recorded!", systemImage: "chart.bar.xaxis")
                     Spacer()
                 }
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
                 .padding()
                 .background(.ultraThinMaterial)
                 .cornerRadius(20)
@@ -229,7 +253,7 @@ struct PainEntry: View {
             // In-App-ABO
             InfomationField( // In-App-ABO
                 backgroundStyle: .ultraThinMaterial,
-                text: "In der aktuellen Version steht die Erfassungen von Schmerzen zur Verfügung. Eine ausführlichere Erfassung, in Kombination mit einem Medikamentenplan/Reminder, ist in Planung. Des Weiteren ist eine PDF-Erstellung von den dokumentierten Daten geplant, die leicht geteilt oder per Mail an die jeweiligen Kontakte versendet werden kann. Dazu entstehen mehr Widgets und Statistiken.",
+                text: LocalizedStringKey("The pain recorder is available in the current version. A more detailed recording is planned, in combination with a medication plan/reminder. In addition, a PDF creation of the documented data is planned, which can be easily shared or emailed to the appropriate contacts. In addition, other widgets and statistics are created."),
                 visibility: AppConfig.shared.hasUnlockedPro ? AppConfig.shared.hideInfomations : true) 
                 .padding(.horizontal)
         })
@@ -246,7 +270,7 @@ struct PainEntry: View {
                     let avg = filter.count == 0 ? filter.count : filter.reduce(0, +) / filter.count
                     
                     BarMark(
-                        x: .value("Reason", reason) ,
+                        x: .value("Reason", translateReasons(reason)) ,
                         y: .value("Pain", avg)
                     )
                     .foregroundStyle(by: .value("Pain", avg))
@@ -258,12 +282,12 @@ struct PainEntry: View {
                 .frame(height: 200)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Schmerzbewertung")
+                    Text("Pain assessment")
                         .padding(.leading)
-                    Text("Wie hoch ist der Schmerzwert der letzten Attacken?")
+                    Text("What was your last pain?")
                         .padding(.leading)
                         .font(.caption2)
-                        .foregroundColor(.gray)
+                        .foregroundColor(currentTheme.textGray)
                 }
                 
                 HStack(spacing: 8) {
@@ -272,9 +296,9 @@ struct PainEntry: View {
                     VStack(alignment: .leading){
                         Text("\(min)")
                             .font(.title.bold())
-                        Text("niedrigste")
+                        Text("Lowest")
                             .font(.caption2)
-                            .foregroundColor(.gray)
+                            .foregroundColor(currentTheme.textGray)
                         
                         Rectangle()
                             .fill(.blue)
@@ -287,12 +311,12 @@ struct PainEntry: View {
                         Text("\(avg)")
                             .font(.title.bold())
                         
-                        Text("Durchschnittlich")
+                        Text("Average")
                             .font(.caption2)
-                            .foregroundColor(.gray)
+                            .foregroundColor(currentTheme.textGray)
                         
                         Rectangle()
-                            .fill(.yellow)
+                            .fill(currentTheme.hightlightColor)
                             .frame(maxWidth: .infinity, maxHeight: 5)
                     }
                     
@@ -302,9 +326,9 @@ struct PainEntry: View {
                         Text("\(max)")
                             .font(.title.bold())
                         
-                        Text("Höchste")
+                        Text("Highest")
                             .font(.caption2)
-                            .foregroundColor(.gray)
+                            .foregroundColor(currentTheme.textGray)
                         
                         Rectangle()
                             .fill(.red)
@@ -313,7 +337,7 @@ struct PainEntry: View {
                     Spacer()
                 }
             }
-            .foregroundColor(.white)
+            .foregroundColor(currentTheme.text)
             .padding()
             .background(.ultraThinMaterial)
             .cornerRadius(20)
@@ -321,32 +345,18 @@ struct PainEntry: View {
             .padding(.horizontal)
         }
     }
-    
-    func sayHallo(name: String) -> some View {
-        let hour = Calendar.current.component(.hour, from: Date())
-        
-        var string = ""
-        
-        var nameString = ""
-        if name != "" {
-            nameString = ", \(name)"
-        }
-
-        switch hour {
-            case 6..<12 : string = "Guten Morgen\(nameString)!"
-            case 12 : string = "Guten Tag\(nameString)!"
-            case 13..<17 :  string = "Hallo\(nameString)!"
-            case 17..<22 : string = "Guten Abend\(nameString)!"
-            default: string = "Hallo\(nameString)!"
-        }
-        
-        return Text(string)
-    }
 }
 
 struct ReasonRow: View {
     var reason: PainReason
     
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     @State var confirm = false
     @ObservedObject var vm: PainViewModel
     private let persistenceController = PersistenceController.shared
@@ -356,44 +366,52 @@ struct ReasonRow: View {
             VStack(alignment: .leading, spacing: 8) {
                 Image(systemName: "chart.bar.xaxis")
                     .font(.title.bold())
-                    .foregroundColor(.yellow)
+                    .foregroundColor(currentTheme.hightlightColor)
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(reason.name ?? "Unbekannter Name")
+
+                Text(translateReasons(reason.name))
                     .font(.body.bold())
                 
                 let i = vm.dateFormatte(inputDate: reason.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
-                Text(i.date + " " + i.time + "Uhr")
+                Text(i.date + " " + i.time)
                     .font(.caption2)
-                    .foregroundColor(.gray)
+                    .foregroundColor(currentTheme.textGray)
             }
             
             Spacer()
-            let arr = ["Wetter", "Kälte", "Wärme"]
-            if !arr.contains(reason.name ?? "Unbekannter Name")  {
+            let arr = [LocalizedStringKey("weather"), LocalizedStringKey("cold"), LocalizedStringKey("warmth")]
+            if !arr.contains(LocalizedStringKey(reason.name ?? "Unknown Name"))  {
                 Image(systemName: "trash")
                     .onTapGesture{
                         confirm = true
                     }
             }
         }
-        .foregroundColor(.white)
+        .foregroundColor(currentTheme.text)
         .padding()
         .background(.ultraThinMaterial)
         .cornerRadius(20)
         .frame(maxWidth: .infinity)
-        .confirmationDialog("Grund löschen?", isPresented: $confirm) {
+        .confirmationDialog("Delete reason?", isPresented: $confirm) {
             let i = vm.dateFormatte(inputDate: reason.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
-            Button("\(reason.name ?? "") löschen?", role: .destructive) {
+            Button("Delete \(reason.name ?? "")?", role: .destructive) {
                 withAnimation {
                     persistenceController.container.viewContext.delete(reason)
                     do {
                         try persistenceController.container.viewContext.save()
                         vm.deletePainReason = nil
                     } catch {
-                        print("Grund vom \(i.date) \(i.time) gelöscht! ")
+                        print("Reason deleted from \(i.date) \(i.time)! ")
                     }
+                    
+                    // Show InterstitialSheet if not Pro
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        if !appConfig.hasPro {
+                               ads.showInterstitial.toggle()
+                        }
+                    })
                 }
             }
             .font(.callout)
@@ -404,6 +422,13 @@ struct ReasonRow: View {
 struct DrugRow: View {
     var drug: PainDrug
     
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     @State var confirm = false
     @ObservedObject var vm: PainViewModel
     private let persistenceController = PersistenceController.shared
@@ -413,22 +438,25 @@ struct DrugRow: View {
             VStack(alignment: .leading, spacing: 8) {
                 Image(systemName: "pills.fill")
                     .font(.title.bold())
-                    .foregroundColor(.yellow)
+                    .foregroundColor(currentTheme.hightlightColor)
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(drug.name ?? "Unbekannter Name")
-                    .font(.body.bold())
+                if let p = drug.name {
+                    Text(translateReasons(p))
+                        .font(.body.bold())
+                }
+                
                 
                 let i = vm.dateFormatte(inputDate: drug.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
-                Text(i.date + " " + i.time + "Uhr")
+                Text(i.date + " " + i.time)
                     .font(.caption2)
-                    .foregroundColor(.gray)
+                    .foregroundColor(currentTheme.textGray)
             }
             
             Spacer()
             
-            if drug.name != "Kein Schmerzmittel" {
+            if drug.name! != "No Painkiller" {
                 VStack(alignment: .trailing, spacing: 8) {
                     Image(systemName: "trash")
                         .onTapGesture {
@@ -439,22 +467,29 @@ struct DrugRow: View {
             }
             
         }
-        .foregroundColor(.white)
+        .foregroundColor(currentTheme.text)
         .padding()
         .background(.ultraThinMaterial)
         .cornerRadius(20)
         .frame(maxWidth: .infinity)
-        .confirmationDialog("Schmerzmittel löschen?", isPresented: $confirm) {
+        .confirmationDialog("Delete painkillers?", isPresented: $confirm) {
             let i = vm.dateFormatte(inputDate: drug.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
-            Button("\(drug.name ?? "") löschen?", role: .destructive) {
+            Button("Delete \(drug.name ?? "")?", role: .destructive) {
                 withAnimation {
                     persistenceController.container.viewContext.delete(drug)
                     do {
                         try persistenceController.container.viewContext.save()
                         vm.deletePainDrug = nil
                     } catch {
-                        print("Grund vom \(i.date) \(i.time) gelöscht! ")
+                        print("Reason deleted from \(i.date) \(i.time)! ")
                     }
+                    
+                    // Show InterstitialSheet if not Pro
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        if !appConfig.hasPro {
+                               ads.showInterstitial.toggle()
+                        }
+                    })
                 }
             }
             .font(.callout)
@@ -465,6 +500,13 @@ struct DrugRow: View {
 struct PainRow: View {
     var pain: Pain
     
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     @State var confirm = false
     @ObservedObject var vm: PainViewModel
     private let persistenceController = PersistenceController.shared
@@ -475,19 +517,19 @@ struct PainRow: View {
             VStack(alignment: .leading, spacing: 8) {
                 Image(systemName: "bolt.fill")
                     .font(.title.bold())
-                    .foregroundColor(.yellow)
+                    .foregroundColor(currentTheme.hightlightColor)
             }
             VStack(alignment: .leading, spacing: 8) {
                 
                 HStack {
-                    Text("\(Int(pain.painIndex)) Schmerzgrad")
+                    Text("\(Int(pain.painIndex)) pain index")
                         .font(.body.bold())
                 }
                 
                 let i = vm.dateFormatte(inputDate: pain.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
-                Text(i.date + " " + i.time + "Uhr")
+                Text(i.date + " " + i.time)
                     .font(.caption2)
-                    .foregroundColor(.gray)
+                    .foregroundColor(currentTheme.textGray)
                 
             }
             
@@ -506,24 +548,31 @@ struct PainRow: View {
                     }
             }
         }
-        .foregroundColor(.white)
+        .foregroundColor(currentTheme.text)
         .padding()
         .background(.ultraThinMaterial)
         .cornerRadius(20)
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
-        .confirmationDialog("Lösche Eintrag", isPresented: $confirm) {
+        .confirmationDialog("Delete entry", isPresented: $confirm) {
             let i = vm.dateFormatte(inputDate: pain.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
-            Button("\(pain.painIndex) löschen?", role: .destructive) {
+            Button("Delete \(pain.painIndex)?", role: .destructive) {
                 withAnimation {
                     persistenceController.container.viewContext.delete(pain)
                     do {
                         try persistenceController.container.viewContext.save()
                         vm.deletePain = nil
                     } catch {
-                        print("Grund vom \(i.date) \(i.time) gelöscht! ")
+                        print("Reason deleted from \(i.date) \(i.time)! ")
                     }
                 }
+                
+                // Show InterstitialSheet if not Pro
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    if !appConfig.hasPro {
+                           ads.showInterstitial.toggle()
+                    }
+                })
             }
             .font(.callout)
             
@@ -575,7 +624,7 @@ struct BarView: View {
 struct PainEntry_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             PainEntry()
                 .environmentObject(MoodCalendar())

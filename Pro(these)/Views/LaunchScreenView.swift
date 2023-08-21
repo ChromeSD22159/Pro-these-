@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct LaunchScreenView: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var body: some View {
         ZStack{
-            Image("LaunchImage")
+            Image(currentTheme.LaunchScreenImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .clipped()

@@ -37,7 +37,7 @@ class WorkoutManager: NSObject, ObservableObject {
             HKSeriesType.workoutRoute()
         ]
         
-        if HKHealthStore.isHealthDataAvailable(), let stepCount = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) {
+        if HKHealthStore.isHealthDataAvailable(), (HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) != nil) {
             healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
                 if success {
                     readSteps()

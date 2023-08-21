@@ -142,6 +142,7 @@ class WorkoutStatisticViewModel: ObservableObject {
         return (bool, Int(percent))
     }
     
+    /*
     /// "Das sind 123456789 weniger als in der Woche zuvor."
     func calculateAvgDifference(date: Date, toCalc: [ChartDataPacked], value: Int , type: String) -> String {
         let (lastWeekAvg, thisWeekAvg) = getAvgDataForThisAndTheWeekBefore(date: date, arr: toCalc)
@@ -177,7 +178,7 @@ class WorkoutStatisticViewModel: ObservableObject {
         
         return (string1 ?? "")  + (string2 ?? "")
     }
-    
+    */
     
     
     func getAvgDataForThisAndTheWeekBefore(date: Date, arr: [ChartDataPacked]) -> (Int, Int) {

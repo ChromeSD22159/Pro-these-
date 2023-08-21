@@ -9,36 +9,59 @@ import SwiftUI
 import WidgetKit
 
 struct PersonalDeteilsView: View {
-    var titel: String
+    var titel: LocalizedStringKey
+    @EnvironmentObject var themeManager: ThemeManager
+
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     @StateObject var appConfig = AppConfig()
+    
     @EnvironmentObject var entitlementManager: EntitlementManager
+    
+    @Binding var username: String
+    
+    @Binding var amputationDate: Date
+    
+    @Binding var prosthesisDate: Date
+
+    @Binding var targetSteps: Int
+    
     var body: some View {
         ZStack {
-            AppConfig().backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 20){
+                VStack(spacing: 10){
                     HStack{
                         Text(titel)
-                            .foregroundColor(.white)
+                            .foregroundColor(currentTheme.text)
                     }
+                    .padding(.bottom)
                     
-                    SettingChangeName(image: "person.fill", info: "Ändere den Anzeigenamen.")
+                    SettingName(image: "person.fill", info: "Change the display name.", color: currentTheme.primary, username: $username)
+
+                    SettingDate(image: "person.fill", info: LocalizedStringKey("Amputation day."), color: currentTheme.primary, date: $amputationDate)
+                        .zIndex(2)
                     
-                    SettingSetStepTarget()
+                    SettingDate(image: "person.fill", info: LocalizedStringKey("First day with prosthesis."), color: currentTheme.primary, date: $prosthesisDate)
+                        .zIndex(1)
+                    
+                    SettingSetStepTarget(targetSteps: $targetSteps)
                     
                     VStack(){
                        
                         VStack(alignment: .leading){
-                            Text("Startseite")
+                            Text(LocalizedStringKey("Entry Site"))
                                 .font(.body)
                                 .fontWeight(.medium)
-                                .foregroundColor(AppConfig().fontColor)
+                                .foregroundColor(currentTheme.text)
                                 .toggleStyle(SwitchToggleStyle(tint: .green))
                                 .padding(.bottom, 5)
                             
-                            Picker("Startseite", selection: appConfig.$entrySite) {
+                            Picker(LocalizedStringKey("Entry Site"), selection: appConfig.$entrySite) {
                                 ForEach(Tab.allCases, id: \.id) { tab in
                                     
                                     if tab.TabTitle() == "plus" {
@@ -50,7 +73,7 @@ struct PersonalDeteilsView: View {
                                 }
                             }
                             .pickerStyle(.navigationLink)
-                            .tint(.white)
+                            .tint(currentTheme.text)
                            
                         }
                         .padding(.leading)
@@ -60,32 +83,76 @@ struct PersonalDeteilsView: View {
                     .frame(maxWidth: .infinity ,alignment: .leading)
                     .padding(.all, 15.0)
                     .frame(maxWidth: .infinity)
-                    .background(AppConfig().background.opacity(0.5))
+                    .background(currentTheme.primary.opacity(0.5))
+                    .cornerRadius(10)
+                    
+                    // ColorSwitcher
+                    VStack(){
+                       
+                        VStack(alignment: .leading){
+                            Text(LocalizedStringKey("Change indicator color"))
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(currentTheme.text)
+                                .toggleStyle(SwitchToggleStyle(tint: .green))
+                                .padding(.bottom, 5)
+                            
+                            let colors = [
+                                (raw: "blue", localized: LocalizedStringKey("blue")),
+                                (raw: "orange", localized: LocalizedStringKey("orange")),
+                                (raw: "green", localized: LocalizedStringKey("green"))
+                            ]
+                            
+                            Picker(LocalizedStringKey("Change indicator color"), selection: appConfig.$currentTheme) {
+                                ForEach(colors, id: \.raw) { theme in
+                                    Text(theme.localized).tag( theme.raw )
+                                }
+                            }
+                            .onChange(of: appConfig.currentTheme) { new in
+                                WidgetCenter.shared.reloadAllTimelines()
+                            }
+                            .pickerStyle(.segmented)
+                            .tint(currentTheme.text)
+                           
+                        }
+                        .padding(.leading)
+                      
+                        
+                    }
+                    .frame(maxWidth: .infinity ,alignment: .leading)
+                    .padding(.all, 15.0)
+                    .frame(maxWidth: .infinity)
+                    .background(currentTheme.primary.opacity(0.5))
                     .cornerRadius(10)
                     
                     // In-App-ABO
                     
                     VStack(alignment: .leading){
-                        Toggle("Haptisches Feedback", isOn: appConfig.$hapticFeedback).disabled(appConfig.hasUnlockedPro)
-                           // .disabled(!entitlementManager.hasPro)
-                        Toggle("Verstecke Infomationen", isOn: appConfig.$hideInfomations)
-                           // .disabled(!entitlementManager.hasPro)
+                        Toggle("Haptic Feedback", isOn: appConfig.$hapticFeedback).disabled(appConfig.hasUnlockedPro)
+                           .disabled(!entitlementManager.hasPro)
+                        Toggle("Hide information", isOn: appConfig.$hideInfomations)
+                           .disabled(!entitlementManager.hasPro)
                     }
                     .frame(maxWidth: .infinity ,alignment: .leading)
                     .padding(.all, 15.0)
                     .frame(maxWidth: .infinity)
-                    .background(AppConfig().background.opacity(0.5))
+                    .background(currentTheme.primary.opacity(0.5))
                     .cornerRadius(10)
                     
                     Spacer()
                     
-                    copyright()
+                    copyright(isAuthenticating: .constant(false), showDebugField: .constant(false), password: .constant(""))
                   
                 }
                 .padding(.top, 80)
             }
             .ignoresSafeArea()
             .padding(.horizontal)
+        }
+        .onAppear {
+            username = appConfig.username
+            amputationDate = appConfig.amputationDate
+            prosthesisDate = appConfig.prosthesisDate
         }
         .onChange(of: appConfig.hasUnlockedPro, perform: { value in
             WidgetCenter.shared.reloadAllTimelines()
@@ -102,7 +169,7 @@ struct PersonalDeteilsView: View {
             }
             .frame(maxWidth: .infinity)
             .padding()
-            .background(AppConfig().backgroundLabel)
+            .background(currentTheme.labelBackground(nil))
             .overlay(
                    RoundedRectangle(cornerRadius: 10)
                    .stroke(lineWidth: 2)

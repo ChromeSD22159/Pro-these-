@@ -10,30 +10,35 @@ import SwiftUI
 struct EventPreview: View {
     @EnvironmentObject private var appConfig: AppConfig
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var item: Event
     var body: some View {
         HStack(spacing: 20) {
             Image(systemName: eventManager.getIcon(item.contact?.titel ?? "") )
                 .font(.title)
-                .foregroundColor(.yellow)
+                .foregroundColor(currentTheme.hightlightColor)
             
             VStack(alignment: .leading, spacing: 5){
                 HStack{
                     Text(item.titel ?? "Unbekannter Titel")
-                        .foregroundColor(appConfig.fontColor)
+                        .foregroundColor(currentTheme.text)
                         .font(.callout)
                 }
                 
                 HStack{
                     Text(item.startDate ?? Date(), style: .date)
-                        .foregroundColor(appConfig.fontLight)
+                        .foregroundColor(currentTheme.textGray)
                         .font(.caption2)
                     Text(item.startDate ?? Date(), style: .time)
-                        .foregroundColor(appConfig.fontLight)
+                        .foregroundColor(currentTheme.textGray)
                         .font(.caption2)
                     
                     Text("(\(item.contact?.name ?? "Unbekannter Kontakt"))")
-                        .foregroundColor(appConfig.fontLight)
+                        .foregroundColor(currentTheme.textGray)
                         .font(.caption2)
                 }
             }
@@ -59,7 +64,7 @@ struct EventPreview_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             VStack{
                 EventPreview(item: testEvent!)

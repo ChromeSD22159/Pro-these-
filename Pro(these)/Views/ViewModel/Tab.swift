@@ -19,6 +19,16 @@ enum Tab: String, Codable, CaseIterable, Identifiable {
     
     var id: Self { self }
     
+    var allCases: [Tab] {
+        return Tab.allCases
+    }
+    
+    var randomTab: String {
+        let index = allCases.count
+        let randomIndex = Int.random(in: 0...(index - 1))
+        return allCases[randomIndex].rawValue
+    }
+    
     func TabIcon() -> String {
         switch self {
             case .home: return "house.fill"
@@ -33,13 +43,13 @@ enum Tab: String, Codable, CaseIterable, Identifiable {
     
     func TabTitle() -> String {
         switch self {
-            case .home: return "Startseite"
-            case .healthCenter: return "Statitik"
-            case .stopWatch: return "Prothesen Recorder"
+            case .home: return "Home"
+            case .healthCenter: return "Statistic"
+            case .stopWatch: return "Prothesis Recorder"
             case .add: return "plus"
-            case .event: return "Kalender"
+            case .event: return "Calendar"
             case .feeling: return "Feeling"
-            case .pain: return "Phantomschmerzen"
+            case .pain: return "Phantom limb pains"
         }
     }
 }
@@ -74,27 +84,3 @@ enum SubTab: String, Codable, CaseIterable, Identifiable {
 }
 
 
-extension URL {
-
-    var isDeeplink: Bool {
-        return scheme == "ProProthese" // match ProProthese://timer
-    }
-    
-    var tabIdentifier: Tab? {
-        guard isDeeplink else {
-            return nil
-        }
-        
-        switch host {
-        //case "step" : return .step
-        case "event" : return .event
-        case "healthCenter" : return .healthCenter
-        case "feeling" : return .healthCenter
-        case "stopWatch": return .stopWatch
-        case "pain": return .pain
-        default: return nil
-        }
-    }
-    
-    
-}

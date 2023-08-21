@@ -12,6 +12,11 @@ struct ContactPersonRow: View {
     @EnvironmentObject var eventManager: EventManager
     @StateObject var contactManager = ContactManager()
     @State var toggleState: Bool = false
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var body: some View {
         HStack {
             
@@ -49,10 +54,10 @@ struct ContactPersonRow: View {
                 }, label: {
                     Image(systemName: "phone")
                         .font(.title3)
-                        .foregroundColor(person.phone?.count ?? 0 < 1 ? .gray : .white)
+                        .foregroundColor(person.phone?.count ?? 0 < 1 ? currentTheme.textGray : currentTheme.text)
                 })
                 .interactiveDismissDisabled(!contactManager.armed)
-                .foregroundColor(((person.phone?.count ?? 0) > 1) ?  .gray : .white)
+                .foregroundColor(((person.phone?.count ?? 0) > 1) ?  currentTheme.textGray : currentTheme.text)
                 .disabled(person.phone?.count ?? 0 < 1)
                 
                 Button(action: {
@@ -66,31 +71,31 @@ struct ContactPersonRow: View {
                 }, label: {
                     Image(systemName: "platter.filled.bottom.iphone")
                         .font(.title3)
-                        .foregroundColor(person.mobil?.count ?? 0 < 1 ? .gray : .white)
+                        .foregroundColor(person.mobil?.count ?? 0 < 1 ? currentTheme.textGray : currentTheme.text)
                 })
                 .interactiveDismissDisabled(!contactManager.armed)
-                .foregroundColor(((person.mobil?.count ?? 0) > 1) ?  .gray : .white)
+                .foregroundColor(((person.mobil?.count ?? 0) > 1) ?  currentTheme.textGray : currentTheme.text)
                 .disabled(person.mobil?.count ?? 0 < 1)
 
                 
                 Button(action: {
-                    EmailController.shared.sendEmail(subject: "Anfrage", body: "Erstellt aus der \"Pro Prothesen App.\"", to: person.mail ?? "")
+                    EmailController.shared.sendEmail(subject: "Inquiry", body: "Erstellt aus der \"Pro Prothesen App.\"", to: person.mail ?? "")
                  }) {
                      Image(systemName: "envelope")
                          .font(.title3)
-                         .foregroundColor(person.mail?.count ?? 0 < 10 ? .gray : .white)
+                         .foregroundColor(person.mail?.count ?? 0 < 10 ? currentTheme.textGray : currentTheme.text)
                  }
-                .foregroundColor(.white)
+                .foregroundColor(currentTheme.text)
                 .disabled(person.mail?.count ?? 0 < 10)
                 
                 
-                Confirm(message: "'\( person.firstname ?? "" ) \( person.lastname ?? "" )' löschen?", buttonText: "", buttonIcon: "trash", content: {
-                    Button("Löschen") { eventManager.deleteContactPerson(person) }
+                Confirm(message: "Delete '\( person.firstname ?? "" ) \( person.lastname ?? "" )'?", buttonText: "", buttonIcon: "trash", content: {
+                    Button("Delete") { eventManager.deleteContactPerson(person) }
                 })
                 .font(.title3)
             }
         }
-        .foregroundColor(.white )
+        .foregroundColor(currentTheme.text )
         .padding(5)
     }
 }

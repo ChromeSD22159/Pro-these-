@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct NavigateToWithStack<Link: View, DetailView: View>: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     @State private var isShowingNavigation = false
     @State private var isShowingButton = true
     let link:           Link
@@ -33,12 +38,12 @@ struct NavigateToWithStack<Link: View, DetailView: View>: View {
     @ViewBuilder
     func detailViewBody(isActive: Binding<Bool>) -> some View {
         ZStack {
-            AppConfig().backgroundGradient
+            currentTheme.gradientBackground(nil)
                 .ignoresSafeArea()
 
             NavigationView {
                 ZStack {
-                    AppConfig().backgroundGradient
+                    currentTheme.gradientBackground(nil)
                         .ignoresSafeArea()
                     
                     VStack{
@@ -47,14 +52,14 @@ struct NavigateToWithStack<Link: View, DetailView: View>: View {
                             HStack {
                                 Spacer()
                                 HStack{
-                                    Text("Einstellungen")
-                                        .foregroundColor(.white)
+                                    Text("Settings")
+                                        .foregroundColor(currentTheme.text)
                                 }
                                 Spacer()
                             }
                             .ignoresSafeArea()
                             HStack(){
-                                BackBTN(size: 30, foreground: .white, background: .black)
+                                BackBTN(size: 30, foreground: currentTheme.text, background: currentTheme.textBlack)
                                     .onTapGesture {
                                         isShowingNavigation = false
                                     }

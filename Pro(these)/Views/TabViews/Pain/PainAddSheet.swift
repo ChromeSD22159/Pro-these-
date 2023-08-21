@@ -9,9 +9,40 @@ import SwiftUI
 
 struct PainAddSheet: View {
     @EnvironmentObject var vm: PainViewModel
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
+    
     private let persistenceController = PersistenceController.shared
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .reverse)]) private var PainReasons: FetchedResults<PainReason>
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .reverse)]) private var PainDrugs: FetchedResults<PainDrug>
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    @FetchRequest var allProthesis: FetchedResults<Prothese>
+    
+    @FetchRequest var allLiners: FetchedResults<Liner>
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
+    var dynamicGrid: Int {
+        if allProthesis.count <= 3 {
+            return allProthesis.count
+        } else {
+            return 3
+        }
+    }
+    
+    init() {
+        _allProthesis = FetchRequest<Prothese>(
+            sortDescriptors: []
+        )
+        
+        _allLiners = FetchRequest<Liner>(
+            sortDescriptors: []
+        )
+    }
     
     var body: some View {
         GeometryReader { geo in
@@ -21,7 +52,7 @@ struct PainAddSheet: View {
                     VStack(spacing: 30) {
                         // close
                         
-                        SheetHeader("Schmerz bearbeiten", action: {
+                        SheetHeader(title: "Edit pain entry", action: {
                             withAnimation(.easeInOut) {
                                 vm.isPainAddSheet.toggle()
                                 vm.isPainAddSheet = false
@@ -45,6 +76,32 @@ struct PainAddSheet: View {
                         PainPicker(screen: geo.size)
                         
                         
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicGrid), spacing: 10) {
+                            ForEach(allProthesis, id: \.hashValue) { prothese in
+                                Button {
+                                    vm.prothese = prothese
+                                } label: {
+                                    VStack {
+                                        Image(prothese.prosthesisIcon)
+                                            .font(.title)
+                                            .foregroundStyle(currentTheme.hightlightColor, currentTheme.textGray)
+                                        
+                                        Text(prothese.prosthesisKindLineBreak).padding()
+                                            .font(.caption.bold())
+                                            .foregroundColor(currentTheme.text)
+                                    }
+                                    .padding()
+                                    .background(vm.prothese == prothese ? Material.ultraThinMaterial.opacity(1) : Material.ultraThinMaterial.opacity(0.4))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .stroke(vm.prothese == prothese ? .white : .clear, lineWidth: 2)
+                                    )
+                                    .cornerRadius(15)
+                                }
+                            }
+                        }
+                        
+                        /*
                         // DatePicker
                         Button {
                             withAnimation {
@@ -63,7 +120,7 @@ struct PainAddSheet: View {
                             .padding(.horizontal)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.gray)
+                                    .stroke(currentTheme.textGray)
                             )
                         }
                         .background(
@@ -71,7 +128,7 @@ struct PainAddSheet: View {
                                 .datePickerStyle(.wheel)
                                 .frame(width: 200, height: 100)
                                 .clipped()
-                                .background(Color.gray.cornerRadius(10))
+                                .background(currentTheme.textGray.cornerRadius(10))
                                 .opacity(vm.showDatePicker ? 1 : 0 )
                                 .offset(x: 50, y: 90)
                         ).onChange(of: vm.addPainDate) { newValue in
@@ -79,6 +136,7 @@ struct PainAddSheet: View {
                                vm.showDatePicker.toggle()
                            }
                        }// DatePicker
+                        */
                         
                         HStack(alignment: .top, spacing: 8) {
                             Reason()
@@ -89,15 +147,21 @@ struct PainAddSheet: View {
                         Spacer()
 
                         HStack{
-                            Button("Abbrechen"){
+                            Button("Cancel"){
                                 vm.resetStates()
+                                vm.prothese = nil
+                                
+                                // Show InterstitialSheet if not Pro
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                                    if !appConfig.hasPro {
+                                           ads.showInterstitial.toggle()
+                                    }
+                                })
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                             
-                            Button("Ändern"){
-                                // save
-                                
+                            Button("Change"){
                                 let newPain = pain
                                 newPain.date = vm.addPainDate
                                 newPain.painIndex = Int16(vm.selectedPain)
@@ -118,6 +182,11 @@ struct PainAddSheet: View {
                                     newPain.painDrugs = newPainDrug
                                 }
 
+                                if let pro = vm.prothese {
+                                    newPain.prothese = pro
+                                    vm.prothese?.addToPains(newPain)
+                                }
+                                
                                 do {
                                     try? persistenceController.container.viewContext.save()
                                     vm.isPainAddSheet.toggle()
@@ -125,14 +194,19 @@ struct PainAddSheet: View {
                                     // reset
                                     vm.resetStates()
                                 }
-                               
+                                // Show InterstitialSheet if not Pro
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                                    if !appConfig.hasPro {
+                                           ads.showInterstitial.toggle()
+                                    }
+                                })
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                         }
                         .frame(maxWidth: .infinity)
-                        .background(Color.white.opacity(0.05))
-                        .foregroundColor(.white)
+                        .background(currentTheme.text.opacity(0.05))
+                        .foregroundColor(currentTheme.text)
                         .cornerRadius(10)
                         .padding(.bottom, 10)
                         .opacity( withAnimation(.easeOut(duration: 0.3)){
@@ -143,13 +217,14 @@ struct PainAddSheet: View {
                     }
                     .padding()
                     .presentationDragIndicator(.visible)
-                    .foregroundColor(.white)
+                    .foregroundColor(currentTheme.text)
                     .onAppear{
                         vm.addPainDate = pain.date ?? Date()
                         vm.showDatePicker.toggle()
                         vm.selectedPain = Int(pain.painIndex)
                         vm.selectedReason = pain.painReasons
                         vm.selectedDrug = pain.painDrugs
+                        vm.prothese = pain.prothese
                     }
                 }
             } else {
@@ -157,7 +232,7 @@ struct PainAddSheet: View {
                     VStack(spacing: 30) {
                         // close
                         
-                        SheetHeader("Hast du Schmerzen?", action: {
+                        SheetHeader(title: LocalizedStringKey("Do you feel any pain?"), action: {
                             withAnimation(.easeInOut) {
                                 vm.isPainAddSheet.toggle()
                                 vm.isPainAddSheet = false
@@ -180,7 +255,29 @@ struct PainAddSheet: View {
                         // PainPicker
                         PainPicker(screen: geo.size)
                         
+                        // a
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicGrid), spacing: 10) {
+                            ForEach(allProthesis, id: \.hashValue) { prothese in
+                                Button {
+                                    vm.prothese = prothese
+                                } label: {
+                                    VStack {
+                                        Image(prothese.prosthesisIcon)
+                                            .font(.title)
+                                            .foregroundStyle(currentTheme.hightlightColor, currentTheme.textGray)
+                                        
+                                        Text(prothese.prosthesisKindLineBreak).padding()
+                                            .font(.caption.bold())
+                                            .foregroundColor(currentTheme.text)
+                                    }
+                                    .padding()
+                                    .background(vm.prothese == prothese ? Material.ultraThinMaterial.opacity(1) : Material.ultraThinMaterial.opacity(0.4))
+                                    .cornerRadius(15)
+                                }
+                            }
+                        }
                         
+                        /*
                         // DatePicker
                         Button {
                             withAnimation {
@@ -199,7 +296,7 @@ struct PainAddSheet: View {
                             .padding(.horizontal)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.gray)
+                                    .stroke(currentTheme.textGray)
                             )
                         }
                         .background(
@@ -207,14 +304,15 @@ struct PainAddSheet: View {
                                 .datePickerStyle(.wheel)
                                 .frame(width: 200, height: 100)
                                 .clipped()
-                                .background(Color.gray.cornerRadius(10))
+                                .background(currentTheme.textGray.cornerRadius(10))
                                 .opacity(vm.showDatePicker ? 1 : 0 )
                                 .offset(x: 50, y: 90)
                         ).onChange(of: vm.addPainDate) { newValue in
                            withAnimation {
                                vm.showDatePicker.toggle()
                            }
-                       }// DatePicker
+                        }// DatePicker
+                        */
                         
                         HStack(alignment: .top, spacing: 8) {
                             Reason()
@@ -225,15 +323,21 @@ struct PainAddSheet: View {
                         Spacer()
 
                         HStack{
-                            Button("Abbrechen"){
+                            Button("Cancel"){
                                 vm.resetStates()
+                                vm.prothese = nil
+                                
+                                // Show InterstitialSheet if not Pro
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                                    if !appConfig.hasPro {
+                                           ads.showInterstitial.toggle()
+                                    }
+                                })
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                             
-                            Button("Speichern"){
-                                // save
-                                
+                            Button("Save"){
                                 let newPain = Pain(context: persistenceController.container.viewContext)
                                 newPain.date = vm.addPainDate
                                 newPain.painIndex = Int16(vm.selectedPain)
@@ -253,6 +357,11 @@ struct PainAddSheet: View {
                                     newPainDrug.date = vm.addPainDate
                                     newPain.painDrugs = newPainDrug
                                 }
+                                
+                                if let pro = vm.prothese {
+                                    newPain.prothese = pro
+                                    vm.prothese?.addToPains(newPain)
+                                }
 
                                 do {
                                     try? persistenceController.container.viewContext.save()
@@ -261,14 +370,21 @@ struct PainAddSheet: View {
                                     // reset
                                     vm.resetStates()
                                 }
+                                
+                                // Show InterstitialSheet if not Pro
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                                    if !appConfig.hasPro {
+                                           ads.showInterstitial.toggle()
+                                    }
+                                })
                                
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                         }
                         .frame(maxWidth: .infinity)
-                        .background(Color.white.opacity(0.05))
-                        .foregroundColor(.white)
+                        .background(currentTheme.text.opacity(0.05))
+                        .foregroundColor(currentTheme.text)
                         .cornerRadius(10)
                         .padding(.bottom, 10)
                         .opacity( withAnimation(.easeOut(duration: 0.3)){
@@ -279,7 +395,7 @@ struct PainAddSheet: View {
                     }
                     .padding()
                     .presentationDragIndicator(.visible)
-                    .foregroundColor(.white)
+                    .foregroundColor(currentTheme.text)
                 }
             }
             
@@ -290,9 +406,9 @@ struct PainAddSheet: View {
     @ViewBuilder
     func Header() -> some View {
         VStack(spacing: 8){
-            Text("Hey! Beschreibe")
+            Text("Hey! Describe")
                 .font(.system(size: 30, weight: .regular))
-            Text("deine Schmerzen!")
+            Text("your pain!")
                 .font(.system(size: 30, weight: .regular))
         }
     }
@@ -307,7 +423,7 @@ struct PainAddSheet: View {
                         .padding()
                 }
                 .frame(width: screen.width / 7.5, height: screen.width / 7.5 )
-                .background(vm.selectedPain == pain ? .white.opacity(0.2) : .white.opacity(0.01)) // 0.2 / 0
+                .background(vm.selectedPain == pain ? currentTheme.text.opacity(0.2) : currentTheme.text.opacity(0.01)) // 0.2 / 0
                 .cornerRadius(20)
                 .onTapGesture(perform: {
                     if vm.selectedPain == pain {
@@ -333,7 +449,7 @@ struct PainAddSheet: View {
                 HStack(spacing: 10){
                     Image(systemName: "figure.walk")
                     
-                    Text((vm.selectedReason == nil ? "Wählen" : vm.selectedReason?.name) ?? "")
+                    Text((vm.selectedReason == nil ? translateReasons("Choose") : translateReasons(vm.selectedReason?.name) ) )
                         .font(.caption2)
                         .frame(maxWidth: .infinity)
                 }
@@ -341,21 +457,21 @@ struct PainAddSheet: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray)
+                        .stroke(currentTheme.textGray)
                 )
             }
             .background(
-                Picker("Schmerzursache", selection: $vm.selectedReason) {
+                Picker("Cause of pain", selection: $vm.selectedReason) {
                     
                     ForEach(PainReasons, id: \.id) { reason in
-                        Text(String(describing: reason.name!)).tag(Optional<PainReason>(reason))
+                        Text(translateReasons(reason.name!)).tag(Optional<PainReason>(reason))
                     }
-                    Text("andrer Grund").tag(Optional<PainReason>(nil))
+                    Text("other reason").tag(Optional<PainReason>(nil))
                 }
                 .pickerStyle(.inline)
                 .frame(width: 200, height: 100)
                 .clipped()
-                .background(Color.black.cornerRadius(10))
+                .background(currentTheme.textBlack.cornerRadius(10))
                 .opacity(vm.showPainReasonPicker ? 1 : 0 )
                 .offset(x: 0, y: 90)
             )
@@ -372,7 +488,7 @@ struct PainAddSheet: View {
                     Image(systemName: "figure.walk")
                         .font(.title3)
                     
-                    TextField( "z.B.: Wetter, Kälte, Wärme...", text: $vm.AddPainReasonText, onEditingChanged: { (isChanged) in
+                    TextField( "e.g.: weather, cold, heat...", text: $vm.AddPainReasonText, onEditingChanged: { (isChanged) in
                         if !isChanged {
                             if vm.AddPainReasonText == "" {
                                 vm.isPainReasonValid = false
@@ -387,7 +503,7 @@ struct PainAddSheet: View {
                 .padding(.horizontal)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray)
+                        .stroke(currentTheme.textGray)
                 )
                 .padding(.vertical)
             }
@@ -404,7 +520,7 @@ struct PainAddSheet: View {
             }  label: {
                 HStack(spacing: 10){
                     Image(systemName: "pills")
-                    Text((vm.selectedDrug == nil ? "Wählen" : vm.selectedDrug?.name) ?? "")
+                    Text((vm.selectedDrug == nil ? translateReasons("Choose") : translateReasons(vm.selectedDrug?.name)) )
                         .font(.caption2)
                         .frame(maxWidth: .infinity)
                 }
@@ -412,21 +528,21 @@ struct PainAddSheet: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray)
+                        .stroke(currentTheme.textGray)
                 )
             }
             .background(
-                    Picker("Schmerzmittel", selection: $vm.selectedDrug) {
+                    Picker("Painkiller", selection: $vm.selectedDrug) {
                         ForEach(PainDrugs, id: \.id) { drug in
-                            Text(String(describing: drug.name!)).tag(Optional<PainDrug>(drug))
+                            Text(translateReasons(drug.name!)).tag(Optional<PainDrug>(drug))
                         }
                         
-                        Text("andere Schmerzmittel").tag(Optional<PainDrug>(nil))
+                        Text("other painkillers").tag(Optional<PainDrug>(nil))
                     }
                     .pickerStyle(.inline)
                     .frame(width: 200, height: 100)
                     .clipped()
-                    .background(Color.black.cornerRadius(10))
+                    .background(currentTheme.textBlack.cornerRadius(10))
                     .opacity(vm.showPainDrugPicker ? 1 : 0 )
                     .offset(x: 0, y: 90)
             )
@@ -442,7 +558,7 @@ struct PainAddSheet: View {
                 HStack(spacing: 20){
                     Image(systemName: "pills")
                         .font(.title3)
-                    TextField( "z.B.: Ibuprofen, Tillidin, Lyrica...", text: $vm.AddPainDrugText, onEditingChanged: { (isChanged) in
+                    TextField( "E.g.: Ibuprofen, Tillidin, Lyrica...", text: $vm.AddPainDrugText, onEditingChanged: { (isChanged) in
                         if !isChanged {
                              if vm.AddPainDrugText == "" {
                                  vm.isPainDrugValid = false
@@ -457,7 +573,7 @@ struct PainAddSheet: View {
                 .padding(.horizontal)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray)
+                        .stroke(currentTheme.textGray)
                 )
                 .padding(.vertical)
             }

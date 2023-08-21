@@ -1,0 +1,15 @@
+/* Privacy - Health Records Usage Description */
+"NSHealthClinicalHealthRecordsShareUsageDescription" = "Die ProWatchOS Watch App möchte Ihre aktiven Messwerte speichern";
+
+/* Privacy - Health Share Usage Description */
+"NSHealthShareUsageDescription" = "Die ProWatchOS Watch App möchte auf Ihre aktiven Messwerte zugreifen";
+
+/* Privacy - Health Update Usage Description */
+"NSHealthUpdateUsageDescription" = "Die ProWatchOS Watch App möchte Ihre aktiven Messwerte ändern";
+
+/* Privacy - Location Always and When In Use Usage Description */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Die Prothesen-App benötigt Zugriff auf ihren Standort, um ihre Trainingseinheiten zu verfolgen";
+
+/* Privacy - Location When In Use Usage Description */
+"NSLocationWhenInUseUsageDescription" = "Die ProWatchOS Watch App benötigt Zugriff auf ihren Standort, um ihre Trainingseinheiten zu verfolgen";
+

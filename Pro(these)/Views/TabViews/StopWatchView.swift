@@ -12,15 +12,17 @@ struct StopWatchView: View {
     @StateObject var tabManager = TabManager()
     @StateObject var workoutStatisticViewModel = WorkoutStatisticViewModel()
     
+    @EnvironmentObject var themeManager: ThemeManager
+
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+
     var body: some View {
         GeometryReader { screen in
            
             ZStack{
-                RadialGradient(gradient: Gradient(colors: [
-                    Color(red: 5/255, green: 5/255, blue: 15/255).opacity(0.7),
-                    Color(red: 5/255, green: 5/255, blue: 15/255).opacity(1)
-                ]), center: .center, startRadius: 50, endRadius: 300)
-                    .ignoresSafeArea()
+                currentTheme.radialBackground(unitPoint: nil, radius: nil).ignoresSafeArea()
                 
                 VStack(spacing: 20) {
                     HeaderComponent()
@@ -39,10 +41,25 @@ struct StopWatchView: View {
 struct StopWatchRecordView: View {
     @EnvironmentObject var stopWatchProvider: StopWatchProvider
     @EnvironmentObject var tabViewManager: TabManager
-    
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
     @EnvironmentObject var stateManager: StateManager
     
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     @State var recorderState = false
+    
+    @FetchRequest var allProthesis: FetchedResults<Prothese>
+    
+    init() {
+        _allProthesis = FetchRequest<Prothese>(
+            sortDescriptors: []
+        )
+    }
     
     var body: some View {
         ZStack {
@@ -60,7 +77,7 @@ struct StopWatchRecordView: View {
                             .italic()
                             .fontWeight(.bold)
                             .fontWeight(.medium)
-                            .foregroundColor(.white)
+                            .foregroundColor(currentTheme.text)
                         
                     } else if stopWatchProvider.recorderState == .notStarted {
                         Text("")
@@ -71,42 +88,41 @@ struct StopWatchRecordView: View {
                 }
                 
                 HStack(spacing: 15){
-                    Button(action: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            tabViewManager.activeTab = .healthCenter
-                        }
-                    }, label: {
-                        Image(systemName: "location.slash")
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .frame(width: 50, height: 50)
-                            .background(
-                                Circle()
-                                    .fill(Color.yellow)
-                                    .frame(width: 50, height: 50)
-                            )
-                    })
+                    
+                    LiveActivitySwitch()
                    
                     Text( stopWatchProvider.recorderState == .started ? "END" : "START" )
                         .font(Font.system(size: 20))
                         .italic()
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundColor(currentTheme.textBlack)
                         .frame(width: 75, height: 75)
                         .background(
                            Circle()
-                               .fill(Color.yellow)
+                               .fill(currentTheme.hightlightColor)
                                 .frame(width: 75, height: 75)
                         )
                         .onTapGesture {
                             switch stopWatchProvider.recorderState {
                                 case .started :
-                                    stopWatchProvider.stopRecording(completion: { bool in  })
-                                stateManager.updateApplicationContext(with: ["state": false , "date": Calendar.current.date(byAdding: .year, value: -5, to: Date())!])
+                                    stopWatchProvider.stopRecording(completion: { bool in
+                                        stopWatchProvider.sharedState(false)
+                                    })
+                                    stateManager.updateApplicationContext(with: ["state": false , "date": Calendar.current.date(byAdding: .year, value: -5, to: Date())!])
                                     recorderState = false
                                 
+                                    // Show InterstitialSheet if not Pro
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                                        if !appConfig.hasPro {
+                                           ads.showInterstitial.toggle()
+                                        }
+                                    })
+                                
+                                
                                 case .notStarted:
-                                    stopWatchProvider.startRecording(completion: { bool in  })
+                                    stopWatchProvider.startRecording(completion: { bool in
+                                        stopWatchProvider.sharedState(true)
+                                    })
                                     stateManager.updateApplicationContext(with: ["state": true , "date":  Date()])
                                     recorderState = true
                                 case .finished:
@@ -116,20 +132,22 @@ struct StopWatchRecordView: View {
                         
                    
                    
-                    //Image(systemName: stateManager.session.isWatchAppInstalled && stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
+                    /*Image(systemName: stateManager.session.isWatchAppInstalled && stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
                     Button(action: {
                         stateManager.paired = stateManager.session.isPaired
                     }, label: {
                         Image(systemName: stateManager.session.isReachable ? "applewatch" : "applewatch.slash")
                             .font(.system(size: 20))
-                            .foregroundColor(.black)
+                            .foregroundColor(currentTheme.textBlack)
                             .frame(width: 50, height: 50)
                             .background(
                                 Circle()
-                                    .fill(Color.yellow)
+                                    .fill(currentTheme.hightlightColor)
                                     .frame(width: 50, height: 50)
                             )
-                    })
+                    })*/
+                    
+                    ProthesesSwitch()
                }
                 .padding(.bottom, 30)
             }
@@ -153,6 +171,117 @@ struct StopWatchRecordView: View {
             })
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    @ViewBuilder
+    func LiveActivitySwitch() -> some View {
+        Menu(content: {
+            Button(action: {
+                appConfig.showLiveActivity = true
+            }, label: {
+                HStack {
+                    Text("Show")
+                    Spacer()
+                    Image(systemName: "location")
+                }
+            })
+            
+            Button(action: {
+                appConfig.showLiveActivity = false
+            }, label: {
+                HStack {
+                    Text("Don't Show")
+                    Spacer()
+                    Image(systemName: "location.slash")
+                }
+            })
+            
+            Text("View your prosthesis timer on your lock screen and Dynamic Island.")
+                .foregroundColor(currentTheme.textGray)
+                .font(.system(size: 8))
+        }, label: {
+            Image(systemName: appConfig.showLiveActivity ? "location" : "location.slash")
+                .font(.system(size: 25))
+                .foregroundColor(currentTheme.textBlack)
+                .frame(width: 50, height: 50)
+                .background(
+                    Circle()
+                        .fill(currentTheme.hightlightColor)
+                        .frame(width: 50, height: 50)
+                )
+        })
+    }
+    
+    @ViewBuilder
+    func ProthesesSwitch() -> some View {
+        Menu(content: {
+            ForEach(self.allProthesis.reversed()) { prothese in
+                Button(action: {
+                    appConfig.selectedProthese = prothese.prosthesisKind.localizedstring()
+                }, label: {
+                    Image(prothese.prosthesisIcon)
+                    Text(prothese.prosthesisKind)
+                })
+            }
+            
+            Text("Select a prostheses for which you want to start the timer.")
+                .foregroundColor(currentTheme.textGray)
+                .font(.system(size: 8))
+        }, label: {
+            if appConfig.selectedProthese == "" {
+                Image(systemName: "rectangle.portrait.slash")
+                    .font(.system(size: 25, weight: .bold))
+                    .foregroundColor(currentTheme.textBlack)
+                    .frame(width: 50, height: 50)
+                    .background(
+                        Circle()
+                            .fill(currentTheme.hightlightColor)
+                            .frame(width: 50, height: 50)
+                    )
+            } else {
+                
+                ZStack {
+                    Text(appConfig.selectedProthese.prefix(1) + "P")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(currentTheme.text)
+                        .offset(y: -40)
+                    
+                    Image(allProthesis.first?.prosthesisIcon ?? "prothese.above")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundStyle(currentTheme.textBlack, currentTheme.textGray)
+                        .flipHorizontal()
+                }
+                .frame(width: 50, height: 50)
+                .background(
+                    Circle()
+                        .fill(currentTheme.hightlightColor)
+                        .frame(width: 50, height: 50)
+                )
+                
+            }
+            
+        })
+        .onAppear{
+            guard appConfig.selectedProthese == "" else {
+                print("selectedProthese already set")
+                return
+            }
+            
+            guard allProthesis.first?.prosthesisKind.localizedstring() != nil else {
+                print("allProthesis first hast no kind")
+                return
+            }
+            
+            guard allProthesis.count != 0 else {
+                print("allProthesis is empty")
+                appConfig.selectedProthese = ""
+                return
+            }
+            
+            appConfig.selectedProthese = (allProthesis.first?.prosthesisKind.localizedstring())!
+            
+            
+        }
     }
 }
 

@@ -9,6 +9,11 @@ import SwiftUI
 
 struct CircleAnimationInBackground: View {
     
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     @State private var animation:Bool = false
     @State private var blur:CGFloat = 0
@@ -28,14 +33,14 @@ struct CircleAnimationInBackground: View {
                 ZStack{
                     ZStack{
                         Circle()
-                            .strokeBorder(.white.opacity(0.08), lineWidth: 120)
+                            .strokeBorder(currentTheme.text.opacity(0.08), lineWidth: 120)
                             .frame(width: 700)
                             .padding()
                             .blur(radius: blur)
                             .offset(x: x1, y: -y1)
                         
                         Circle()
-                            .fill(Color.white.opacity(0.08))
+                            .fill(currentTheme.text.opacity(0.08))
                             .frame(width: 400)
                             .padding()
                             .blur(radius: blur)

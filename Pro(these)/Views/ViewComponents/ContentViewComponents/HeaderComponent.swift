@@ -11,33 +11,42 @@ struct HeaderComponent: View {
     @EnvironmentObject var appConfig: AppConfig
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var entitlementManager: EntitlementManager
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var body: some View {
         HStack(){
             VStack(spacing: 2) {
-                Text(sayHallo(name: appConfig.username) )
+                sayHallo(name: appConfig.username)
                     .font(.title2)
-                    .foregroundColor(appConfig.fontColor)
+                    .foregroundColor(currentTheme.text)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Dein Tagesziel ist für heute \(appConfig.targetSteps) Schritte")
-                    .font(.callout)
-                    .foregroundColor(appConfig.fontLight)
+                Text("Your daily goal for today is \(AppConfig.shared.targetSteps) steps.")
+                    .font(.caption2)
+                    .foregroundColor(currentTheme.textGray)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             HStack(spacing: 20){
-                /* HASPRO
+                
                 if !entitlementManager.hasPro {
                     Image(systemName: "trophy.fill")
-                        .foregroundColor(AppConfig.shared.fontColor)
+                        .foregroundColor(currentTheme.text)
+                        .font(.title3)
                         .onTapGesture {
                             DispatchQueue.main.async {
                                 tabManager.ishasProFeatureSheet.toggle()
                             }
                         }
                 }
-                 */
+                 
                 Image(systemName: "gearshape")
-                    .foregroundColor(appConfig.fontColor)
+                    .foregroundColor(currentTheme.text)
+                    .font(.title3)
                     .onTapGesture {
                         tabManager.isSettingSheet.toggle()
                     }
@@ -45,26 +54,6 @@ struct HeaderComponent: View {
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity)
-    }
-    
-    func sayHallo(name: String) -> String {
-        let hour = Calendar.current.component(.hour, from: Date())
-        
-        let string = ""
-        
-        var nameString = ""
-        if name != "" {
-            nameString = ", \(name)"
-        }
-        
-        switch hour {
-            case 6..<12 : return "Guten Morgen\(nameString)!"
-            case 12 : return "Guten Tag\(nameString)!"
-            case 13..<17 :  return "Hallo\(nameString)!"
-            case 17..<22 : return "Guten Abend\(nameString)!"
-            default: return "Hallo\(nameString)!"
-        }
-
     }
 }
 

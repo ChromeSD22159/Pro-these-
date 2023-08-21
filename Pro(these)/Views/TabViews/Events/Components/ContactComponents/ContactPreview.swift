@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct ContactPreview: View {
-    @ EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var icon: String
     var color: Color
     var name: String
@@ -26,7 +31,7 @@ struct ContactPreview: View {
                     .font(.callout)
                 
                 Text(titel)
-                    .foregroundColor(appConfig.fontLight)
+                    .foregroundColor(currentTheme.textGray)
                     .font(.caption2)
             }
             

@@ -11,51 +11,59 @@ struct SettingSetStepTarget: View {
 
     @StateObject var appConfig = AppConfig()
     
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
+    @Binding var targetSteps: Int
+    
     var body: some View {
         
         HStack(alignment: .center, spacing: 6) {
-            Button("-", action: { reduceSteps(input: appConfig.targetSteps) })
+            Button("-", action: { targetSteps = targetSteps.reduceSteps })
                 .frame(width: 20, height: 20)
-                .padding()
-                .foregroundColor(.white)
-                .background(.white.opacity(0.1))
+                .padding(6)
+                .foregroundColor(currentTheme.text)
+                .background(currentTheme.text.opacity(0.1))
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.white, lineWidth: 2)
+                        .stroke(currentTheme.text, lineWidth: 1)
                 )
             
             Spacer()
             
             VStack{
-                Text("\(appConfig.targetSteps)")
+                Text("\(targetSteps)")
                     .font(.title)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(currentTheme.text)
                 
-                Label("Zielvorgabe der Täglichen Schritte", image: "prothesis")
+                Label("Daily Steps Goal", image: "figure.prothese")
                     .font(.body)
                     .fontWeight(.regular)
-                    .foregroundColor(.gray)
+                    .foregroundColor(currentTheme.textGray)
             }
             
             Spacer()
             
-            Button("+", action: { maximizeSteps(input: appConfig.targetSteps) })
+            Button("+", action: { targetSteps = targetSteps.maximizeSteps })
                 .frame(width: 20, height: 20)
-                .padding()
-                .foregroundColor(.white)
-                .background(.white.opacity(0.1))
+                .padding(6)
+                .foregroundColor(currentTheme.text)
+                .background(currentTheme.text.opacity(0.1))
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.white, lineWidth: 2)
+                        .stroke(currentTheme.text, lineWidth: 1)
                 )
             
         }
-        .padding(.all, 15.0)
+        .padding(.all, 12)
         .frame(maxWidth: .infinity)
-        .background(AppConfig().background.opacity(0.5))
+        .background(currentTheme.primary.opacity(0.5))
         .cornerRadius(10)
     }
     

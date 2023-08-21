@@ -34,24 +34,15 @@ class LocationProvider: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         location = locations.first?.coordinate
+
         region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: location!.latitude, longitude: location!.longitude),
             latitudinalMeters: 750, longitudinalMeters: 750
         )
-    }
-    
-    func getLocation() -> MKCoordinateRegion {
-        startMonitoring()
         
-        let region = updateRegion(location: location)
+        region = updateRegion(location: location)
+    }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-            self.stopMonitoring()
-        })
-        
-        return region
-    }
-    
     func updateRegion(location: CLLocationCoordinate2D?) -> MKCoordinateRegion {
         
         guard location != nil else {
@@ -75,12 +66,12 @@ class LocationProvider: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func startMonitoring() {
-        manager.startMonitoringSignificantLocationChanges()
+       // manager.startMonitoringSignificantLocationChanges()
         manager.startUpdatingLocation()
     }
     
     func stopMonitoring() {
-        manager.stopMonitoringSignificantLocationChanges()
+        // manager.stopMonitoringSignificantLocationChanges()
         manager.stopUpdatingLocation()
     }
 }

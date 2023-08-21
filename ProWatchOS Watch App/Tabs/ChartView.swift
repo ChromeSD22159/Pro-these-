@@ -39,11 +39,11 @@ struct ChartView: View {
         VStack {
           
             HStack{
-                Image("prothesis")
+                Image("figure.prothese")
                     .imageScale(.large)
                     .font(.system(size: 20, weight: .semibold))
                 
-                Text("\( Int(currentSteps) ) Schritte")
+                Text("\( Int(currentSteps) ) Step")
                     .font(.title3)
                     .padding()
 
@@ -156,11 +156,11 @@ struct ChartView: View {
     func chart() -> some View {
         Chart(){
             
-            RuleMark(y: .value("Durchschnitt", avg ) )
+            RuleMark(y: .value("Average", avg ) )
                 .foregroundStyle(.yellow)
                 .lineStyle(StrokeStyle(lineWidth: 0.5, dash: [8]))
                 .annotation(position: .automatic, alignment: .leading, spacing: 10) {
-                    Text("⌀ \(avg) Steps")
+                    Text("⌀ \(avg) steps")
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(.yellow)

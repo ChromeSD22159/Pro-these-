@@ -31,7 +31,14 @@ extension View {
 
         // locate far out of screen
         controller.view.frame = CGRect(x: 0, y: CGFloat(Int.max), width: 1, height: 1)
-        UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
+        
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window: Void? = windowScene?.windows.first?.rootViewController?.view.addSubview(controller.view)
+        
+        window
+        
+        //UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
 
         let size = controller.view.intrinsicContentSize //controller.sizeThatFits(in: UIScreen.main.bounds.size)
         controller.view.bounds = CGRect(origin: .zero, size: size)

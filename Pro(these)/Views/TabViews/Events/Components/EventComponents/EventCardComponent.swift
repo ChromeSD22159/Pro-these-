@@ -11,9 +11,21 @@ struct EventCardComponent: View {
     @EnvironmentObject var eventManager: EventManager
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var appConfig: AppConfig
+    @EnvironmentObject var ads: AdsViewModel
     @FocusState private var focusedTask: EventTasks?
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var color: Color
     var item: Event
+    
+    var events: [EventTasks] {
+        let allTasks = (item.tasks?.allObjects as? [EventTasks]) ?? []
+        return allTasks.sorted(by: { $0.date ?? Date() < $1.date ?? Date() })
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10){
             EventTaskHeader(color: color, item: item)
@@ -22,16 +34,16 @@ struct EventCardComponent: View {
                 .fontWeight(.medium)
                 .padding(.top, 25)
                 .padding(.bottom, 20)
-           
-            let events = (item.tasks?.allObjects as? [EventTasks]) ?? []
-            ForEach(events.sorted(by: { $0.date ?? Date() < $1.date ?? Date() }), id: \.self) { item in
+            
+            ForEach(events, id: \.self) { item in
                 EventTaskRow(task: item, focusedTask: $focusedTask)
             }
             
             Button {
                 let newTask = EventTasks(context: managedObjectContext)
                 newTask.isDone = false
-                newTask.text = "Notiz"
+                newTask.text = ""
+                newTask.date = Date()
                 item.addToTasks(newTask)
                 withAnimation{
                     eventManager.sortAllEvents()
@@ -39,6 +51,10 @@ struct EventCardComponent: View {
                 }
                 do {
                     try PersistenceController.shared.container.viewContext.save()
+                    // Show InterstitialSheet if not Pro
+                    if !appConfig.hasPro {
+                       ads.showInterstitial.toggle()
+                    }
                 } catch {
                     let nsError = error as NSError
                     fatalError("Add Task error: \(nsError), \(nsError.userInfo)")
@@ -46,27 +62,27 @@ struct EventCardComponent: View {
             } label: {
                 HStack {
                     Image(systemName: "plus")
-                    Text("Notiz hinzufügen")
+                    Text("Add Note")
                 }
             }
-            .foregroundColor(appConfig.fontColor)
+            .foregroundColor(currentTheme.text)
             .padding(.top, 10)
         }
         .padding(20)
-        .background(Color.white.opacity(0.05))
+        .background(currentTheme.text.opacity(0.05))
         .cornerRadius(20)
         
         HStack{
 
-            Confirm(message: "Den Termin '\( item.titel ?? "" )' löschen?", buttonText: "Löschen", buttonIcon: "trash", content: {
-                Button("Löschen") { eventManager.deleteEvent(item) }
+            Confirm(message: "Delete the event '\( item.titel ?? "" )'?", buttonText: "Delete", buttonIcon: "trash", content: {
+                Button("Delete") { eventManager.deleteEvent(item) }
             })
-            .foregroundColor(.yellow)
+            .foregroundColor(currentTheme.hightlightColor)
             
             Spacer()
         }
         .padding(20)
-        .background(Color.white.opacity(0.05))
+        .background(currentTheme.text.opacity(0.05))
         .cornerRadius(20)
     }
 }
@@ -84,7 +100,7 @@ struct EventCardComponent_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack {
-            AppConfig.shared.background.ignoresSafeArea()
+            Theme.blue.gradientBackground(nil).ignoresSafeArea()
             
             VStack{
                 EventCardComponent(color: .white, item: testEvent!)

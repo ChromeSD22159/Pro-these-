@@ -11,6 +11,11 @@ struct EventTaskRow: View {
     var task: EventTasks
     var focusedTask: FocusState<EventTasks?>.Binding
     @EnvironmentObject var eventManager: EventManager
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     @State var toggleState: Bool = false
     var body: some View {
         HStack {
@@ -28,7 +33,7 @@ struct EventTaskRow: View {
                     }
                 }
             
-            TextField(task.text ?? "Notiz", text: Binding(get: {task.text ?? ""}, set: {task.text = $0}), onEditingChanged: { _ in
+            TextField("Notiz", text: Binding(get: {task.text ?? ""}, set: {task.text = $0}), onEditingChanged: { _ in
                 do {
                     try PersistenceController.shared.container.viewContext.save()
                 } catch {
@@ -43,7 +48,7 @@ struct EventTaskRow: View {
                 Image(systemName: "trash")
             })
         }
-        .foregroundColor(task.isDone ? .white.opacity(0.4) : .white )
+        .foregroundColor(task.isDone ? currentTheme.text.opacity(0.4) : currentTheme.text )
         .padding(5)
     }
 }

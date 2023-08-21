@@ -9,12 +9,14 @@ import WidgetKit
 import SwiftUI
 
 struct StopWatchProvider: TimelineProvider {
+    var unlock: Bool
+    
     func placeholder(in context: Context) -> StopWatchSimpleEntry {
-        StopWatchSimpleEntry(date: Date())
+        StopWatchSimpleEntry(date: Date(), hasUnlockedPro: unlock)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (StopWatchSimpleEntry) -> ()) {
-        let entry = StopWatchSimpleEntry(date: Date())
+        let entry = StopWatchSimpleEntry(date: Date(), hasUnlockedPro: unlock)
         completion(entry)
     }
 
@@ -25,7 +27,7 @@ struct StopWatchProvider: TimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = StopWatchSimpleEntry(date: entryDate)
+            let entry = StopWatchSimpleEntry(date: entryDate, hasUnlockedPro: unlock)
             entries.append(entry)
         }
 
@@ -36,60 +38,88 @@ struct StopWatchProvider: TimelineProvider {
 
 struct StopWatchSimpleEntry: TimelineEntry {
     let date: Date
+    let hasUnlockedPro: Bool
 }
 
 struct ProProthesenWidgetStopWatchEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily
+    
+    private var currentTheme: Theme {
+        return ThemeManager().currentTheme()
+    }
+    
     var entry: StopWatchProvider.Entry
-
+    
+    @ObservedObject var appConfig = AppConfig()
+     
     var body: some View {
         
-        Link(destination: URL(string: "ProProthese://stopWatch")!) {
+        Link(destination: URL(string: entry.hasUnlockedPro ? appConfig.recorderState ? "ProProthese://stopWatchStop" : "ProProthese://stopWatchStart" : "ProProthese://getPro")!) {
             ZStack {
                 
-                LinearGradient(colors: [Color(red: 32/255, green: 40/255, blue: 63/255), Color(red: 4/255, green: 5/255, blue: 8/255)], startPoint: .top, endPoint: .bottom)
+                currentTheme.gradientBackground(nil)
                 
-                switch widgetFamily {
-                case .systemSmall:
+                hasProFeatureOverlay(binding: !entry.hasUnlockedPro, label: true) { state in
                     GeometryReader { screen in
                         
                         let width = screen.size.width / 2
                         
                         VStack {
                             
-                            Text("Kontrolliere deinen Prothesentimer.")
+                            Text("Check your prosthesis timer.")
                                 .font(.caption.bold())
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-
-                            ZStack{
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .frame(width: width, height: width)
-                                
-                                Image(systemName: "playpause.fill")
-                                    .font(.title.bold())
-                                    .foregroundColor(.yellow)
+                                .foregroundColor(currentTheme.hightlightColor)
+                            
+                            Spacer()
+                            
+                            if appConfig.recorderState {
+                                HStack {
+                                    Text(appConfig.recorderTimer, style: .timer)
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(currentTheme.hightlightColor)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    ZStack{
+                                        Circle()
+                                            .fill(currentTheme.text.opacity(0.1))
+                                            .frame(width: width / 2, height: width / 2)
+                                        
+                                        Image(systemName: appConfig.recorderState ? "stop.fill" : "play.fill")
+                                            .font(.title3.bold())
+                                            .foregroundColor(currentTheme.hightlightColor)
+                                    }
+                                }
+                                .padding(10)
+                                .font(.caption2)
+                            } else {
+                                HStack {
+                                    Spacer()
+                                    ZStack{
+                                        Circle()
+                                            .fill(currentTheme.text.opacity(0.1))
+                                            .frame(width: width, height: width)
+                                        
+                                        Image(systemName: appConfig.recorderState ? "stop.fill" : "play.fill")
+                                            .font(.title3.bold())
+                                            .foregroundColor(currentTheme.hightlightColor)
+                                    }
+                                    Spacer()
+                                }
+                                .font(.caption2)
                             }
+                            
+                            Spacer()
                         }
+                        .padding()
                         .frame(width: screen.size.width, height: screen.size.height)
+                        .hasProBlurry(state)
                         
                     }
-                case .systemLarge:
-                    VStack {
-                        Text(entry.date, style: .time)
-                        Text("Large Widget")
-                    }
-                default:
-                    VStack {
-                        Text(entry.date, style: .time)
-                        Text("Default")
-                    }
                 }
-            }.widgetURL(URL(string: "ProProthese://stopWatch"))
+            }
+            .widgetURL(URL(string: entry.hasUnlockedPro ? appConfig.recorderState ? "ProProthese://stopWatchStop" : "ProProthese://stopWatchStart" : "ProProthese://getPro"))
         }
-        
-       
     }
 }
 
@@ -97,18 +127,18 @@ struct ProProthesenWidgetStopWatch: Widget {
     let kind: String = "ProProthesenWidgetStopWatch"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: StopWatchProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: StopWatchProvider(unlock: AppTrailManager.hasProOrFreeTrail)) { entry in
             ProProthesenWidgetStopWatchEntryView(entry: entry)
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("Prothese Tragezeiten")
-        .description("Stoppe deine Prothesen tragezeiten.")
+        .configurationDisplayName("Prosthesis wearing times")
+        .description("Stop wearing your prostheses.")
     }
 }
 
 struct ProProthesenWidgetStopWatch_Previews: PreviewProvider {
     static var previews: some View {
-        ProProthesenWidgetStopWatchEntryView(entry: StopWatchSimpleEntry(date: Date()))
+        ProProthesenWidgetStopWatchEntryView(entry: StopWatchSimpleEntry(date: Date(), hasUnlockedPro: true))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

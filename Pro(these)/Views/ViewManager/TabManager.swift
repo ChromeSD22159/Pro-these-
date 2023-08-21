@@ -8,12 +8,12 @@
 import SwiftUI
 
 class TabManager: ObservableObject {
-    @Published var currentTab: Tab = .healthCenter // StartTab
+    
     @Published var isSettingSheet: Bool = false
     @Published var ishasProFeatureSheet: Bool = false
     @Published var isSetupSheet: Bool = false
+    @Published var isSuggestionSheet: Bool = false
     @Published var workoutTab: WorkoutTab = .statistic
-    @AppStorage("startTab") var startTab:Tab = .healthCenter
     
     @Published var animation:Bool = false
     @Published var blur:CGFloat = 0
@@ -23,5 +23,5 @@ class TabManager: ObservableObject {
     @Published var x2:CGFloat = 0
     @Published var y2:CGFloat = 0
     
-    @Published var activeTab: Tab = .healthCenter
+    @Published var activeTab: Tab = .home
 }

@@ -17,23 +17,27 @@ import SwiftUI
 /// ```
 struct Confirm<Content: View>: View {
     @State private var showingConfirmation = false
-    var message: String?
-    var buttonText: String?
+    var message: LocalizedStringKey?
+    var buttonText: LocalizedStringKey?
     var buttonIcon: String?
     @ViewBuilder var content: Content
+    @EnvironmentObject var themeManager: ThemeManager
     
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     var body: some View {
         ZStack{
             Button(action: {
                 showingConfirmation.toggle()
             }, label: {
-                if let buttonIcon = buttonIcon, !buttonIcon.isEmpty, let buttonText = buttonText, buttonText.isEmpty {
+                if let buttonIcon = buttonIcon, !buttonIcon.isEmpty, let buttonText = buttonText, buttonText == "" {
                     Image(systemName: "\(buttonIcon)")
                 }
-                if let buttonText = buttonText, !buttonText.isEmpty, let buttonIcon = buttonIcon, buttonIcon.isEmpty {
-                    Text("\(buttonText)")
+                if let buttonText = buttonText, buttonText != "", let buttonIcon = buttonIcon, buttonIcon.isEmpty {
+                    Text(buttonText)
                 }
-                if let buttonText = buttonText, !buttonText.isEmpty, let buttonIcon = buttonIcon, !buttonIcon.isEmpty  {
+                if let buttonText = buttonText, buttonText != "", let buttonIcon = buttonIcon, !buttonIcon.isEmpty  {
                     Label(buttonText, systemImage: buttonIcon)
                 }
                

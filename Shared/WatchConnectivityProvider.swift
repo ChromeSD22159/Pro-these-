@@ -18,6 +18,8 @@ class StateManager: ObservableObject {
     @Published private(set) var date: Date? = nil
     @Published var paired = false
     
+    private var debug = false
+    
     init(session: WCSession = .default) {
         self.session = session
         
@@ -77,7 +79,7 @@ class SessionDelegater: NSObject, WCSessionDelegate {
         // Protocol comformance only
         // Not needed for this demo
         if activationState == .activated {
-            print("Watch Connected")
+            //  print("Watch Connected")
         }
     }
     

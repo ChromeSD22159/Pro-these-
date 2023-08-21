@@ -9,22 +9,31 @@ import SwiftUI
 
 struct ContactSection: View {
     @EnvironmentObject var eventManager: EventManager
+    
     @EnvironmentObject var appConfig: AppConfig
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
+    
     var titel: String
+    
     var body: some View {
         Section(content: {
             if !eventManager.contacts.isEmpty {
                 ForEach(eventManager.contacts){ contact in
                     NavigateTo({
-                        ContactPreview(icon: contact.icon ?? "", color: .yellow, name: contact.name ?? "Unbekannter Name" , titel: contact.titel ?? "Unbekannter Titel")
+                        ContactPreview(icon: contact.icon ?? "", color: currentTheme.hightlightColor, name: contact.name ?? "Unknown Name" , titel: contact.titel ?? "Unknown Titel")
                     }, {
-                        ContactDetailView(contact: contact, iconColor: .yellow)
+                        ContactDetailView(contact: contact, iconColor: currentTheme.hightlightColor)
                     })
                 }
             } else {
                 HStack(alignment: .center){
                     Spacer()
-                    Text("Kein Kontakt vorhanden!")
+                    Text("No contact available!")
                         .font(.caption2)
                     Spacer()
                 }
@@ -38,7 +47,7 @@ struct ContactSection: View {
                 Spacer()
                 
                 Button(action: { eventManager.isAddContactSheet.toggle() }, label: {
-                    Label("Kontakt hinzufügen", systemImage: "plus")
+                    Label("Add Contact", systemImage: "plus")
                         .font(.caption2)
                         .fontWeight(.medium)
                         .padding(.trailing, 20)
@@ -46,8 +55,8 @@ struct ContactSection: View {
             }
             
         })
-        .tint(appConfig.fontColor)
-        .listRowBackground(Color.white.opacity(0.05))
+        .tint(currentTheme.text)
+        .listRowBackground(currentTheme.text.opacity(0.05))
     }
 }
 
