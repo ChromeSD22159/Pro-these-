@@ -86,6 +86,8 @@ struct FeelingCalendarView: View {
                               ads.showInterstitial.toggle()
                        }
                    })
+                   
+                   cal.editFeeling = nil
                }, content: {
                    AddFeelingSheetBody()
                })

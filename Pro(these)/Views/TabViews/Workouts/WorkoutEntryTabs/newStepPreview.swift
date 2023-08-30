@@ -116,7 +116,7 @@ struct newStepPreview: View {
                                         .font(size < 400 ? .headline : .title3)
                                         .foregroundColor(currentTheme.hightlightColor)
                                     
-                                    let (h,m,_) = totelWearingThisWeek.secondsToHoursMinutesSecondsString()
+                                    let (h,m,_) = totelWearingThisWeek.secondsToHoursMinutesSeconds
                                     Text("**\(h):\(m)h**")
                                         .font(size < 400 ? .headline : .title3).fontWeight(.bold)
                                         .multilineTextAlignment(.leading)
@@ -799,10 +799,12 @@ struct dailyStepsSheets: View {
             }
             .foregroundColor(currentTheme.text)
             
+            /*
             if !AppConfig.shared.hasPro {
                 AdsManager.AdBannerView(adUnitID: AdsManager.GoogleAds.banner.blockID(type: AppConfig.shared.adsDebug ? .test : .product )  , height: 50, width: nil )
                     .frame(height: 50)
             }
+             */
         }
         .blurredSheet(.init(.ultraThinMaterial), show: $snapsheet, onDismiss: {
             // Show InterstitialSheet if not Pro

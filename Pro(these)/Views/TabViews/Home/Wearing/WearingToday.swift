@@ -60,6 +60,13 @@ struct WearingToday: View {
             }
         }
     
+        func secondsToHoursMinutesSeconds(_ seconds: Int) -> (String, String, String) {
+            let hour = String(format: "%02d", seconds / 3600)
+            let minute = String(format: "%02d", (seconds % 3600) / 60)
+            let second = String(format: "%02d", (seconds % 3600) % 60)
+            return (hour, minute, second)
+        }
+    
         func getWorkouts() {
             let date = Date()
 

@@ -80,56 +80,51 @@ struct ContentView: View {
                     // Content
                     VStack(){
                         switch activeTab {
-                        case .home: HomeView().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
-                        case .event: Events().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
-                        case .healthCenter: WorkOutEntryView().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
-                        case .stopWatch: StopWatchView().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
-                        case .add: FeelingView().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
-                        case .feeling: FeelingView().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
-                        case .pain: PainEntry().padding(.bottom, !AppConfig.shared.hasPro ? 60 : 10)
+                        case .home: HomeView().padding(.bottom, 10)
+                        case .event: Events().padding(.bottom, 10)
+                        case .healthCenter: WorkOutEntryView().padding(.bottom, 10)
+                        case .stopWatch: StopWatchView().padding(.bottom, 10)
+                        case .add: FeelingView().padding(.bottom, 10)
+                        case .feeling: FeelingView().padding(.bottom, 10)
+                        case .pain: PainEntry().padding(.bottom, 10)
                         }
                         
-                        Spacer(minLength: 70)
+                        Spacer(minLength: 40)
                     }
                     .foregroundColor(currentTheme.accentColor)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .blur(radius: showReportSheet ? 4 : 0)
                     
+                    if showSubTab {
+                        ZStack{
+                            currentTheme.textBlack.ignoresSafeArea().opacity(showSubTab ? 0.5 : 0)
+                            currentTheme.radialBackground(unitPoint: nil, radius: nil).ignoresSafeArea().opacity(showSubTab ? 0.5 : 0)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                        .background(Material.ultraThinMaterial.opacity(showSubTab ? 0.5 : 0))
+                        .ignoresSafeArea().opacity(showSubTab ? 1 : 0)
+                        .onTapGesture{
+                            withAnimation(.easeInOut(duration: 0.3)){
+                                showSubTab.toggle()
+                            }
+                        }
+                    }
+                    
                     // Navigation
                     VStack(spacing: 0){
-                        if showSubTab {
-                            ZStack{
-                                currentTheme.textBlack.ignoresSafeArea().opacity(showSubTab ? 0.5 : 0)
-                                currentTheme.radialBackground(unitPoint: nil, radius: nil).ignoresSafeArea().opacity(showSubTab ? 0.5 : 0)
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                            .background(Material.ultraThinMaterial.opacity(showSubTab ? 0.5 : 0))
-                            .ignoresSafeArea().opacity(showSubTab ? 1 : 0)
-                            .onTapGesture{
-                                withAnimation(.easeInOut(duration: 0.3)){
-                                    showSubTab.toggle()
-                                }
-                            }
-                        } else {
-                            Spacer()
-                        }
                         
+                        Spacer()
                         // NavBar
                         TabStack(deepLink: $deepLink, activeTab: $activeTab, activeSubTab: $activeSubTab, showSubTab: $showSubTab)
-                            .frame(height: !AppConfig.shared.hasPro ? 70 : 50)
-                            .offset(y: -15)
-                            
-                        
-                        if !AppConfig.shared.hasPro {
-                            AdsManager.AdBannerView(adUnitID: AdsManager.GoogleAds.banner.blockID(type: appConfig.adsDebug ? .test : .product) , height: nil, width: nil )
-                                .ignoresSafeArea()
-                                .frame(height: 50)
-                        }
+                            .frame(height: 50)
+                            .offset(y: -27)
                         
                     }
                     .foregroundColor(currentTheme.accentColor)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .ignoresSafeArea()
                     .blur(radius: showReportSheet ? 4 : 0)
+                  
                     
                     // Header blur
                     HeaderBackgroundBlurTop()

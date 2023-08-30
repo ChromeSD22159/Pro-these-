@@ -22,6 +22,11 @@ class AppConfig: ObservableObject {
     
     var adsDebug = false // !!!!!! FOR DEBUG TRUE // PRODUCTION FALSE
     
+    var googleAppOpenAd: GoogleAds = .prod
+    var googleInterstitialAds: GoogleAds = .prod
+    
+    @AppStorage("GoogleAppOpenAdLastShow", store: AppConfig.store) var googleAppOpenAdLastShow: Date = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+    
     var debugPW = "x"
     
     /// currentTheme.primary
@@ -140,4 +145,8 @@ enum Launch: String, Codable, CaseIterable {
         case .notLaunchedbefore: return "notLaunchedbefore"
         }
     }
+}
+
+enum GoogleAds {
+    case dev, prod
 }

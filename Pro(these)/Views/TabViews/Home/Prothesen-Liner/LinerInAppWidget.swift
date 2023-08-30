@@ -113,6 +113,7 @@ struct LinerInAppWidget: View {
                                     Text(prothese?.kind?.linerFor ?? LocalizedStringKey(""))
                                         .font(.body.bold())
                                         .foregroundColor(currentTheme.text)
+                                        .multilineTextAlignment(.leading)
                                 }
                                 
                                 Text(prothese?.kind?.oneToOneOrderSubline ?? LocalizedStringKey(""))

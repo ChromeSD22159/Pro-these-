@@ -1,0 +1,9 @@
+/* Privacy - Health Records Usage Description */
+"NSHealthClinicalHealthRecordsShareUsageDescription" = "ProProtheseWidgetExtension quiere guardar sus lecturas activas";
+
+/* Privacy - Health Share Usage Description */
+"NSHealthShareUsageDescription" = "ProProtheseWidgetExtension quiere acceder a sus lecturas activas";
+
+/* Privacy - Health Update Usage Description */
+"NSHealthUpdateUsageDescription" = "ProProtheseWidgetExtension quiere cambiar sus lecturas activas";
+

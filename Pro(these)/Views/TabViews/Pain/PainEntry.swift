@@ -68,6 +68,9 @@ struct PainEntry: View {
                        ads.showInterstitial.toggle()
                 }
             })
+            
+            vm.editPain = nil
+            vm.resetStates()
         }, content: {
             PainAddSheet()
         })
@@ -371,7 +374,7 @@ struct ReasonRow: View {
             
             VStack(alignment: .leading, spacing: 8) {
 
-                Text(translateReasons(reason.name))
+                Text(LocalizedStringKey(reason.name ?? "")) // translateReasons(reason.name)
                     .font(.body.bold())
                 
                 let i = vm.dateFormatte(inputDate: reason.date ?? Date(), dateString: "dd.MM.yy", timeString: "HH:mm")
@@ -443,7 +446,7 @@ struct DrugRow: View {
             
             VStack(alignment: .leading, spacing: 8) {
                 if let p = drug.name {
-                    Text(translateReasons(p))
+                    Text(LocalizedStringKey(p)) // translateReasons(p)
                         .font(.body.bold())
                 }
                 

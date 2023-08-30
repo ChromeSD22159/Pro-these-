@@ -1,0 +1,21 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "Pro Prótesis";
+
+/* Bundle name */
+"CFBundleName" = "Aplicación de reloj ProWatch OS";
+
+/* Privacy - Health Records Usage Description */
+"NSHealthClinicalHealthRecordsShareUsageDescription" = "La aplicación ProWatchOS Watch desea guardar sus lecturas activas";
+
+/* Privacy - Health Share Usage Description */
+"NSHealthShareUsageDescription" = "La aplicación ProWatchOS Watch quiere acceder a sus lecturas activas";
+
+/* Privacy - Health Update Usage Description */
+"NSHealthUpdateUsageDescription" = "La aplicación ProWatchOS Watch quiere cambiar sus lecturas activas";
+
+/* Privacy - Location Always and When In Use Usage Description */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "La aplicación Prosthesis necesita acceso a su ubicación para realizar un seguimiento de sus entrenamientos";
+
+/* Privacy - Location When In Use Usage Description */
+"NSLocationWhenInUseUsageDescription" = "La aplicación ProWatchOS Watch necesita acceso a su ubicación para realizar un seguimiento de sus entrenamientos";
+

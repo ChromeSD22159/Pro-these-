@@ -96,9 +96,11 @@ struct Pro_theseApp: App {
                                    
                                     loginViewModel.appUnlocked = false
                                     
-                                    AppRemoveNotifications.setMoodReminderNotifications()
-                                    AppRemoveNotifications.setGoodMorningNotifications()
-                                    AppRemoveNotifications.setComebackNotifications(delay: Int.random(in: (6*60*60)...(8*60*60))) // 6h - 8h
+                                    let printNotificationsRegistering = true
+                                    
+                                    AppRemoveNotifications.setMoodReminderNotifications(printConsole: printNotificationsRegistering)
+                                    AppRemoveNotifications.setGoodMorningNotifications(printConsole: printNotificationsRegistering)
+                                    AppRemoveNotifications.setComebackNotifications(delay: Int.random(in: (6*60*60)...(8*60*60)), printConsole: printNotificationsRegistering) // 6h - 8h
                                     
                                     registerAppBackgroundTask()
                                     
@@ -196,6 +198,10 @@ struct Pro_theseApp: App {
         })
 
         removeNotifications()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            GoogleAppOpenAd().requestAppOpenAd()
+        })
         
         AppFirstLaunchManager.requestFirstLaunch(debug: false)
         AppFirstLaunchManager.updateLaunchDate()

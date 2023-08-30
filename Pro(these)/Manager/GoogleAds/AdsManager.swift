@@ -10,6 +10,7 @@ import GoogleMobileAds
 import AppTrackingTransparency
 import AdSupport
 
+/*
 class AdsManager: NSObject, ObservableObject {
     
     final class Interstitial: NSObject, GADFullScreenContentDelegate, ObservableObject {
@@ -104,39 +105,6 @@ class AdsManager: NSObject, ObservableObject {
         }
     }
 }
+*/
 
 
-class AdsViewModel: ObservableObject {
-    static let shared = AdsViewModel()
-    
-    @Published var nextAdsShowen: Date? = nil
-    
-    @Published var interstitial = AdsManager.Interstitial()
-    @Published var showInterstitial = false {
-        didSet {
-            if !AppConfig.shared.hasPro {
-                if showInterstitial && !AppConfig.shared.hasPro {
-                    print("SHOW Interstitial Ads")
-                    if nextAdsShowen != nil {
-                        
-                        if nextAdsShowen! < Date() {
-                            interstitial.showAd()
-                            showInterstitial = false
-                            nextAdsShowen = Calendar.current.date(byAdding: .minute, value: 3, to: Date())
-                        }
-                        
-                    } else {
-                        interstitial.showAd()
-                        showInterstitial = false
-                        nextAdsShowen = Calendar.current.date(byAdding: .minute, value: 3, to: Date())
-                    }
-                    
-                    
-                } else {
-                    interstitial.requestInterstitialAds()
-                }
-            }
-            
-        }
-    }
-}

@@ -69,6 +69,7 @@ struct ReportFeeldingProtheseDiagram: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text("Prostheses Mood Chart")
                     .font(.body.bold())
+                    .multilineTextAlignment(.leading)
                     .foregroundColor(currentTheme.text)
                 
                 Text("Your mood progression in the prosthesis comparison.")

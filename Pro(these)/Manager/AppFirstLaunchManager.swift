@@ -108,3 +108,9 @@ enum AppFirstLaunchManager {
         }
     }
 }
+
+
+struct BackgroundTask {
+    var name: String
+    var value: String
+}

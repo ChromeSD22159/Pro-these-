@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		525E551369F02D78175799B8 /* Pods_Pro_these_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA1B4F7BE824594CBD6AD3D /* Pods_Pro_these_.framework */; };
 		B60497142A716F5900985310 /* FeelingDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60497132A716F5900985310 /* FeelingDiagram.swift */; };
 		B60497162A718C2E00985310 /* StepsAvarage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60497152A718C2E00985310 /* StepsAvarage.swift */; };
 		B60497182A719A5D00985310 /* WearingAvarage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60497172A719A5D00985310 /* WearingAvarage.swift */; };
@@ -78,7 +79,6 @@
 		B63D8E472A6661C50032FBF7 /* SuggestionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63D8E462A6661C50032FBF7 /* SuggestionSheet.swift */; };
 		B63D8E492A6666BC0032FBF7 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63D8E482A6666BC0032FBF7 /* String.swift */; };
 		B63D8E4A2A668B770032FBF7 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63D8E482A6666BC0032FBF7 /* String.swift */; };
-		B63D8E4D2A66A6E60032FBF7 /* WorkoutTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63D8E4C2A66A6E60032FBF7 /* WorkoutTab.swift */; };
 		B63D8E4F2A66CBD70032FBF7 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63D8E4E2A66CBD70032FBF7 /* Int.swift */; };
 		B63D8E532A66DBD60032FBF7 /* Pro-these--InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B63D8E512A66DBD60032FBF7 /* Pro-these--InfoPlist.strings */; };
 		B63D8E562A66DBD60032FBF7 /* ProWatchOS-Watch-App-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B63D8E542A66DBD60032FBF7 /* ProWatchOS-Watch-App-InfoPlist.strings */; };
@@ -92,15 +92,12 @@
 		B63F19CC2A8B01F700143545 /* ReportPainProtheseDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63F19CB2A8B01F700143545 /* ReportPainProtheseDiagram.swift */; };
 		B63F19CE2A8BAFF800143545 /* SystemDebugDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63F19CD2A8BAFF800143545 /* SystemDebugDataView.swift */; };
 		B63F19D02A8BF7D300143545 /* MissingReminerNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63F19CF2A8BF7D300143545 /* MissingReminerNotifications.swift */; };
-		B63F19D22A8C008600143545 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63F19D12A8C008600143545 /* BackgroundTask.swift */; };
 		B6407B572A403903008D9539 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6407B562A403903008D9539 /* ExtensionDelegate.swift */; };
 		B64635D22A7E584D0032F1F8 /* StepDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64635D12A7E584D0032F1F8 /* StepDiagram.swift */; };
 		B64635D42A7E8D880032F1F8 /* StepTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64635D32A7E8D880032F1F8 /* StepTrend.swift */; };
 		B64635D62A7EBF160032F1F8 /* StepTargetReached.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64635D52A7EBF160032F1F8 /* StepTargetReached.swift */; };
 		B64878652A60017D00ED3028 /* UrlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64878642A60017D00ED3028 /* UrlExtension.swift */; };
 		B64878662A60017D00ED3028 /* UrlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64878642A60017D00ED3028 /* UrlExtension.swift */; };
-		B648786C2A602AC700ED3028 /* extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648786B2A602AC700ED3028 /* extension.swift */; };
-		B648786D2A602AC700ED3028 /* extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648786B2A602AC700ED3028 /* extension.swift */; };
 		B648786F2A6047B000ED3028 /* newStepPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648786E2A6047B000ED3028 /* newStepPreview.swift */; };
 		B64AE0F02A8A2896000DCEA7 /* ReportNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64AE0EF2A8A2896000DCEA7 /* ReportNotifications.swift */; };
 		B64AE0F22A8A2BDF000DCEA7 /* NotificationByTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64AE0F12A8A2BDF000DCEA7 /* NotificationByTimer.swift */; };
@@ -149,6 +146,7 @@
 		B6676BA52A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
 		B6676BA62A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
 		B6676BA72A466FC200260C8F /* StoreConnect.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B6676BA22A466FC200260C8F /* StoreConnect.storekit */; };
+		B66CE4332A9D6E570020EC1A /* GoogleInterstitialAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66CE4322A9D6E570020EC1A /* GoogleInterstitialAd.swift */; };
 		B66F2C4629FD0649006CA21E /* WatchConnectivityProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F2C4529FD0649006CA21E /* WatchConnectivityProvider.swift */; };
 		B67449112A89333600DE5BE7 /* AppRemoveNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67449102A89333600DE5BE7 /* AppRemoveNotifications.swift */; };
 		B67449132A89826300DE5BE7 /* StepNotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67449122A89826300DE5BE7 /* StepNotificationRequest.swift */; };
@@ -157,7 +155,6 @@
 		B67B9EB32A785DF4001CAC86 /* FeelingTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67B9EB22A785DF4001CAC86 /* FeelingTrend.swift */; };
 		B67B9EB52A79410E001CAC86 /* LinerInAppWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67B9EB42A79410E001CAC86 /* LinerInAppWidget.swift */; };
 		B67B9EB72A7AD93D001CAC86 /* LinerAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67B9EB62A7AD93D001CAC86 /* LinerAddView.swift */; };
-		B67BD4B12A8C014C002A75E7 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63F19D12A8C008600143545 /* BackgroundTask.swift */; };
 		B67BD4B32A8CCB07002A75E7 /* HandlerStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BD4B22A8CCB07002A75E7 /* HandlerStates.swift */; };
 		B67BD4B52A8CD0AC002A75E7 /* HandlerStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BD4B22A8CCB07002A75E7 /* HandlerStates.swift */; };
 		B67BD4B62A8CD0C0002A75E7 /* AppFirstLaunchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A0A452A83BEFA00E425CB /* AppFirstLaunchManager.swift */; };
@@ -243,6 +240,7 @@
 		B6EEC4BB29FD40D8004E2F2F /* HealthStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9490C29F6EEB600BBE3A2 /* HealthStorage.swift */; };
 		B6EEC4BD29FD41C0004E2F2F /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9490E29F6EECC00BBE3A2 /* AppConfig.swift */; };
 		B6EEC4BE29FD42BD004E2F2F /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9491329F6EF0900BBE3A2 /* Step.swift */; };
+		B6F4E66F2A9D61160049AC6F /* GoogleAppOpenAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F4E66E2A9D61160049AC6F /* GoogleAppOpenAd.swift */; };
 		B6F948F129F6ED8500BBE3A2 /* Pro_these_App.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F948F029F6ED8500BBE3A2 /* Pro_these_App.swift */; };
 		B6F948F329F6ED8500BBE3A2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F948F229F6ED8500BBE3A2 /* ContentView.swift */; };
 		B6F948F529F6ED8700BBE3A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6F948F429F6ED8700BBE3A2 /* Assets.xcassets */; };
@@ -259,7 +257,6 @@
 		B6F9492129F7AB1F00BBE3A2 /* PushNotifications_OLD.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9492029F7AB1F00BBE3A2 /* PushNotifications_OLD.swift */; };
 		B6F9F88D2A9227D500D6939E /* ProthesenWearingCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9F88C2A9227D500D6939E /* ProthesenWearingCounter.swift */; };
 		B6FD0DB72A3258C600E06F9D /* ActivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD0DB62A3258C600E06F9D /* ActivityState.swift */; };
-		C20A14C8D2189A1A5B5A2DC7 /* Pods_Pro_these_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07C36B9BF3E3EC0FD2E12F7 /* Pods_Pro_these_.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -341,9 +338,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		483285429B7CF672B8A2072F /* Pods-Pro-these-.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-these-.debug.xcconfig"; path = "Target Support Files/Pods-Pro-these-/Pods-Pro-these-.debug.xcconfig"; sourceTree = "<group>"; };
-		7934539B1F9C5CA6899D99A0 /* Pods-Pro-these-.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-these-.release.xcconfig"; path = "Target Support Files/Pods-Pro-these-/Pods-Pro-these-.release.xcconfig"; sourceTree = "<group>"; };
-		A07C36B9BF3E3EC0FD2E12F7 /* Pods_Pro_these_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pro_these_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DA1B4F7BE824594CBD6AD3D /* Pods_Pro_these_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pro_these_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E6DECEBA267B5041E2B1F34 /* Pods-Pro-these-.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-these-.debug.xcconfig"; path = "Target Support Files/Pods-Pro-these-/Pods-Pro-these-.debug.xcconfig"; sourceTree = "<group>"; };
+		80DA8B99397939E924677EDA /* Pods-Pro-these-.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-these-.release.xcconfig"; path = "Target Support Files/Pods-Pro-these-/Pods-Pro-these-.release.xcconfig"; sourceTree = "<group>"; };
 		B60497132A716F5900985310 /* FeelingDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingDiagram.swift; sourceTree = "<group>"; };
 		B60497152A718C2E00985310 /* StepsAvarage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsAvarage.swift; sourceTree = "<group>"; };
 		B60497172A719A5D00985310 /* WearingAvarage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearingAvarage.swift; sourceTree = "<group>"; };
@@ -398,7 +395,6 @@
 		B63D8E432A61E5940032FBF7 /* DoubleExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtention.swift; sourceTree = "<group>"; };
 		B63D8E462A6661C50032FBF7 /* SuggestionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionSheet.swift; sourceTree = "<group>"; };
 		B63D8E482A6666BC0032FBF7 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		B63D8E4C2A66A6E60032FBF7 /* WorkoutTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTab.swift; sourceTree = "<group>"; };
 		B63D8E4E2A66CBD70032FBF7 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		B63D8E502A66DBD60032FBF7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B63D8E522A66DBD60032FBF7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Pro-these--InfoPlist.strings"; sourceTree = "<group>"; };
@@ -413,13 +409,11 @@
 		B63F19CB2A8B01F700143545 /* ReportPainProtheseDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPainProtheseDiagram.swift; sourceTree = "<group>"; };
 		B63F19CD2A8BAFF800143545 /* SystemDebugDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDebugDataView.swift; sourceTree = "<group>"; };
 		B63F19CF2A8BF7D300143545 /* MissingReminerNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingReminerNotifications.swift; sourceTree = "<group>"; };
-		B63F19D12A8C008600143545 /* BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		B6407B562A403903008D9539 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		B64635D12A7E584D0032F1F8 /* StepDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDiagram.swift; sourceTree = "<group>"; };
 		B64635D32A7E8D880032F1F8 /* StepTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTrend.swift; sourceTree = "<group>"; };
 		B64635D52A7EBF160032F1F8 /* StepTargetReached.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTargetReached.swift; sourceTree = "<group>"; };
 		B64878642A60017D00ED3028 /* UrlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlExtension.swift; sourceTree = "<group>"; };
-		B648786B2A602AC700ED3028 /* extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extension.swift; sourceTree = "<group>"; };
 		B648786E2A6047B000ED3028 /* newStepPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newStepPreview.swift; sourceTree = "<group>"; };
 		B64AE0EF2A8A2896000DCEA7 /* ReportNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportNotifications.swift; sourceTree = "<group>"; };
 		B64AE0F12A8A2BDF000DCEA7 /* NotificationByTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationByTimer.swift; sourceTree = "<group>"; };
@@ -457,6 +451,7 @@
 		B66670EF2A3CA9F5009CB426 /* ProProtheseWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProProtheseWidgetExtension.entitlements; sourceTree = "<group>"; };
 		B6676B9A2A45F39600260C8F /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		B6676BA22A466FC200260C8F /* StoreConnect.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreConnect.storekit; sourceTree = "<group>"; };
+		B66CE4322A9D6E570020EC1A /* GoogleInterstitialAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleInterstitialAd.swift; sourceTree = "<group>"; };
 		B66F2C4529FD0649006CA21E /* WatchConnectivityProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityProvider.swift; sourceTree = "<group>"; };
 		B67449102A89333600DE5BE7 /* AppRemoveNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRemoveNotifications.swift; sourceTree = "<group>"; };
 		B67449122A89826300DE5BE7 /* StepNotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepNotificationRequest.swift; sourceTree = "<group>"; };
@@ -505,6 +500,7 @@
 		B69A0A472A83C72C00E425CB /* AppTrailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTrailManager.swift; sourceTree = "<group>"; };
 		B69A0A4B2A8403B500E425CB /* ProthesenMaintainceInAppWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProthesenMaintainceInAppWidget.swift; sourceTree = "<group>"; };
 		B69F36ED2A41BB8E00E558D4 /* InfomationField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfomationField.swift; sourceTree = "<group>"; };
+		B6A6391B2A9F63B10094EB73 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B6A6BCF42A4A45E200D690F5 /* TestStore.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestStore.storekit; sourceTree = "<group>"; };
 		B6B487652A13B79100263A57 /* EventProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProvider.swift; sourceTree = "<group>"; };
 		B6B487682A14DF8B00263A57 /* FeelingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingView.swift; sourceTree = "<group>"; };
@@ -525,8 +521,15 @@
 		B6E3B3DC29FD1B5900341144 /* ProWatchOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProWatchOSApp.swift; sourceTree = "<group>"; };
 		B6E3B3E029FD1B5A00341144 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6E3B3E329FD1B5A00341144 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B6EC77FD2A9F7C7E006F06AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "es.lproj/Pro-these--InfoPlist.strings"; sourceTree = "<group>"; };
+		B6EC77FE2A9F7C7E006F06AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "es.lproj/ProWatchOS-Watch-App-InfoPlist.strings"; sourceTree = "<group>"; };
+		B6EC77FF2A9F7C7E006F06AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B6EC78002A9F7C7E006F06AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B6EC78012A9F7C7E006F06AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B6EC78022A9F7C7E006F06AC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B6EEC4B629FD3F39004E2F2F /* ProWatchOS Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ProWatchOS Watch App.entitlements"; sourceTree = "<group>"; };
 		B6EEC4C729FEF30B004E2F2F /* ProWatchOS-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ProWatchOS-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		B6F4E66E2A9D61160049AC6F /* GoogleAppOpenAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAppOpenAd.swift; sourceTree = "<group>"; };
 		B6F948ED29F6ED8500BBE3A2 /* Pro-these-.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-these-.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6F948F029F6ED8500BBE3A2 /* Pro_these_App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pro_these_App.swift; sourceTree = "<group>"; };
 		B6F948F229F6ED8500BBE3A2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -590,7 +593,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C20A14C8D2189A1A5B5A2DC7 /* Pods_Pro_these_.framework in Frameworks */,
+				525E551369F02D78175799B8 /* Pods_Pro_these_.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -898,7 +901,6 @@
 				B6DBD89E2A41DB67003C5E85 /* hasProFeature.swift */,
 				B697CF852A38989F00A4CD01 /* Widgets */,
 				B697CF752A388B3B00A4CD01 /* Assets.xcassets */,
-				B648786B2A602AC700ED3028 /* extension.swift */,
 				B697CF772A388B3B00A4CD01 /* Info.plist */,
 				B63D8E5A2A66DBD60032FBF7 /* Localizable.strings */,
 				B63D8E572A66DBD60032FBF7 /* InfoPlist.strings */,
@@ -990,6 +992,8 @@
 			isa = PBXGroup;
 			children = (
 				B6BBBD092A6E97F60009711E /* AdsManager.swift */,
+				B6F4E66E2A9D61160049AC6F /* GoogleAppOpenAd.swift */,
+				B66CE4322A9D6E570020EC1A /* GoogleInterstitialAd.swift */,
 			);
 			path = GoogleAds;
 			sourceTree = "<group>";
@@ -1137,13 +1141,11 @@
 			children = (
 				B6F9491129F6EEFA00BBE3A2 /* Tab.swift */,
 				B666606D2A7D2140006C3122 /* Prothesis.swift */,
-				B63F19D12A8C008600143545 /* BackgroundTask.swift */,
 				B64AE0F12A8A2BDF000DCEA7 /* NotificationByTimer.swift */,
 				B64AE0F52A8A2D08000DCEA7 /* NotificationByDate.swift */,
 				B6BBBD0B2A6FA7840009711E /* Theme.swift */,
 				B68C6E1A2A1D7F7C00167F9B /* MoodModels.swift */,
 				B65260032A0E5FBC0024B9D2 /* Workout.swift */,
-				B63D8E4C2A66A6E60032FBF7 /* WorkoutTab.swift */,
 				B6F9491529F6EF2A00BBE3A2 /* MoreListStaks.swift */,
 				B6F9491329F6EF0900BBE3A2 /* Step.swift */,
 			);
@@ -1196,7 +1198,7 @@
 			children = (
 				B6F9492F29F7F92600BBE3A2 /* WidgetKit.framework */,
 				B6F9493129F7F92700BBE3A2 /* SwiftUI.framework */,
-				A07C36B9BF3E3EC0FD2E12F7 /* Pods_Pro_these_.framework */,
+				5DA1B4F7BE824594CBD6AD3D /* Pods_Pro_these_.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1220,8 +1222,8 @@
 		FF2B16ECCB1B1BBDC88F4FB2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				483285429B7CF672B8A2072F /* Pods-Pro-these-.debug.xcconfig */,
-				7934539B1F9C5CA6899D99A0 /* Pods-Pro-these-.release.xcconfig */,
+				5E6DECEBA267B5041E2B1F34 /* Pods-Pro-these-.debug.xcconfig */,
+				80DA8B99397939E924677EDA /* Pods-Pro-these-.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1304,14 +1306,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6F9490129F6ED8700BBE3A2 /* Build configuration list for PBXNativeTarget "Pro-these-" */;
 			buildPhases = (
-				9BE6811498093EC404704C0E /* [CP] Check Pods Manifest.lock */,
+				590D8B8E9E3E676F2083324E /* [CP] Check Pods Manifest.lock */,
 				B6F948E929F6ED8500BBE3A2 /* Sources */,
 				B6F948EA29F6ED8500BBE3A2 /* Frameworks */,
 				B6F948EB29F6ED8500BBE3A2 /* Resources */,
 				B6F9494329F7F92900BBE3A2 /* Embed Foundation Extensions */,
 				B6E3B3EB29FD1B5A00341144 /* Embed Watch Content */,
 				B63FC1362A05B49C0013652B /* Embed ExtensionKit Extensions */,
-				0385DFF19D5AD8EA27FD199B /* [CP] Embed Pods Frameworks */,
+				977967359ADF653CC6CA14C3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1359,6 +1361,7 @@
 				en,
 				de,
 				Base,
+				es,
 			);
 			mainGroup = B6F948E429F6ED8500BBE3A2;
 			productRefGroup = B6F948EE29F6ED8500BBE3A2 /* Products */;
@@ -1436,24 +1439,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0385DFF19D5AD8EA27FD199B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Pro-these-/Pods-Pro-these--frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Pro-these-/Pods-Pro-these--frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pro-these-/Pods-Pro-these--frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9BE6811498093EC404704C0E /* [CP] Check Pods Manifest.lock */ = {
+		590D8B8E9E3E676F2083324E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1473,6 +1459,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		977967359ADF653CC6CA14C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pro-these-/Pods-Pro-these--frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pro-these-/Pods-Pro-these--frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pro-these-/Pods-Pro-these--frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1511,8 +1514,6 @@
 				B635A67C2A45000B00AF87FA /* Date.swift in Sources */,
 				B69A0A492A83C99A00E425CB /* AppTrailManager.swift in Sources */,
 				B67BD4BE2A8D5805002A75E7 /* healthStoreProvider.swift in Sources */,
-				B648786D2A602AC700ED3028 /* extension.swift in Sources */,
-				B67BD4B12A8C014C002A75E7 /* BackgroundTask.swift in Sources */,
 				B6C533822A71357C00C0C7BE /* Theme.swift in Sources */,
 				B6D727012A3F387800C8523F /* ProProtheseWidgetWorkoutsToday.swift in Sources */,
 				B6AB87082A3C693E00D3D3BC /* Tab.swift in Sources */,
@@ -1590,10 +1591,9 @@
 				B635A6362A42251600AF87FA /* Date.swift in Sources */,
 				B64AE0FA2A8A2E2B000DCEA7 /* GoodMonrningNotifications.swift in Sources */,
 				B6F9F88D2A9227D500D6939E /* ProthesenWearingCounter.swift in Sources */,
+				B66CE4332A9D6E570020EC1A /* GoogleInterstitialAd.swift in Sources */,
 				B60DDCC02A04125400372957 /* EventPreview.swift in Sources */,
-				B63D8E4D2A66A6E60032FBF7 /* WorkoutTab.swift in Sources */,
 				B63F19D02A8BF7D300143545 /* MissingReminerNotifications.swift in Sources */,
-				B63F19D22A8C008600143545 /* BackgroundTask.swift in Sources */,
 				B620B38B2A41EBE000A61B1D /* ProFeatureSheet.swift in Sources */,
 				B64AE0FC2A8A2F8B000DCEA7 /* MoodReminderNotifications.swift in Sources */,
 				B612E31029FA9BD400C6BF88 /* NavigateToWithStack.swift in Sources */,
@@ -1669,7 +1669,6 @@
 				B64AE1012A8A495E000DCEA7 /* WeeklyReports.swift in Sources */,
 				B6C1286029FA74CC0018C71D /* SettingsDeteilsView.swift in Sources */,
 				B67449132A89826300DE5BE7 /* StepNotificationRequest.swift in Sources */,
-				B648786C2A602AC700ED3028 /* extension.swift in Sources */,
 				B612E31B29FAA6AA00C6BF88 /* SettingChangeName.swift in Sources */,
 				B612E31229FA9BF400C6BF88 /* BackBTN.swift in Sources */,
 				B60DDCBC2A038DB500372957 /* ConfirmButton.swift in Sources */,
@@ -1693,6 +1692,7 @@
 				B6F9490829F6EE4500BBE3A2 /* TabStack.swift in Sources */,
 				B63F19CA2A8AFA8500143545 /* ReportFeeldingProtheseDiagram.swift in Sources */,
 				B68C6E332A25CC6100167F9B /* SnapShotView.swift in Sources */,
+				B6F4E66F2A9D61160049AC6F /* GoogleAppOpenAd.swift in Sources */,
 				B6C16B7029F84CE700B5BD70 /* LaunchScreen.swift in Sources */,
 				B69A0A422A82894000E425CB /* PainProtheseDiagram.swift in Sources */,
 				B60DDCBE2A0411F700372957 /* EventSection.swift in Sources */,
@@ -1763,6 +1763,7 @@
 			children = (
 				B635A6602A4233ED00AF87FA /* en */,
 				B63D8E502A66DBD60032FBF7 /* de */,
+				B6A6391B2A9F63B10094EB73 /* es */,
 			);
 			name = Localizable.strings;
 			path = ..;
@@ -1772,6 +1773,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B63D8E522A66DBD60032FBF7 /* de */,
+				B6EC77FD2A9F7C7E006F06AC /* es */,
 			);
 			name = "Pro-these--InfoPlist.strings";
 			path = ..;
@@ -1781,6 +1783,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B63D8E552A66DBD60032FBF7 /* de */,
+				B6EC77FE2A9F7C7E006F06AC /* es */,
 			);
 			name = "ProWatchOS-Watch-App-InfoPlist.strings";
 			path = ..;
@@ -1790,6 +1793,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B63D8E582A66DBD60032FBF7 /* de */,
+				B6EC77FF2A9F7C7E006F06AC /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1798,6 +1802,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B63D8E5B2A66DBD60032FBF7 /* de */,
+				B6EC78002A9F7C7E006F06AC /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1814,6 +1819,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B63D8E612A66DBD60032FBF7 /* de */,
+				B6EC78012A9F7C7E006F06AC /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1830,6 +1836,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B63D8E672A66DBD60032FBF7 /* de */,
+				B6EC78022A9F7C7E006F06AC /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1843,7 +1850,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS Watch App/StopWatchComplication/Info.plist";
@@ -1860,7 +1867,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.StopWatchComplication";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1878,7 +1885,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS Watch App/StopWatchComplication/Info.plist";
@@ -1895,7 +1902,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.StopWatchComplication";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1914,7 +1921,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = ProProtheseWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
@@ -1930,7 +1937,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProProtheseWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1947,7 +1954,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = ProProtheseWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProProtheseWidget/Info.plist;
@@ -1963,7 +1970,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProProtheseWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1979,7 +1986,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS Watch App/ProProtheseWatchComplication/Info.plist";
@@ -1995,7 +2002,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.ProProtheseWatchComplication";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -2013,7 +2020,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ProWatchOS Watch App/ProProtheseWatchComplication/Info.plist";
@@ -2029,7 +2036,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS.ProProtheseWatchComplication";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -2049,7 +2056,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "ProWatchOS Watch App/ProWatchOS Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_ASSET_PATHS = "\"ProWatchOS Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
@@ -2068,7 +2075,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -2088,7 +2095,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "ProWatchOS Watch App/ProWatchOS Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_ASSET_PATHS = "\"ProWatchOS Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
@@ -2107,7 +2114,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-.ProWatchOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -2237,7 +2244,7 @@
 		};
 		B6F9490229F6ED8700BBE3A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 483285429B7CF672B8A2072F /* Pods-Pro-these-.debug.xcconfig */;
+			baseConfigurationReference = 5E6DECEBA267B5041E2B1F34 /* Pods-Pro-these-.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconV4;
@@ -2245,7 +2252,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Pro(these)/Pro(these).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_ASSET_PATHS = "\"Pro(these)/Preview Content\"";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
@@ -2275,7 +2282,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2289,7 +2296,7 @@
 		};
 		B6F9490329F6ED8700BBE3A2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7934539B1F9C5CA6899D99A0 /* Pods-Pro-these-.release.xcconfig */;
+			baseConfigurationReference = 80DA8B99397939E924677EDA /* Pods-Pro-these-.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconV4;
@@ -2297,7 +2304,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Pro(these)/Pro(these).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.10;
+				CURRENT_PROJECT_VERSION = 1.3.11;
 				DEVELOPMENT_ASSET_PATHS = "\"Pro(these)/Preview Content\"";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
@@ -2327,7 +2334,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.10;
+				MARKETING_VERSION = 1.3.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "FK.Pro-these-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

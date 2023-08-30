@@ -16,6 +16,7 @@ struct TabStack: View {
     @EnvironmentObject var pain: PainViewModel
     @EnvironmentObject var wsvm: WorkoutStatisticViewModel
     @EnvironmentObject var loginViewModel: LoginViewModel
+    @EnvironmentObject var themeManager: ThemeManager
     
     @StateObject var stopWatchProvider = StopWatchProvider()
     
@@ -24,6 +25,10 @@ struct TabStack: View {
     @Binding var activeTab:Tab
     @Binding var activeSubTab:SubTab
     @Binding var showSubTab:Bool
+
+    private var currentTheme: Theme {
+        return self.themeManager.currentTheme()
+    }
     
     var body: some View {
         ZStack {
@@ -87,7 +92,14 @@ struct TabStack: View {
                         if tab == .add {
                             ZStack{
                                 Circle()
-                                    .fill(.yellow)
+                                    .fill(LinearGradient(colors: [currentTheme.text.opacity(1), currentTheme.text.opacity(0.15), currentTheme.text.opacity(0.05)], startPoint: .top, endPoint: .bottom))
+                                    .background{
+                                        
+                                    }
+                                    .frame(width: 45, height: 45)
+                                
+                                Circle()
+                                    .fill(currentTheme.hightlightColor)
                                     .frame(width: 40, height: 40)
                                 
                                 Image(systemName: tab.TabIcon())
@@ -148,11 +160,11 @@ struct TabStack: View {
                 
             }
             .frame(maxWidth: .infinity)
-            .padding()
-            .background(AppConfig().backgroundLabel.opacity(0.1))
+            .padding(10)
+           // .background(AppConfig().backgroundLabel.opacity(0.1))
         }
         .onAppear{
-            print("tabstack \(deepLink)")
+            print("tabstack \(String(describing: deepLink))")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: {
                 if deepLink?.host == "showFeeling" {
                     tabManager.workoutTab = .feelings
@@ -184,6 +196,16 @@ struct TabStack: View {
                 pain.isPainAddSheet = false
             }
         }
+        .borderGradient(
+            width: 1,
+            edges: [.top],
+            linearGradient:
+                LinearGradient(
+                    colors: [currentTheme.text.opacity(0.5), currentTheme.text.opacity(0.05), currentTheme.text.opacity(0.05), currentTheme.text.opacity(0.5)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+        )
     }
     
     func newFeeling(moodCalendar: MoodCalendar, tabManager: TabManager, showSubTab: Binding<Bool>, activeTab: Binding<Tab>){
@@ -253,6 +275,3 @@ struct TabStack: View {
         }
     }
 }
-
-
-

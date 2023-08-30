@@ -21,8 +21,7 @@ struct WorkOutEntryView: View {
     }
     
     @StateObject var healthStore = HealthStoreProvider()
-    
-    @State var healthTab: WorkoutTab?
+
     @State var isScreenShotSheet = false
     
     @State var stepCount: Double = 0

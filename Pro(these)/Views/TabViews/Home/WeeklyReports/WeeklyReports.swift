@@ -47,7 +47,7 @@ struct WeeklyReports: View {
         } // ZStack
         .onAppear {
             
-            allReports.map({
+            let _ = allReports.map({
                 print($0)
             })
 
@@ -134,6 +134,10 @@ struct WeeklyReportDiscloser: View {
         self.report = report
         
         self.index = index
+    }
+    
+    var screenWidth: CGFloat {
+        UIScreen.main.bounds.width
     }
 
     var body: some View {
@@ -272,8 +276,11 @@ struct WeeklyReportDiscloser: View {
         }, label: {
             VStack {
                 HStack {
-                    Text("Weekly report")
-                        .font(.headline.bold())
+                    let start = report.startOfWeek?.dateFormatte(date: "dd.MM.", time: "").date
+                    let end = report.endOfWeek?.dateFormatte(date: "dd.MM.yy", time: "").date
+                    
+                    Text((start ?? "") + "-" + (end ?? ""))
+                        .font(screenWidth < 400 ? .body.bold() : .headline.bold())
                         .foregroundColor(currentTheme.text)
                     
                     Spacer()
@@ -283,14 +290,12 @@ struct WeeklyReportDiscloser: View {
                         .foregroundColor(currentTheme.text)
                 }
                 
-                if AppConfig.shared.adsDebug {
-                    HStack {
-                        Text(String(UInt(bitPattern: ObjectIdentifier(report))))
-                            .font(.caption2.bold())
-                            .foregroundColor(currentTheme.textGray)
-                        
-                        Spacer()
-                    }
+                HStack {
+                    Text("Weekly report")
+                        .font(.caption2)
+                        .foregroundColor(currentTheme.textGray)
+                    
+                    Spacer()
                 }
                
             }

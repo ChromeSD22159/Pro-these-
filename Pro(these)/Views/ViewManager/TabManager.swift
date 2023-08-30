@@ -25,3 +25,8 @@ class TabManager: ObservableObject {
     
     @Published var activeTab: Tab = .home
 }
+
+
+enum WorkoutTab {
+    case statistic, feelings
+}

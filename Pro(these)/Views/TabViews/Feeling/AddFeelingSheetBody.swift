@@ -72,40 +72,6 @@ struct AddFeelingSheetBody: View {
                             .multilineTextAlignment(.center)
                     }
                     
-                    /*
-                    // DatePicker
-                    Button {
-                        withAnimation {
-                            cal.showDatePicker.toggle()
-                        }
-                    }  label: {
-                        HStack(spacing: 20){
-                            Image(systemName: "calendar.badge.plus")
-                                .font(.title3)
-                            Text(cal.addFeelingDate, style: .date)
-                        }
-                        .padding()
-                        .padding(.horizontal)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(currentTheme.textGray)
-                        )
-                    }
-                    .background(
-                        DatePicker("", selection: $cal.addFeelingDate, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(.wheel)
-                            .frame(width: 200, height: 100)
-                            .clipped()
-                            .background(currentTheme.textGray.cornerRadius(10))
-                            .opacity(cal.showDatePicker ? 1 : 0 )
-                            .offset(x: 50, y: 90)
-                    ).onChange(of: cal.addFeelingDate) { newValue in
-                       withAnimation {
-                           cal.showDatePicker.toggle()
-                       }
-                    }// DatePicker
-                    */
-                    
                     Spacer()
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicGrid), spacing: 10) {
@@ -170,29 +136,6 @@ struct AddFeelingSheetBody: View {
                         }
                     }
                     
-                    /*
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 10) {
-                        ForEach(cal.feelingItems , id: \.name) { feeling in
-                            
-                            ZStack{
-                                Image("feeling_\(feeling.image)")
-                                    .resizable()
-                                    .frame(width: geo.size.width / 6.5, height: geo.size.width / 6.5 )
-                                    .foregroundColor(feeling.color)
-                                    .onTapGesture {
-                                        cal.selectedFeeling = "feeling_\(feeling.image)"
-                                    }
-                            }
-                            .padding()
-                            .frame(width: geo.size.width / 7.5, height: geo.size.width / 7.5 )
-                            .background(cal.selectedFeeling == "feeling_\(feeling.image)" ? currentTheme.text.opacity(0.2) : currentTheme.text.opacity(0))
-                            .cornerRadius(20)
-                            
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    */
-                    
                     HStack {
                         Button("Cancel") {
                             cal.isFeelingSheet.toggle()
@@ -221,7 +164,6 @@ struct AddFeelingSheetBody: View {
                                 cal.selectedFeeling = ""
                                 cal.prothese = nil
                                 cal.editFeeling = nil
-                                
                             }
                         }
                     }
@@ -259,40 +201,6 @@ struct AddFeelingSheetBody: View {
                             .font(.system(size: 30, weight: .regular))
                             .multilineTextAlignment(.center)
                     }
-                    
-                    /*
-                    // DatePicker
-                    Button {
-                        withAnimation {
-                            cal.showDatePicker.toggle()
-                        }
-                    }  label: {
-                        HStack(spacing: 20){
-                            Image(systemName: "calendar.badge.plus")
-                                .font(.title3)
-                            Text(cal.addFeelingDate, style: .date)
-                        }
-                        .padding()
-                        .padding(.horizontal)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(currentTheme.textGray)
-                        )
-                    }
-                    .background(
-                        DatePicker("", selection: $cal.addFeelingDate, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(.wheel)
-                            .frame(width: 200, height: 100)
-                            .clipped()
-                            .background(currentTheme.textGray.cornerRadius(10))
-                            .opacity(cal.showDatePicker ? 1 : 0 )
-                            .offset(x: 50, y: 90)
-                    ).onChange(of: cal.addFeelingDate) { newValue in
-                       withAnimation {
-                           cal.showDatePicker.toggle()
-                       }
-                    }// DatePicker
-                     */
                     
                     Spacer()
 
@@ -338,6 +246,7 @@ struct AddFeelingSheetBody: View {
                                     WidgetCenter.shared.reloadAllTimelines()
                                     cal.selectedFeeling = ""
                                     cal.prothese = nil
+                                    cal.editFeeling = nil
                                 }
                             } label: {
                                 VStack {
@@ -353,48 +262,6 @@ struct AddFeelingSheetBody: View {
                         }
                     }
 
-                    /*
-                    Spacer()
-                    
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 10) {
-                        ForEach(cal.feelingItems , id: \.name) { feeling in
-                            
-                            ZStack{
-                                Image("feeling_\(feeling.image)")
-                                    .resizable()
-                                    .frame(width: geo.size.width / 6.5, height: geo.size.width / 6.5 )
-                                    .foregroundColor(feeling.color)
-                                    .onTapGesture {
-                                        cal.selectedFeeling = "feeling_\(feeling.image)"
-                                        
-                                        let newFeeling = Feeling(context: persistenceController.container.viewContext)
-                                        newFeeling.date = cal.addFeelingDate
-                                        newFeeling.name = cal.selectedFeeling
-                                        
-                                        if var pro = cal.prothese {
-                                            newFeeling.prothese = pro
-                                            cal.prothese?.addToFeelings(newFeeling)
-                                        }
-
-                                        do {
-                                            try? persistenceController.container.viewContext.save()
-                                            cal.isFeelingSheet.toggle()
-                                            WidgetCenter.shared.reloadAllTimelines()
-                                            cal.selectedFeeling = ""
-                                            cal.prothese = nil
-                                        }
-                                    }
-                            }
-                            .padding()
-                            .frame(width: geo.size.width / 7.5, height: geo.size.width / 7.5 )
-                            .background(cal.selectedFeeling == "feeling_\(feeling.image)" ? currentTheme.text.opacity(0.2) : currentTheme.text.opacity(0))
-                            .cornerRadius(20)
-                            
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    */
-                    
                     Spacer()
                 }
                 .padding()

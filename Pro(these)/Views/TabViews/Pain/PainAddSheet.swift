@@ -101,43 +101,6 @@ struct PainAddSheet: View {
                             }
                         }
                         
-                        /*
-                        // DatePicker
-                        Button {
-                            withAnimation {
-                                vm.showDatePicker.toggle()
-                            }
-                        }  label: {
-                            HStack(spacing: 20){
-                                Image(systemName: "calendar.badge.plus")
-                                    .font(.title3)
-                                
-                                Spacer()
-                                
-                                Text(vm.addPainDate, style: .date)
-                            }
-                            .padding()
-                            .padding(.horizontal)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(currentTheme.textGray)
-                            )
-                        }
-                        .background(
-                            DatePicker("", selection: $vm.addPainDate, displayedComponents: .hourAndMinute)
-                                .datePickerStyle(.wheel)
-                                .frame(width: 200, height: 100)
-                                .clipped()
-                                .background(currentTheme.textGray.cornerRadius(10))
-                                .opacity(vm.showDatePicker ? 1 : 0 )
-                                .offset(x: 50, y: 90)
-                        ).onChange(of: vm.addPainDate) { newValue in
-                           withAnimation {
-                               vm.showDatePicker.toggle()
-                           }
-                       }// DatePicker
-                        */
-                        
                         HStack(alignment: .top, spacing: 8) {
                             Reason()
                             
@@ -151,6 +114,8 @@ struct PainAddSheet: View {
                                 vm.resetStates()
                                 vm.prothese = nil
                                 
+                                vm.editPain = nil
+                                vm.resetStates()
                                 // Show InterstitialSheet if not Pro
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                                     if !appConfig.hasPro {
@@ -327,6 +292,8 @@ struct PainAddSheet: View {
                                 vm.resetStates()
                                 vm.prothese = nil
                                 
+                                vm.editPain = nil
+                                vm.resetStates()
                                 // Show InterstitialSheet if not Pro
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                                     if !appConfig.hasPro {
@@ -448,8 +415,8 @@ struct PainAddSheet: View {
             }  label: {
                 HStack(spacing: 10){
                     Image(systemName: "figure.walk")
-                    
-                    Text((vm.selectedReason == nil ? translateReasons("Choose") : translateReasons(vm.selectedReason?.name) ) )
+                    // Text((vm.selectedReason == nil ? translateReasons("Choose") : translateReasons(vm.selectedReason?.name) ) )
+                    Text((vm.selectedReason == nil ? LocalizedStringKey("Choose") : LocalizedStringKey(vm.selectedReason?.name ?? "") ) )
                         .font(.caption2)
                         .frame(maxWidth: .infinity)
                 }
@@ -464,7 +431,10 @@ struct PainAddSheet: View {
                 Picker("Cause of pain", selection: $vm.selectedReason) {
                     
                     ForEach(PainReasons, id: \.id) { reason in
-                        Text(translateReasons(reason.name!)).tag(Optional<PainReason>(reason))
+                        //Text(translateReasons(reason.name!)).tag(Optional<PainReason>(reason))
+                        
+                        Text(LocalizedStringKey(reason.name!)).tag(Optional<PainReason>(reason))
+                        
                     }
                     Text("other reason").tag(Optional<PainReason>(nil))
                 }
@@ -520,7 +490,7 @@ struct PainAddSheet: View {
             }  label: {
                 HStack(spacing: 10){
                     Image(systemName: "pills")
-                    Text((vm.selectedDrug == nil ? translateReasons("Choose") : translateReasons(vm.selectedDrug?.name)) )
+                    Text((vm.selectedDrug == nil ? LocalizedStringKey("Choose") : LocalizedStringKey(vm.selectedDrug?.name ?? "")) )
                         .font(.caption2)
                         .frame(maxWidth: .infinity)
                 }
@@ -534,7 +504,9 @@ struct PainAddSheet: View {
             .background(
                     Picker("Painkiller", selection: $vm.selectedDrug) {
                         ForEach(PainDrugs, id: \.id) { drug in
-                            Text(translateReasons(drug.name!)).tag(Optional<PainDrug>(drug))
+                            
+                            // Text(translateReasons(drug.name!)).tag(Optional<PainDrug>(drug))
+                            Text(LocalizedStringKey(drug.name!)).tag(Optional<PainDrug>(drug))
                         }
                         
                         Text("other painkillers").tag(Optional<PainDrug>(nil))

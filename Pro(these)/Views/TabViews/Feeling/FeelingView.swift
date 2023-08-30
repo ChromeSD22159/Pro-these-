@@ -122,6 +122,9 @@ struct FeelingView: View {
                        ads.showInterstitial.toggle()
                 }
             })
+            
+            cal.editFeeling = nil
+            
         }, content: {
             AddFeelingSheetBody()
         })
@@ -172,6 +175,9 @@ struct FeelingView: View {
                             .opacity(showTimePicker ? 1 : 0 )
                             .offset(x: -65, y: 90)
                     )
+                    .onChange(of: appConfig.PushNotificationDailyMoodRememberingDate, perform: { new in
+                        showTimePicker.toggle()
+                    })
                 }
 
             }
@@ -285,6 +291,8 @@ struct FeelingView: View {
                            ads.showInterstitial.toggle()
                     }
                 })
+                
+                cal.editFeeling = nil
             }, content: {
                 AddFeelingSheetBody()
             })
@@ -366,7 +374,6 @@ struct feelingRowItem: View {
            
             Button("To edit this entry??", role: .destructive) {
                 cal.isFeelingSheet.toggle()
-                print(feeling)
                 cal.editFeeling = feeling
             }
             .font(.callout)

@@ -329,6 +329,12 @@
 "cold" = "Kälte";
 
 /* No comment provided by engineer. */
+"Cold" = "Kälte";
+
+/* No comment provided by engineer. */
+"Choose" = "Wählen";
+
+/* No comment provided by engineer. */
 "Come back soon, it will be exciting ✌️" = "Komm bald wieder, es wird spannend ✌️";
 
 /* No comment provided by engineer. */
@@ -1475,6 +1481,9 @@
 "warmth" = "Wärme";
 
 /* No comment provided by engineer. */
+"Warmth" = "Wärme";
+
+/* No comment provided by engineer. */
 "Waterproof" = "Wasserfeste";
 
 /* No comment provided by engineer. */
@@ -1497,6 +1506,9 @@
 
 /* No comment provided by engineer. */
 "weather" = "Wetter";
+
+/* No comment provided by engineer. */
+"Weather" = "Wetter";
 
 /* No comment provided by engineer. */
 "Week: **%@**" = "Woche: **%@**";

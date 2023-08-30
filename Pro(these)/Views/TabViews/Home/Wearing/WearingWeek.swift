@@ -47,7 +47,7 @@ struct WearingWeek: View {
                     
                     
                     Spacer()
-                    let (h,m,_) = totelWearingThisWeek.secondsToHoursMinutesSecondsString()
+                    let (h,m,_) = totelWearingThisWeek.secondsToHoursMinutesSeconds
                     Text("\(h == "00" ? "0" : h) hrs. \(m == "00" ? "0" : m ) mins.")
                         .font(.largeTitle.bold())
                 }

@@ -120,7 +120,8 @@ struct SettingsSheet: View {
                                             )
                                             
                                             Text("Rate the app")
-                                                
+                                                .multilineTextAlignment(.leading)
+                                            
                                             Spacer()
                                         }
                                         .frame(maxWidth: .infinity)
@@ -166,7 +167,8 @@ struct SettingsSheet: View {
                                             )
                                             
                                             Text(LocalizedStringKey("Setup Assistant"))
-                                                
+                                                .multilineTextAlignment(.leading)
+                                            
                                             Spacer()
                                         }
                                         .frame(maxWidth: .infinity)
@@ -206,7 +208,8 @@ struct SettingsSheet: View {
                                                     )
                                                     
                                                     Text(LocalizedStringKey("System"))
-                                                        
+                                                        .multilineTextAlignment(.leading)
+                                                    
                                                     Spacer()
                                                 }
                                                 .frame(maxWidth: .infinity)
@@ -252,7 +255,8 @@ struct SettingsSheet: View {
                                                     )
                                                     
                                                     Text(LocalizedStringKey("Debug"))
-                                                        
+                                                        .multilineTextAlignment(.leading)
+                                                    
                                                     Spacer()
                                                 }
                                                 .frame(maxWidth: .infinity)
@@ -415,6 +419,7 @@ struct SettingsSheet: View {
                 )
                 
                 Text(buttonText)
+                    .multilineTextAlignment(.leading)
                     
                 Spacer()
                 

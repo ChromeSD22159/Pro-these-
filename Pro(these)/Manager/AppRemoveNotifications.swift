@@ -28,7 +28,7 @@ enum AppRemoveNotifications {
         }
     }
     
-    static func setMoodReminderNotifications() {
+    static func setMoodReminderNotifications(printConsole: Bool? = nil) {
         if PushNotificationDailyMoodRemembering {
             let note = MoodReminderNotifications.shared.randomNotification
             
@@ -39,12 +39,13 @@ enum AppRemoveNotifications {
                 triggerHour: note.triggerHour,
                 triggerMinute: note.triggerMinute,
                 repeater: note.repeater,
-                url: note.url
+                url: note.url,
+                printConsole: printConsole
             )
         }
     }
     
-    static func setGoodMorningNotifications() {
+    static func setGoodMorningNotifications(printConsole: Bool? = nil) {
         if PushNotificationGoodMorning {
             let note = GoodMonrningNotifications.shared.randomNotification
             
@@ -55,12 +56,13 @@ enum AppRemoveNotifications {
                 triggerHour: note.triggerHour,
                 triggerMinute: note.triggerMinute,
                 repeater: note.repeater,
-                url: note.url
+                url: note.url,
+                printConsole: printConsole
             )
         }
     }
     
-    static func setComebackNotifications(delay: Int) {
+    static func setComebackNotifications(delay: Int, printConsole: Bool? = nil) {
         if PushNotificationComebackReminder {
             let targetTriggerDate = Calendar.current.date(byAdding: .second, value: delay, to: Date())!
             let startNotificationWindow = Calendar.current.date(bySetting: .hour, value: 8, of: Date())! //Calendar.current.date(byAdding: .day, value: -1, to: )!
@@ -74,11 +76,14 @@ enum AppRemoveNotifications {
                     title: note.title,
                     body: note.body,
                     triggerTimer: delay,
-                    url: note.url
+                    url: note.url,
+                    printConsole: printConsole
                 )
                 
                 print("Next ComebackNotification: \(targetTriggerDate)")
-            }  
+            }  else {
+                print("ComebackNotification not in date range")
+            }
         }
     }
 }

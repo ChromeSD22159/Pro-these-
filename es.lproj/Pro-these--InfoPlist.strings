@@ -1,0 +1,30 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "Pro Prótesis";
+
+/* Privacy - Calendars Usage Description */
+"NSCalendarsUsageDescription" = "La aplicación Prostheses desea acceder a su calendario y crear o eliminar entradas.";
+
+/* Privacy - Face ID Usage Description */
+"NSFaceIDUsageDescription" = "La aplicación Prótesis quiere desbloquear la aplicación a través de FaceID";
+
+/* Privacy - Health Records Usage Description */
+"NSHealthClinicalHealthRecordsShareUsageDescription" = "La aplicación Prótesis quiere guardar sus lecturas activas";
+
+/* Privacy - Health Share Usage Description */
+"NSHealthShareUsageDescription" = "La aplicación Prótesis quiere acceder a sus lecturas activas";
+
+/* Privacy - Health Update Usage Description */
+"NSHealthUpdateUsageDescription" = "La aplicación Prótesis quiere cambiar tus lecturas activas";
+
+/* Privacy - Location Always and When In Use Usage Description */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "La aplicación Prosthesis necesita acceso a su ubicación para realizar un seguimiento de sus entrenamientos";
+
+/* Privacy - Location Always Usage Description */
+"NSLocationAlwaysUsageDescription" = "La aplicación Prosthesis necesita acceso a su ubicación para realizar un seguimiento de sus entrenamientos";
+
+/* Privacy - Location When In Use Usage Description */
+"NSLocationWhenInUseUsageDescription" = "La aplicación Prosthesis necesita acceso a su ubicación para realizar un seguimiento de sus entrenamientos";
+
+/* Privacy - Photo Library Additions Usage Description */
+"NSPhotoLibraryAddUsageDescription" = "La aplicación Prótesis quiere guardar instantáneas en su aplicación de fotos";
+

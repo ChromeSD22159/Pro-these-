@@ -123,7 +123,8 @@ struct WebSheetButton: View {
                     )
                     
                     Text(string)
-                        
+                        .multilineTextAlignment(.leading)
+                    
                     Spacer()
                 }
                 .frame(maxWidth: .infinity)
