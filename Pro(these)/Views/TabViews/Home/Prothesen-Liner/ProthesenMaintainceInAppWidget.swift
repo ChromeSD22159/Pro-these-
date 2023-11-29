@@ -83,6 +83,12 @@ struct ProthesenMaintainceInAppWidget: View {
                         .font(.caption2)
                         .foregroundColor(currentTheme.text)
                         .padding(.bottom, 6)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.caption2)
+                        .foregroundColor(currentTheme.text)
                 }
                 
                 Spacer()

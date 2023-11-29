@@ -1,0 +1,104 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "LaunchLaunch2EN.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "locale" : "es",
+      "idiom" : "universal",
+      "filename" : "LaunchLaunch2ES.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "es",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "es",
+      "scale" : "3x"
+    },
+    {
+      "locale" : "de",
+      "idiom" : "universal",
+      "filename" : "LaunchLaunch2DE.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "de",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "de",
+      "scale" : "3x"
+    },
+    {
+      "locale" : "pt-BR",
+      "idiom" : "universal",
+      "filename" : "LaunchLaunch2PT.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "pt-BR",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "pt-BR",
+      "scale" : "3x"
+    },
+    {
+      "locale" : "pt-PT",
+      "idiom" : "universal",
+      "filename" : "LaunchLaunch2PT 1.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "pt-PT",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "pt-PT",
+      "scale" : "3x"
+    },
+    {
+      "locale" : "en",
+      "idiom" : "universal",
+      "filename" : "LaunchLaunch2EN 1.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "en",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "locale" : "en",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "localizable" : true
+  }
+}

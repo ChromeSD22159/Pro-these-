@@ -14,6 +14,8 @@ class LocationProvider: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     let manager = CLLocationManager()
 
+    let geoCoder = CLGeocoder()
+    
     @Published var location: CLLocationCoordinate2D?
     @Published var region: MKCoordinateRegion
 

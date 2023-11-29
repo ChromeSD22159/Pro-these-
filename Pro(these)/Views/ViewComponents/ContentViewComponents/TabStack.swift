@@ -228,6 +228,8 @@ struct TabStack: View {
                 withAnimation(.easeInOut(duration: 0.3))   {
                     self.showSubTab = false
                     self.activeTab = .healthCenter
+                    AppConfig.shared.recorderState = false
+                    print("STOP STOPWATCH FROM WIDGET")
                 }
             })
         } else {
